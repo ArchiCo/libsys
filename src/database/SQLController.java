@@ -68,4 +68,9 @@ public class SQLController {
 		return null;
 	}
 	
+	public void debugInsert(String table, String columns, String values) {
+		boolean status = mysql.queryInsert(table, columns, values);
+		System.out.println("Insert operation status: " + status);
+	}
+	
 }

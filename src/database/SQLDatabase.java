@@ -18,16 +18,14 @@ class SQLDatabase {
                  String pass) {
 		try {
 			dbConnection = DriverManager.getConnection("jdbc:mysql://" + 
-												host + ":" +
-												port + "/" + 
-												db   + "?user=" +
-												user + "&password=" +
-												pass);
+												       host + ":" +
+												       port + "/" + 
+												       db   + "?user=" +
+												       user + "&password=" +
+												       pass);
 
 		} catch (SQLException ex) {
-			System.out.println("SQLException: " + ex.getMessage());
-			System.out.println("SQLState: "     + ex.getSQLState());
-			System.out.println("VendorError: "  + ex.getErrorCode());
+			printSqlExceptions(ex);
 		}
 	}
 	
@@ -64,6 +62,25 @@ class SQLDatabase {
 		}
 	}
 	
+	public boolean queryInsert(String table,
+							   String columns,
+							   String values) {
+		Statement stmt = null;
+		ResultSet rs = null;
+		try {
+			stmt = dbConnection.createStatement();
+		    return stmt.execute("INSERT INTO " + 
+	    							 table   + " " + 
+	    							 columns + " VALUES" +
+	    							 values);
+		} catch (SQLException ex) {
+			printSqlExceptions(ex);
+		} finally {
+			releaseResources(stmt, rs);
+		}
+		return false;
+	}
+	
 	public ResultSet query(String query) {
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -73,10 +90,7 @@ class SQLDatabase {
 		    return rs;
 		}
 		catch (SQLException ex){
-		    // handle any errors
-		    System.out.println("SQLException: " + ex.getMessage());
-		    System.out.println("SQLState: " + ex.getSQLState());
-		    System.out.println("VendorError: " + ex.getErrorCode());
+		    printSqlExceptions(ex);
 		}
 		finally {
 		    /*if (rs != null) {
@@ -96,5 +110,30 @@ class SQLDatabase {
 		    }*/
 		}
 		return rs;	
+	}
+	
+	private void printSqlExceptions(SQLException ex) {
+		System.out.println("SQLException: " + ex.getMessage());
+	    System.out.println("SQLState: " + ex.getSQLState());
+	    System.out.println("VendorError: " + ex.getErrorCode());
+	}
+	
+	private void releaseResources(Statement stmt, ResultSet rs) {
+		if (rs != null) {
+			try {
+				rs.close();
+			} catch (SQLException sqlEx) { 
+				printSqlExceptions(sqlEx);
+			}
+			rs = null;
+		}
+		if (stmt != null) {
+			try {
+				stmt.close();
+			} catch (SQLException sqlEx) { 
+				printSqlExceptions(sqlEx);
+			} // ignore
+        stmt = null;
+		}
 	}
 }

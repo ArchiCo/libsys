@@ -2,10 +2,11 @@ package database;
 import java.util.Scanner;
 
 public class SQLDebug {
-	final String SQL_CONNECTION_STATUS	= "1";
-	final String SQL_LIVE_STATUS		= "2";
-	final String SQL_PRINT_COLUMNS		= "3";
-	final String DEBUG_EXIT 			= "4";
+	final String SQL_CONNECTION_STATUS = "1";
+	final String SQL_LIVE_STATUS       = "2";
+	final String SQL_PRINT_COLUMNS     = "3";
+	final String SQL_DEBUG_INSERT      = "4";
+	final String DEBUG_EXIT            = "5";
 	
 	Scanner scan;
 	SQLController sql;
@@ -15,7 +16,7 @@ public class SQLDebug {
                   				3306,
                   				"team10",
                   				"teamten",
-                				"tC7FuKsZYM9M9Xwy");
+                				    "tC7FuKsZYM9M9Xwy");
 	}
 	
 		public void run() {
@@ -39,6 +40,16 @@ public class SQLDebug {
             			String table = scan.nextLine();
             			sql.printColumnNames(table);
             			break;	
+            			
+            		case SQL_DEBUG_INSERT : 
+            			System.out.print("Table's name: ");
+            			String table1 = scan.nextLine();
+            			System.out.print("Columns: ");
+            			String columns = scan.nextLine();
+            			System.out.print("Values: ");
+            			String values = scan.nextLine();
+            			sql.debugInsert(table1, columns, values);;
+            			break;		
  				   	
             		case DEBUG_EXIT: 
             			active = false;
@@ -59,7 +70,8 @@ public class SQLDebug {
         	System.out.println("1. Connection status");
         	System.out.println("2. Live status");
         	System.out.println("3. Print column names");
-        	System.out.println("4. Exit");
+        	System.out.println("4. Debug Insert");
+        	System.out.println("5. Exit");
         	System.out.print("\nSelect: ");
 		}
 }
