@@ -12,11 +12,11 @@ public class SQLDebug {
 	SQLController sql;
 	public SQLDebug() {
 		scan =  new Scanner(System.in);
-		sql = new SQLController("129.16.155.35",
+		sql = new SQLController("leia.skip.chalmers.se",
                   				3306,
                   				"team10",
                   				"teamten",
-                				    "tC7FuKsZYM9M9Xwy");
+                				"tC7FuKsZYM9M9Xwy");
 	}
 	
 		public void run() {

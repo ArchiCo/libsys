@@ -20,7 +20,7 @@ class SQLDatabase {
 			dbConnection = DriverManager.getConnection("jdbc:mysql://" + 
 												       host + ":" +
 												       port + "/" + 
-												       db   + "?user=" +
+												       db   + "?useSSL=true&user=" +
 												       user + "&password=" +
 												       pass);
 
