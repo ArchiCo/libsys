@@ -38,7 +38,6 @@ public class SQLController {
 	}
 	
 	public void printColumnNames(String table) {
-		try {
 			List<String> columns = returnColumns(table);
 			if (columns != null) {
 				for (String columnName : columns) {
@@ -47,9 +46,6 @@ public class SQLController {
 			} else {
 				System.out.println("No result returned.");
 			}
-		} catch (Exception e) {
-			
-		}
 	}
 	
 	
