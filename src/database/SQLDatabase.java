@@ -61,7 +61,9 @@ class SQLDatabase {
 			throw ex;
 		}
 	}
-	
+	public boolean queryUpdate() {
+	return false;	
+	}
 	public boolean queryInsert(String table,
 							   String columns,
 							   String values) {
