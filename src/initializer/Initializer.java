@@ -1,9 +1,18 @@
 package initializer;
 
-public class Initializer {
+import database.SQLDebug;
 
+public class Initializer {
+	
 	public static void main(String[] args) {
-		System.out.println("Hello world!");
+        try {
+            Class.forName("com.mysql.jdbc.Driver").newInstance();
+            new SQLDebug().run();
+            
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
 	}
 
 }
