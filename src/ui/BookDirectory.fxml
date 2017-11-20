@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="600.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <center>
+      <TableView prefHeight="551.0" prefWidth="629.0" BorderPane.alignment="CENTER">
+        <columns>
+          <TableColumn prefWidth="152.66666412353516" text="Title" />
+          <TableColumn minWidth="0.0" prefWidth="124.66661071777344" text="Author" />
+            <TableColumn minWidth="0.0" prefWidth="114.0" text="Genre" />
+            <TableColumn minWidth="0.0" prefWidth="169.99993896484375" text="Publisher" />
+            <TableColumn minWidth="0.0" prefWidth="136.00009155273438" text="Shelf" />
+        </columns>
+         <BorderPane.margin>
+            <Insets right="2.0" />
+         </BorderPane.margin>
+      </TableView>
+   </center>
+   <bottom>
+      <AnchorPane prefHeight="155.0" prefWidth="700.0" BorderPane.alignment="CENTER">
+         <children>
+            <TextField layoutX="458.0" layoutY="14.0" />
+            <Button layoutX="631.0" layoutY="14.0" mnemonicParsing="false" text="Search" />
+            <Button layoutX="176.0" layoutY="42.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="117.0" text="Register Book" />
+            <Button layoutX="363.0" layoutY="59.0" mnemonicParsing="false" prefHeight="80.0" prefWidth="323.0" text="LEND BOOK">
+               <font>
+                  <Font name="Gill Sans Ultra Bold" size="31.0" />
+               </font>
+               <textFill>
+                  <LinearGradient endX="1.0" endY="1.0" startY="0.4698412577311198">
+                     <stops>
+                        <Stop color="BLACK" />
+                        <Stop color="#a400d1" offset="0.7606741573033707" />
+                        <Stop color="WHITE" offset="1.0" />
+                     </stops>
+                  </LinearGradient>
+               </textFill>
+            </Button>
+            <Button layoutX="176.0" layoutY="103.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="117.0" text="Book Statistics" />
+            <Button layoutX="28.0" layoutY="104.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="87.0" text="Back" />
+         </children>
+      </AnchorPane>
+   </bottom>
+</BorderPane>

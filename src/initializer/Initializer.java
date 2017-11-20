@@ -1,9 +1,11 @@
 package initializer;
 
+import frontend.Frontend;
+import javafx.application.Application;
+
 public class Initializer {
 
 	public static void main(String[] args) {
-		System.out.println("Hello world!");
+		Application.launch(Frontend.class, args);
 	}
-
 }
