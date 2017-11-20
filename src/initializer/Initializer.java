@@ -1,9 +1,11 @@
 package initializer;
 
+import backend.LibraryMenu;
+
 public class Initializer {
 
 	public static void main(String[] args) {
-		System.out.println("Hello world!");
+		LibraryMenu program = new LibraryMenu();
+		program.run();
 	}
-
 }
