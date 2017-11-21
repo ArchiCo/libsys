@@ -31,7 +31,7 @@
          <children>
             <TextField layoutX="458.0" layoutY="14.0" />
             <Button layoutX="631.0" layoutY="14.0" mnemonicParsing="false" text="Search" />
-            <Button layoutX="176.0" layoutY="11.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="117.0" text="Register Book" />
+            <Button layoutX="176.0" layoutY="42.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="117.0" text="Register Book" />
             <Button layoutX="363.0" layoutY="59.0" mnemonicParsing="false" prefHeight="80.0" prefWidth="323.0" text="LEND BOOK">
                <font>
                   <Font name="Gill Sans Ultra Bold" size="31.0" />
