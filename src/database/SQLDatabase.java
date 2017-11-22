@@ -17,13 +17,19 @@ class SQLDatabase {
 		         String user, 
                  String pass) {
 		try {
-			dbConnection = DriverManager.getConnection("jdbc:mysql://" + 
+			/*dbConnection = DriverManager.getConnection("jdbc:mysql://" + 
 												       host + ":" +
 												       port + "/" + 
 												       db   + "?useSSL=true&user=" +
 												       user + "&password=" +
-												       pass);
-
+												       pass);*/
+			dbConnection = DriverManager.getConnection("jdbc:postgresql://" + 
+				       host + ":" +
+				       port + "/" + 
+				       db   + "?sslmode=require&user=" +
+				       user + "&password=" +
+				       pass);
+			
 		} catch (SQLException ex) {
 			printSqlExceptions(ex);
 		}
@@ -79,6 +85,29 @@ class SQLDatabase {
 			releaseResources(stmt, rs);
 		}
 		return false;
+	}
+	
+	public ResultSet selectQuery(String selection, String table) {
+		return selectQuery(selection, table, null);
+	}
+	
+	public ResultSet selectQuery(String selection, String table, String condition) {
+		try {
+			String query = "SELECT " + selection + 
+					       " FROM "  + table;
+			if (!condition.isEmpty()  && 
+			    !condition.equals("") &&
+			    !condition.equals(null)) {
+				
+				query += " WHERE " + condition;
+			}
+			ResultSet result = dbConnection.createStatement()
+					                       .executeQuery(query);
+			return result;
+		} catch (SQLException ex) {
+			printSqlExceptions(ex);
+		}
+		return null;
 	}
 	
 	public ResultSet query(String query) {

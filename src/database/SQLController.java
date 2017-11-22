@@ -1,5 +1,6 @@
 package database;
 
+import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -51,7 +52,7 @@ public class SQLController {
 	
 	public List<String> returnColumns(String table) {
 		try {
-			ResultSet rs = mysql.query("SELECT * FROM " + table);
+			ResultSet rs = mysql.selectQuery("*", table);
 			if (rs != null) {
 				List<String> columns = new ArrayList<String>();
 				for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
@@ -72,5 +73,19 @@ public class SQLController {
 		boolean status = mysql.queryInsert(table, columns, values);
 		System.out.println("Insert operation status: " + status);
 	}
+	
+	/*public void debugPrint(String selection, String table) {
+		ResultSet rs = mysql.selectQuery(selection, table);
+		ArrayList<Array> arr;
+		for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
+			arr.add(rs.getArray(i));
+		}
+		for (int i = 0; i < arr.size(); i++)
+			for (int j = 0; j < arr.get(i).; j++) {
+				System.out.println(arr.get(i)[j]);
+			}
+		
+		//System.out.println("Insert operation status: " + status);
+	}*/
 	
 }
