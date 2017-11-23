@@ -1,11 +1,9 @@
 package frontend.resources;
 
+import java.awt.print.Book;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-
-import com.sun.corba.se.impl.orbutil.graph.Node;
-import com.sun.java.swing.plaf.windows.resources.windows;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,29 +12,68 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.scene.Node;
 
 public class LoginController implements Initializable{
 
 	@FXML
+	private Button loginBtn;
+	@FXML
 	private Button registerBtn;
 	
+
 	
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		
-	}
 	
+	
+	//registerBtn going to registration
 	public void changeScreenBtn(ActionEvent event) throws IOException {
-		if(event.getSource().equals(registerBtn) ) {
-		Parent registerParent = FXMLLoader.load(getClass().getResource("Registration.fxml"));
-		Scene registerScene = new Scene(registerParent);
 		
+		//if the source of the event is the register button
+		if(event.getSource().equals(registerBtn) ) {
+			Stage window;
+			//load the registration scene into a parent
+		Parent registerParent = FXMLLoader.load(getClass().getResource("Registration.fxml"));
+		//make a new scene with the loaded fxml
+		Scene registerScene = new Scene(registerParent);
 		//get stage info
-		Stage window = (Stage) registerBtn.getScene().getWindow();
+		window = (Stage) registerBtn.getScene().getWindow();
+		//set scene to the register scene with the stage of the register button, which is the same
 		window.setScene(registerScene);
 		window.show();
 		}
+		
+		else if(event.getSource().equals(loginBtn)) {
+			
+			loadWindow("Library.fxml", "Book Directory");
+			/* Stage window;
+			Parent bookParent = FXMLLoader.load(getClass().getResource("CustomerList2.fxml"));
+			Scene bookScene = new Scene(bookParent);
+			
+			window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+			window.setScene(bookScene);
+			window.show();
+			*/
+		}	
+		
 	}
+	
+	public void loadWindow(String location, String title) throws IOException {
+		
+		Parent root = FXMLLoader.load(getClass().getResource(location));
+		Stage newStage = new Stage();
+		newStage.setTitle(title);
+		newStage.setScene(new Scene(root));
+		newStage.show();
+	}
+
+
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		
+		
+	}
+	
 
 }
