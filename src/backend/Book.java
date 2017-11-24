@@ -11,6 +11,7 @@ public class Book {
 	private String shelf;
 	private Customer lentCustomer;
 	private int lendDuration;
+	private int lentTimes;
 
 	public Book(String name, String isbn, String publisher, String genre, String shelf, String author) {
 		this.liid = liid;
@@ -20,6 +21,11 @@ public class Book {
 		this.genre = genre;
 		this.author = author;
 		this.shelf = shelf;
+		this.lentTimes = 0;
+	}
+
+	public int getLiid() {
+		return this.liid;
 	}
 
 	public String getName() {
@@ -52,6 +58,14 @@ public class Book {
 
 	public int getLendDuration() {
 		return this.lendDuration;
+	}
+
+	public int getLentTimes() {
+		return this.lentTimes;
+	}
+
+	public void bookPopularityUp() {
+		this.lentTimes++;
 	}
 
 	public void setLentCustomer(Customer newCustomer) {

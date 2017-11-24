@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class Library {
 	protected ArrayList<Book> listBooks;
 	protected ArrayList<Book> listLentBooks;
+	protected ArrayList<Book> popularBooks;
 	private Book book1, book2, book3;
 	private static int days;
 	private final static int DAILY_OVERDUE_FEE = 2;
@@ -23,6 +24,17 @@ public class Library {
 	public void addBook(String name, String isbn, String publisher, String genre, String shelf, String author) {
 		Book book = new Book(name, isbn, publisher, genre, shelf, author);
 		listBooks.add(book);
+		boolean exists = false;
+		for (Book s : this.popularBooks) {
+			if (s.getISBN().equals(book.getISBN())) {
+				exists = true;
+				break;
+			}
+
+		}
+		if (exists == false) {
+			popularBooks.add(book);
+		}
 	}
 
 	public void lendBook(Customer regCustomer, Book book, int duration) {
@@ -30,6 +42,7 @@ public class Library {
 		this.listBooks.remove(book);
 		book.setLentCustomer(regCustomer);
 		book.setLendDuration(duration);
+		book.bookPopularityUp();
 	}
 
 	public Book returnBook(Customer regCustomer) {
