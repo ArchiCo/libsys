@@ -34,27 +34,26 @@ public class LoginController implements Initializable{
 		if(event.getSource().equals(registerBtn) ) {
 			Stage window;
 			//load the registration scene into a parent
-		Parent registerParent = FXMLLoader.load(getClass().getResource("Registration.fxml"));
-		//make a new scene with the loaded fxml
-		Scene registerScene = new Scene(registerParent);
-		//get stage info
-		window = (Stage) registerBtn.getScene().getWindow();
-		//set scene to the register scene with the stage of the register button, which is the same
-		window.setScene(registerScene);
-		window.show();
+			Parent registerParent = FXMLLoader.load(getClass().getResource("Registration.fxml"));
+			//make a new scene with the loaded FXML
+			Scene registerScene = new Scene(registerParent);
+			//get stage info
+			window = (Stage) registerBtn.getScene().getWindow();
+			//set scene to the register scene with the stage of the register button, which is the same
+			window.setScene(registerScene);
+			window.show();
 		}
 		
 		else if(event.getSource().equals(loginBtn)) {
-			
-			loadWindow("Library.fxml", "Book Directory");
-			/* Stage window;
-			Parent bookParent = FXMLLoader.load(getClass().getResource("CustomerList2.fxml"));
+			//loadWindow("Library.fxml", "Book Directory");
+			Stage window;
+			Parent bookParent = FXMLLoader.load(getClass().getResource("Library.fxml"));
 			Scene bookScene = new Scene(bookParent);
 			
 			window = (Stage) ((Node) event.getSource()).getScene().getWindow();
 			window.setScene(bookScene);
 			window.show();
-			*/
+			
 		}	
 		
 	}

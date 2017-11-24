@@ -158,8 +158,9 @@
                                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="551.0">
                                                    <children>
                                                       <Button mnemonicParsing="false" prefHeight="110.0" prefWidth="216.0" text="Log out" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="335.0" AnchorPane.topAnchor="0.0" />
-                                                      <Button layoutX="216.0" mnemonicParsing="false" prefHeight="110.0" prefWidth="173.0" text="Add book" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="216.0" AnchorPane.rightAnchor="162.0" AnchorPane.topAnchor="0.0" />
+                                                      <Button layoutX="216.0" mnemonicParsing="false" prefHeight="61.0" prefWidth="173.0" text="Add book" AnchorPane.bottomAnchor="49.0" AnchorPane.leftAnchor="216.0" AnchorPane.rightAnchor="162.0" AnchorPane.topAnchor="0.0" />
                                                       <Button layoutX="390.0" layoutY="1.0" mnemonicParsing="false" prefHeight="110.0" prefWidth="161.0" text="Lend Book" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="390.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                      <Button layoutX="216.0" layoutY="61.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="173.0" text="Edit book" />
                                                    </children>
                                                 </AnchorPane>
                                             </items>
