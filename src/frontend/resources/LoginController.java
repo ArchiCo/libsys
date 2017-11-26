@@ -1,6 +1,5 @@
 package frontend.resources;
 
-import java.awt.print.Book;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -46,15 +45,15 @@ public class LoginController implements Initializable{
 		
 		else if(event.getSource().equals(loginBtn)) {
 			
-			loadWindow("Library.fxml", "Book Directory");
-			/* Stage window;
-			Parent bookParent = FXMLLoader.load(getClass().getResource("CustomerList2.fxml"));
+			//loadWindow("Library.fxml", "Book Directory");
+			 Stage window;
+			Parent bookParent = FXMLLoader.load(getClass().getResource("Library.fxml"));
 			Scene bookScene = new Scene(bookParent);
 			
-			window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+			window = (Stage) (loginBtn.getScene().getWindow());
 			window.setScene(bookScene);
 			window.show();
-			*/
+			
 		}	
 		
 	}

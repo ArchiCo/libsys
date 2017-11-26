@@ -1,6 +1,11 @@
 package frontend;
-	
+
+import frontend.resources.*;
+import java.util.Observable;
+
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import sun.security.jgss.LoginConfigImpl;
@@ -10,6 +15,10 @@ import javafx.scene.layout.BorderPane;
 
 
 public class Frontend extends Application {
+	
+	
+	
+	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		try {
