@@ -1,40 +1,58 @@
 package datatype;
 
 import java.sql.Date;
+import java.util.ArrayList;
 
 public class Book {
-	int liid;
-	String isbn, title, genre, author, publisher, customerSsn, record = null;
-	Date datePublished, dateTaken, dateDue = null;
+	int lid;
+	String isbn, title, genre, author, publisher, shelf;
+	Date publicationDate;
+	ArrayList<Record> records;
 	
-	public Book(int    liid,
+	public Book(int lid, String isbn, String title, String genre, 
+		        String author,  String publisher, Date publicationDate) {
+		
+		this(lid, isbn, title, genre, author, publisher, publicationDate, "");
+	}
+	
+	public Book(int lid, String isbn, String title, String genre, 
+			    String author,  String publisher, Date publicationDate,
+			    String shelf) {
+		
+		this(lid, isbn, title, genre, author, publisher, 
+			 publicationDate, shelf, new ArrayList<Record>());
+	}
+	
+	public Book(int    lid,
 				String isbn, 
 			    String title, 
 			    String genre, 
 			    String author, 
 			    String publisher, 
-			    Date datePublished) {
+			    Date   publicationDate,
+			    String shelf,
+			    ArrayList<Record> records) {
 		
-		this.liid          =          liid;
-		this.isbn          =          isbn;
-		this.title         =         title;
-		this.genre         =         genre;
-		this.author        =        author;
-		this.publisher     =     publisher;
-		this.datePublished = datePublished;	
+		this.lid             =             lid;
+		this.isbn            =            isbn;
+		this.title           =           title;
+		this.genre           =           genre;
+		this.author          =          author;
+		this.publisher       =       publisher;
+		this.publicationDate = publicationDate;
+		this.shelf           =           shelf;
+		this.records         =         records;
 	}
 	
-	public int    getLiid()          { return          liid; }
-	public String getIsbn()          { return          isbn; }
-	public String getTitle()         { return         title; }
-	public String getGenre()         { return         genre; }
-	public String getAuthor()        { return        author; }
-	public String getPublisher()     { return     publisher; }
-	public String getCustomerSsn()   { return   customerSsn; }
-	
-	
-	public Date   getDatePublished() { return datePublished; }
-	
-	
+	public int    getLid()                { return lid; }
+	public String getIsbn()               { return isbn; }
+	public String getGenre()              { return genre; }
+	public String getShelf()              { return shelf; }
+	public String getTitle()              { return title; }
+	public String getAuthor()             { return author; }
+	public ArrayList<Record> getRecords() { return records; }
+	public String getPublisher()          { return publisher; }
+	public Date   getPublicationDate()    { return publicationDate; }	
+
 	
 }

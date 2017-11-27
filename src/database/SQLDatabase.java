@@ -1,5 +1,6 @@
 package database;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -17,12 +18,20 @@ class SQLDatabase {
 		         String user, 
                  String pass) {
 		try {
-			dbConnection = DriverManager.getConnection("jdbc:mysql://" + 
+			/*dbConnection = DriverManager.getConnection("jdbc:mysql://" + 
 												       host + ":" +
 												       port + "/" + 
 												       db   + "?user=" +
 												       user + "&password=" +
-												       pass);
+												       pass);*/
+			dbConnection = DriverManager.getConnection
+					("jdbc:postgresql://" + 
+				     host + ":" +
+				     port + "/" + 
+				     db   + "?sslmode=require&user=" +
+				     user + "&password=" +
+				     pass);
+
 
 		} catch (SQLException ex) {
 			printSqlExceptions(ex);
@@ -63,24 +72,6 @@ class SQLDatabase {
 	}
 	public boolean queryUpdate() {
 	return false;	
-	}
-	public boolean queryInsert(String table,
-							   String columns,
-							   String values) {
-		Statement stmt = null;
-		ResultSet rs = null;
-		try {
-			stmt = dbConnection.createStatement();
-		    return stmt.execute("INSERT INTO " + 
-	    							 table   + " " + 
-	    							 columns + " VALUES" +
-	    							 values);
-		} catch (SQLException ex) {
-			printSqlExceptions(ex);
-		} finally {
-			releaseResources(stmt, rs);
-		}
-		return false;
 	}
 	
 	public ResultSet query(String query) {
@@ -138,4 +129,77 @@ class SQLDatabase {
         stmt = null;
 		}
 	}
+	
+	public boolean createTable(String tableName, String structure) {
+		return createTable(null, tableName, structure);
+	}
+	
+	public boolean createTable(String schemaName, 
+			                   String tableName, 
+			                   String structure) {
+		String createTableQuery = "CREATE TABLE ";
+		if (schemaName == null) {
+			createTableQuery += tableName;
+		} else {
+			createTableQuery += schemaName + "." + tableName;
+		}
+		
+		createTableQuery += structure;
+		
+		return (inputQuery(createTableQuery));
+	}
+	
+	public boolean dropTable(String schemaName, String tableName) {
+		return dropTable(schemaName + "." + tableName);
+	}
+	
+	public boolean dropTable(String tableName) {
+		return inputQuery("DROP TABLE " + tableName);
+	}
+	
+	public ResultSet getTableName(String tableName) {
+		try {
+			DatabaseMetaData dbm = dbConnection.getMetaData();
+			ResultSet rs = dbm.getTables(null, null, tableName, null);
+			return rs;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	    return null;
+	}
+	
+	public boolean insertQueryWithSchema(String schemaName, String tableName,
+                                         String columns, String values) {
+        return insertQuery(schemaName + "." + tableName, columns, values);
+    }
+
+    public boolean insertQueryWithSchema(String schemaName, String tableName,
+                                         String values) {
+        return insertQuery(schemaName + "." + tableName, values);
+    }
+	
+	public boolean insertQuery(String tableName, String columns, String values) {
+		return inputQuery("INSERT INTO " + tableName + " " + 
+	                      columns + " VALUES" + values);
+	}
+	
+	public boolean insertQuery(String tableName, String values) {
+        return inputQuery("INSERT INTO " + tableName + " VALUES" + values);
+    }
+	
+	public boolean inputQuery(String query) {
+		Statement stmt = null;
+		ResultSet rs = null;
+		try {
+			stmt = dbConnection.createStatement();
+		    stmt.execute(query);
+		    return true;
+		} catch (SQLException ex) {
+			printSqlExceptions(ex);
+		} finally {
+			releaseResources(stmt, rs);
+		}
+		return false;
+	}
+	
 }
