@@ -3,7 +3,7 @@ package datatype;
 import java.sql.Date;
 import java.util.ArrayList;
 
-public class Book {
+public class Book{
 	int lid;
 	String isbn, title, genre, author, publisher, shelf;
 	Date publicationDate;
@@ -24,11 +24,11 @@ public class Book {
 	}
 	
 	public Book(int    lid,
-				String isbn, 
-			    String title, 
-			    String genre, 
-			    String author, 
-			    String publisher, 
+			    String isbn,
+                String title,
+                String genre,
+                String author,
+                String publisher,
 			    Date   publicationDate,
 			    String shelf,
 			    ArrayList<Record> records) {
@@ -52,7 +52,26 @@ public class Book {
 	public String getAuthor()             { return author; }
 	public ArrayList<Record> getRecords() { return records; }
 	public String getPublisher()          { return publisher; }
-	public Date   getPublicationDate()    { return publicationDate; }	
-
+	public Date   getPublicationDate()    { return publicationDate; }
 	
+	public void   setIsbn(String newIsbn) { 
+		isbn = newIsbn; 
+	}
+
+	public void   setTitle(String newTitle) { 
+		title = newTitle; 
+	}
+	public void   setGenre(String newGenre) { 
+		genre = newGenre; 
+	}
+	public void   setAuthor(String newAuthor) { 
+		author = newAuthor;
+	}
+	public void   setPublisher(String newPublisher) {
+		publisher = newPublisher;
+	}
+	public void   setDatePublished(Date newDatePublished) {
+		publicationDate = newDatePublished;
+	}
 }
+

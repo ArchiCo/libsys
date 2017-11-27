@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import database.structure.Column;
 import database.structure.Table;
 
 public class SQLController {
@@ -133,5 +134,59 @@ public class SQLController {
 		}
 	    return false;
 	}
+	
+	public void searchQuery(String searchItem, String tableName) {
+		searchQuery(searchItem, tableName, null, null);
+	}
+	
+	public void searchQuery(String searchItem, String tableName, 
+			                   String searchParameter, String data) {
+	    ResultSet rs = null;
+		try {
+			if (searchParameter == null || data == null) {
+				rs = postgresql.outputQuery("SELECT " + searchItem + " FROM " + 
+                        tableName);
+			} else {
+		        rs = postgresql.outputQuery("SELECT " + searchItem + " FROM " + 
+			                                tableName + " WHERE " + searchParameter + 
+			                                " = " + data);
+			}
+			
+	       if (rs.getMetaData().getColumnCount() == 0) {
+	    	   System.out.println("The table is empty.");
+	    
+	       } else {
+	          ArrayList<Column> columns = new ArrayList<Column>();
+	          for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
+	    	      String datatype   = rs.getMetaData().getColumnTypeName(i);
+	    	      String columnName = rs.getMetaData().getColumnName(i);
+	    	      columns.add(new Column(columnName, datatype));
+	    	      System.out.println(i + ": " + columnName + " : " + datatype);
+	          }
+	    }
+	    
+	    
+	    
+		} catch (Exception ex) {
+			System.out.println("SQLException: " + ex.getMessage());
+		    //System.out.println("SQLState: " + ex.getSQLState());
+		    //System.out.println("VendorError: " + ex.getErrorCode());
+		} 
+	    
+	}
+	
+	/*public void debugPrint(String selection, String table) {
+		ResultSet rs = mysql.selectQuery(selection, table);
+		ArrayList<Array> arr;
+		for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
+			arr.add(rs.getArray(i));
+		}
+		for (int i = 0; i < arr.size(); i++)
+			for (int j = 0; j < arr.get(i).; j++) {
+				System.out.println(arr.get(i)[j]);
+			}
+		
+		//System.out.println("Insert operation status: " + status);
+	}*/
 	
 }

@@ -15,7 +15,8 @@ public class SQLDebug {
 	final String SQL_DEBUG_DROP        = "6";
 	final String SQL_DEBUG_BUILDER     = "7";
 	final String SQL_DEBUG_PRESENT     = "8";
-	final String DEBUG_EXIT            = "9";
+	final String SQL_DEBUG_SELECT	   = "9";
+	final String DEBUG_EXIT            = "10";
 	
 	Scanner scan;
 	SQLController sql;
@@ -27,6 +28,12 @@ public class SQLDebug {
 				                 cred.getDatabase(),
 				                 cred.getUsername(),
 				                 cred.getPassword());
+		sql = new SQLController("ec2-184-72-243-166.compute-1.amazonaws.com",
+			                    5432,
+			                    "dbeqbssbap89ck",
+			                    "epoxusywcguize",
+		                        "9f5ce8aee62b66e69b388c89446c87518822090137cc57e861478f2ffea2376a");
+		
 	}
 	
 		public void run() {
@@ -63,6 +70,13 @@ public class SQLDebug {
             			
             		case SQL_DEBUG_CREATE : 
 	    				try {
+	    					System.out.print("Table's name: ");
+	            			String newTableName = scan.nextLine();
+	            			System.out.print("Number of columns: ");
+	            			int    newTableColumnSize = scan.nextInt();
+	            			scan.nextLine();
+	            			
+	            			
 		    				Table books = new Table(new Books().getName(), 
 		    						                new Books().getColumns());	    				
 		    				System.out.println(books.getSqlStructure());
@@ -71,6 +85,14 @@ public class SQLDebug {
 						    // TODO Auto-generated catch block
 						    e.printStackTrace();
 				    	}
+            			break;
+            		
+            		case SQL_DEBUG_SELECT : 
+            			System.out.print("Selection: ");
+            			String selection = scan.nextLine();		
+            			System.out.print("Table's name: ");
+            			String tableSelect = scan.nextLine();
+            			sql.searchQuery(selection, tableSelect);
             			break;
             		
             		case SQL_DEBUG_PRESENT: 
@@ -88,8 +110,6 @@ public class SQLDebug {
             		case SQL_DEBUG_BUILDER : 
 	    				try {
 		    				new Builder(sql);
-		    				//System.out.println(books.getSqlStructure());
-			    			//sql.createTable(books.getSqlStructure());
 				        	} catch (Exception e) {
 						    // TODO Auto-generated catch block
 						    e.printStackTrace();
@@ -126,7 +146,8 @@ public class SQLDebug {
         	System.out.println("6. Debug DROP");
         	System.out.println("7. Debug BUILDER");
         	System.out.println("8. Debug PRESENT");
-        	System.out.println("9. Exit");
+        	System.out.println("9. Debug SELECT");
+        	System.out.println("10. Exit");
         	System.out.print("\nSelect: ");
 		}
 }

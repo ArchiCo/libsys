@@ -21,9 +21,10 @@ class SQLDatabase {
 			/*dbConnection = DriverManager.getConnection("jdbc:mysql://" + 
 												       host + ":" +
 												       port + "/" + 
-												       db   + "?user=" +
+												       db   + "?useSSL=true&user=" +
 												       user + "&password=" +
 												       pass);*/
+			
 			dbConnection = DriverManager.getConnection
 					("jdbc:postgresql://" + 
 				     host + ":" +
@@ -31,7 +32,7 @@ class SQLDatabase {
 				     db   + "?sslmode=require&user=" +
 				     user + "&password=" +
 				     pass);
-
+			
 
 		} catch (SQLException ex) {
 			printSqlExceptions(ex);
@@ -72,6 +73,29 @@ class SQLDatabase {
 	}
 	public boolean queryUpdate() {
 	return false;	
+	}
+	
+	public ResultSet selectQuery(String selection, String table) {
+		return selectQuery(selection, table, null);
+	}
+	
+	public ResultSet selectQuery(String selection, String table, String condition) {
+		try {
+			String query = "SELECT " + selection + 
+					       " FROM "  + table;
+			if (!condition.isEmpty()  && 
+			    !condition.equals("") &&
+			    !condition.equals(null)) {
+				
+				query += " WHERE " + condition;
+			}
+			ResultSet result = dbConnection.createStatement()
+					                       .executeQuery(query);
+			return result;
+		} catch (SQLException ex) {
+			printSqlExceptions(ex);
+		}
+		return null;
 	}
 	
 	public ResultSet query(String query) {
@@ -200,6 +224,21 @@ class SQLDatabase {
 			releaseResources(stmt, rs);
 		}
 		return false;
+	}
+	
+	public ResultSet outputQuery(String query) {
+		Statement stmt = null;
+		ResultSet rs = null;
+		try {
+			stmt = dbConnection.createStatement();
+		    rs = stmt.executeQuery(query);
+		    return rs;
+		} catch (SQLException ex) {
+			printSqlExceptions(ex);
+		} finally {
+			//releaseResources(stmt, rs);
+		}
+		return null;
 	}
 	
 }
