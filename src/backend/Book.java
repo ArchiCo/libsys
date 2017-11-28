@@ -1,19 +1,22 @@
 package backend;
 
+import java.sql.Date;
+
 public class Book {
 	final String END_OF_LINE = System.lineSeparator();
-	private int liid;
 	private String name;
 	private String isbn;
 	private String publisher;
 	private String genre;
 	private String author;
 	private String shelf;
+	private Date lendDate;
+	private Date dueDate;
+	private Date returnDate;
 	private Customer lentCustomer;
 	private int lendDuration;
 
 	public Book(String name, String isbn, String publisher, String genre, String shelf, String author) {
-		this.liid = liid;
 		this.name = name;
 		this.isbn = isbn;
 		this.publisher = publisher;
@@ -60,6 +63,30 @@ public class Book {
 
 	public void setLendDuration(int duration) {
 		this.lendDuration = duration;
+	}
+
+	public Date getLendDate() {
+		return this.lendDate;
+	}
+
+	public Date getReturnDate() {
+		return this.returnDate;
+	}
+
+	public Date getDueDate() {
+		return this.dueDate;
+	}
+
+	public void setLendDate(Date lendDate) {
+		this.lendDate = lendDate;
+	}
+
+	public void setReturnDate(Date returnDate) {
+		this.returnDate = returnDate;
+	}
+
+	public void setDueDate(Date dueDate) {
+		this.dueDate = dueDate;
 	}
 
 	public String toString() {

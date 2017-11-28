@@ -100,7 +100,7 @@ public class LibraryMenu {
 		sc.nextLine();
 		String libraryID;
 		do {
-			libraryID = generateRandomChars("ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890", 10);
+			libraryID = generateRandomChars("ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890", 4);
 		} while (this.regCustomer.findCustomer(libraryID) != null);
 		this.regCustomer.registerCustomer(libraryID, name, address, phoneNumber);
 		System.out.println("Here's your library card!");
@@ -138,13 +138,15 @@ public class LibraryMenu {
 		Customer foundCustomer = printCustomer();
 		System.out.println("");
 		if (foundCustomer != null) {
-			searchBook();
-			Book foundBook = printBook();
-			System.out.println("");
-			System.out.print("Enter number of days the book will be lent: ");
-			int duration = sc.nextInt();
-			this.library.lendBook(foundCustomer, foundBook, duration);
-			System.out.println("Please return the book within " + duration + " days");
+			int trigger = searchBook();
+			if (trigger > 0) {
+				Book foundBook = printBook();
+				System.out.println("");
+				System.out.print("Enter number of days the book will be lent: ");
+				int duration = sc.nextInt();
+				this.library.lendBook(foundCustomer, foundBook, duration);
+				System.out.println("Please return the book within " + duration + " days");
+			}
 		}
 	}
 
@@ -161,16 +163,21 @@ public class LibraryMenu {
 		}
 	}
 
-	private void searchBook() {
+	private int searchBook() {
 		System.out.print("Please enter author's name: ");
 		String authorName = sc.nextLine();
+		int counter = 0;
 		for (Book s : this.library.listBooks) {
 			if (s != null && s.getAuthor().contains(authorName)) {
 				System.out.println("===============================");
 				System.out.println(s);
 				System.out.println("===============================");
+				counter++;
 			}
 		}
+		if (counter == 0)
+			System.out.println("No book found");
+		return counter;
 	}
 
 	private void addBook() {
