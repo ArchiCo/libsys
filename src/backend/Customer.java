@@ -1,13 +1,17 @@
 package backend;
 
+import java.util.ArrayList;
+
 public class Customer {
 	final String END_OF_LINE = System.lineSeparator();
 	private String libraryID;
 	private String name;
 	private String address;
 	private int phoneNumber;
+	private ArrayList<Book> customerHistory;
 
 	public Customer(String libraryID, String name, String address, int phoneNumber) {
+		customerHistory = new ArrayList<Book>();
 		this.libraryID = libraryID;
 		this.name = name;
 		this.address = address;
@@ -28,6 +32,24 @@ public class Customer {
 
 	public int getPhoneNumber() {
 		return this.phoneNumber;
+	}
+
+	public ArrayList<Book> getCustomerHistory() {
+		return this.customerHistory;
+	}
+
+	public void addToCustomerHistory(Book book) {
+		boolean exists = false;
+		for (Book s : this.customerHistory) {
+			if (s.getLiid() == book.getLiid()) {
+				exists = true;
+				break;
+			}
+
+		}
+		if (exists == false) {
+			customerHistory.add(book);
+		}
 	}
 
 	public boolean equals(Object otherObject) {

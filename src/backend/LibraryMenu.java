@@ -16,6 +16,7 @@ public class LibraryMenu {
 	public static final int QUIT = 8;
 	private Scanner sc;
 	private Library library;
+
 	private RegisteredCustomer regCustomer;
 
 	public LibraryMenu() {
@@ -134,6 +135,10 @@ public class LibraryMenu {
 		return null;
 	}
 
+	private void printPopularBooks() {
+
+	}
+
 	private void lendBook() {
 		Customer foundCustomer = printCustomer();
 		System.out.println("");
@@ -147,6 +152,15 @@ public class LibraryMenu {
 				this.library.lendBook(foundCustomer, foundBook, duration);
 				System.out.println("Please return the book within " + duration + " days");
 			}
+			searchBook();
+			Book foundBook = printBook();
+			System.out.println("");
+			System.out.print("Enter number of days the book will be lent: ");
+			int duration = sc.nextInt();
+			this.library.lendBook(foundCustomer, foundBook, duration);
+			System.out.println("Please return the book within " + duration + " days");
+			foundCustomer.addToCustomerHistory(foundBook);
+
 		}
 	}
 
