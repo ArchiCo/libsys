@@ -43,6 +43,8 @@ public class Library {
 		book.setLentCustomer(regCustomer);
 		book.setLendDuration(duration);
 		book.bookPopularityUp();
+		regCustomer.addToCustomerHistory(book);
+
 	}
 
 	public Book returnBook(Customer regCustomer) {

@@ -64,6 +64,14 @@ public class Book {
 		return this.lentTimes;
 	}
 
+	public void resetLentTimes() {
+		this.lentTimes = 0;
+	}
+
+	public void setLentTimes(int newLent) {
+		this.lentTimes = newLent;
+	}
+
 	public void bookPopularityUp() {
 		this.lentTimes++;
 	}
