@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frontend.resources.LibraryController">
    <children>
       <BorderPane layoutX="21.0" layoutY="93.0" prefHeight="400.0" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <center>
@@ -30,38 +30,53 @@
                <children>
                   <Label text="ID">
                      <GridPane.margin>
-                        <Insets left="10.0" />
+                        <Insets left="40.0" />
                      </GridPane.margin>
                   </Label>
                   <Label text="Name" GridPane.rowIndex="1">
                      <GridPane.margin>
-                        <Insets left="10.0" />
+                        <Insets left="40.0" />
                      </GridPane.margin>
                   </Label>
                   <Label text="Surname" GridPane.rowIndex="2">
                      <GridPane.margin>
-                        <Insets left="10.0" />
+                        <Insets left="30.0" />
                      </GridPane.margin>
                   </Label>
                   <Label text="Phone" GridPane.rowIndex="3">
                      <GridPane.margin>
-                        <Insets left="10.0" />
+                        <Insets left="40.0" />
                      </GridPane.margin>
                   </Label>
                   <Label text="Address" GridPane.rowIndex="4">
                      <GridPane.margin>
-                        <Insets left="10.0" />
+                        <Insets left="40.0" />
                      </GridPane.margin>
                   </Label>
-                  <TextField promptText="New Id" GridPane.columnIndex="1">
+                  <TextField promptText="Customer ID" GridPane.columnIndex="1">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
+                     <GridPane.margin>
+                        <Insets right="20.0" />
+                     </GridPane.margin>
                   </TextField>
-                  <TextField promptText="New name" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <TextField promptText="New surname" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <TextField promptText="New phone" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <TextField prefWidth="128.0" promptText="New address" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <TextField promptText="Customer name" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets right="20.0" />
+                     </GridPane.margin></TextField>
+                  <TextField promptText="Customer surname" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                     <GridPane.margin>
+                        <Insets right="20.0" />
+                     </GridPane.margin></TextField>
+                  <TextField promptText="Phone number" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                     <GridPane.margin>
+                        <Insets right="20.0" />
+                     </GridPane.margin></TextField>
+                  <TextField prefWidth="128.0" promptText="Customer address" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                     <GridPane.margin>
+                        <Insets right="20.0" />
+                     </GridPane.margin></TextField>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="5">
                      <children>
                         <Button layoutX="47.0" layoutY="20.0" mnemonicParsing="false" text="Cancel" />
@@ -69,7 +84,7 @@
                   </AnchorPane>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
                      <children>
-                        <Button layoutX="47.0" layoutY="20.0" mnemonicParsing="false" text="Add customer" />
+                        <Button fx:id="addCustomerBtn" layoutX="47.0" layoutY="20.0" mnemonicParsing="false" onAction="#addCustomerEvent" text="Add customer" AnchorPane.rightAnchor="30.0" />
                      </children>
                   </AnchorPane>
                </children>

@@ -20,10 +20,10 @@ public class Frontend extends Application {
 			primaryStage.setTitle("Library System");
 			*/
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(getClass().getResource("/frontend/resources/Registration.fxml"));
+			loader.setLocation(getClass().getResource("/frontend/resources/Login.fxml"));
 			Parent root = loader.load();
-		    Scene scene = new Scene(root, 700, 400);
-		    primaryStage.setTitle("Login");
+		    Scene scene = new Scene(root);
+		    primaryStage.setTitle("Library System");
 			
 		    
 		    

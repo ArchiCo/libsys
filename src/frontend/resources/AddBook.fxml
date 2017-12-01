@@ -10,8 +10,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-
-<BorderPane prefHeight="400.0" prefWidth="300.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/9.0.1">
+<BorderPane prefHeight="400.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <center>
       <GridPane BorderPane.alignment="CENTER">
         <columnConstraints>
@@ -76,8 +75,8 @@
    <bottom>
       <AnchorPane prefHeight="61.0" prefWidth="300.0" BorderPane.alignment="CENTER">
          <children>
-            <Button layoutX="43.0" layoutY="15.0" mnemonicParsing="false" text="Cancel" />
-            <Button layoutX="185.0" layoutY="15.0" mnemonicParsing="false" text="Add Book" />
+            <Button fx:id="cancelBtn" layoutX="43.0" layoutY="15.0" mnemonicParsing="false" text="Cancel" />
+            <Button fx:id="addbookBtn" layoutX="185.0" layoutY="15.0" mnemonicParsing="false" text="Add Book" />
          </children>
       </AnchorPane>
    </bottom>

@@ -14,7 +14,7 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frontend.resources.RegistrationController">
    <center>
-      <GridPane maxHeight="200.0" maxWidth="400.0" prefHeight="287.0" prefWidth="415.0" BorderPane.alignment="CENTER">
+      <GridPane maxHeight="221.0" maxWidth="400.0" prefHeight="221.0" prefWidth="400.0" BorderPane.alignment="CENTER">
         <columnConstraints>
           <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="338.66668701171875" minWidth="10.0" prefWidth="299.33331298828125" />
           <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="338.0" minWidth="10.0" prefWidth="300.66668701171875" />
@@ -22,6 +22,8 @@
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -51,14 +53,24 @@
                   <Insets left="30.0" right="30.0" />
                </GridPane.margin>
             </Label>
-            <PasswordField GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <TextField GridPane.columnIndex="1" />
-            <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Button mnemonicParsing="false" prefHeight="37.0" prefWidth="103.0" text="Register" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
-            <Button fx:id="backBtn" mnemonicParsing="false" onAction="#backToLogin" prefHeight="31.0" prefWidth="76.0" text="Back" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
+            <PasswordField fx:id="registrationPassw" onKeyReleased="#handleButtonAction" promptText="Your password" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextField fx:id="regID" promptText="Type your ID" GridPane.columnIndex="1" />
+            <TextField fx:id="registrationUsername" promptText="Your username" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Button fx:id="completeRegBtn" mnemonicParsing="false" onAction="#handleButtonAction" prefHeight="37.0" prefWidth="103.0" text="Register" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
+            <Button fx:id="backBtn" mnemonicParsing="false" onAction="#handleButtonAction" prefHeight="31.0" prefWidth="76.0" text="Back" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="4">
+               <children>
+                  <Label layoutX="14.0" layoutY="5.0" text="The user name must not be empty" />
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="5">
+               <children>
+                  <Label layoutX="11.0" layoutY="7.0" text="The password must have at least 8 chars" />
+               </children>
+            </AnchorPane>
          </children>
          <BorderPane.margin>
-            <Insets left="30.0" right="30.0" top="30.0" />
+            <Insets bottom="40.0" left="30.0" right="30.0" top="30.0" />
          </BorderPane.margin>
       </GridPane>
    </center>
