@@ -106,27 +106,29 @@ public class LibraryController implements Initializable{
 		ObjectProperty<Predicate<Book>> genreFilter = new SimpleObjectProperty<>();
 		
 		IDFilter.bind(Bindings.createObjectBinding(() ->
-			book -> book.getID().toLowerCase().contains(IDFilterField.getText().toLowerCase()),
-				IDFilterField.textProperty()));
+			book -> book.getID().toLowerCase().
+				contains(IDFilterField.getText().toLowerCase()),
+					IDFilterField.textProperty()));
 		
 		titleFilter.bind(Bindings.createObjectBinding(() ->
-			book -> book.getTitle().toLowerCase().contains(titleFilterField.getText().toLowerCase()),
-				titleFilterField.textProperty()));
+			book -> book.getTitle().toLowerCase().
+				contains(titleFilterField.getText().toLowerCase()),
+					titleFilterField.textProperty()));
 		
 		authorFilter.bind(Bindings.createObjectBinding(() ->
 			book -> book.getAuthor().toLowerCase().contains(authorFilterField.getText().toLowerCase()),
 				authorFilterField.textProperty()));
 		
 		shelfFilter.bind(Bindings.createObjectBinding(() ->
-		book -> book.getShelf().toLowerCase().contains(shelfFilterField.getText().toLowerCase()),
+			book -> book.getShelf().toLowerCase().contains(shelfFilterField.getText().toLowerCase()),
 			shelfFilterField.textProperty()));
 		
 		publisherFilter.bind(Bindings.createObjectBinding(() ->
-		book -> book.getPublisher().toLowerCase().contains(publisherFilterField.getText().toLowerCase()),
+			book -> book.getPublisher().toLowerCase().contains(publisherFilterField.getText().toLowerCase()),
 			publisherFilterField.textProperty()));
 		
 		genreFilter.bind(Bindings.createObjectBinding(() ->
-		book -> book.getGenre().toLowerCase().contains(genreFilterField.getText().toLowerCase()),
+			book -> book.getGenre().toLowerCase().contains(genreFilterField.getText().toLowerCase()),
 			genreFilterField.textProperty()));
 		
 		// 1. Wrap the ObservableList in a FilteredList (initially display all data) 	
@@ -141,81 +143,81 @@ public class LibraryController implements Initializable{
 		//addlistener calls changelistener.changed
 		IDFilterField.textProperty().addListener((observable,oldValue,newValue) -> {
 			 // If filter text is empty, display all persons.
-			filteredBooks.setPredicate(book -> {
-				if(newValue.equals(null) || newValue.isEmpty()) {
-					return true;
-				}
-				String lowerCaseFilter = newValue.toLowerCase();
-				if (book.getID().toLowerCase().contains(lowerCaseFilter)) {
-					return true;
-				}
-				return false; //no matches found
-			});
+			//filteredBooks.setPredicate(book -> {
+				//if(newValue.equals(null) || newValue.isEmpty()) {
+					//return true;
+				//}
+				//String lowerCaseFilter = newValue.toLowerCase();
+				//if (book.getID().toLowerCase().contains(lowerCaseFilter)) {
+					//return true;
+				//}
+				//return false; //no matches found
+			//});
 		}) ;
 		
 		titleFilterField.textProperty().addListener((observable,oldvalue,newvalue) -> {
-			filteredBooks.setPredicate(books -> {
-				if (newvalue.equals(null) || newvalue.isEmpty()) {
-					return true;
-				}
-				String lowerCaseFilter = newvalue.toLowerCase();
-				if (books.getTitle().toLowerCase().contains(lowerCaseFilter)) {
-					return true;
-				}
-				return false;
-			});
+			//filteredBooks.setPredicate(books -> {
+				//if (newvalue.equals(null) || newvalue.isEmpty()) {
+					//return true;
+				//}
+				//String lowerCaseFilter = newvalue.toLowerCase();
+				//if (books.getTitle().toLowerCase().contains(lowerCaseFilter)) {
+					//return true;
+				//}
+				//return false;
+			//});
 		});
 		
 		authorFilterField.textProperty().addListener((observable,oldvalue,newvalue) -> {
-			filteredBooks.setPredicate(books -> {
-				if (newvalue.equals(null) || newvalue.isEmpty()) {
-					return true;
-				}
-				String lowerCaseFilter = newvalue.toLowerCase();
-				if (books.getAuthor().toLowerCase().contains(lowerCaseFilter)) {
-					return true;
-				}
-				return false;
-			});
+		//	filteredBooks.setPredicate(books -> {
+				//if (newvalue.equals(null) || newvalue.isEmpty()) {
+					//return true;
+				//}
+				//String lowerCaseFilter = newvalue.toLowerCase();
+				//if (books.getAuthor().toLowerCase().contains(lowerCaseFilter)) {
+					//return true;
+				//}
+				//return false;
+			//});
 		});
 		
 		shelfFilterField.textProperty().addListener((observable,oldvalue,newvalue) -> {
-			filteredBooks.setPredicate(books -> {
-				if (newvalue.equals(null) || newvalue.isEmpty()) {
-					return true;
-				}
-				String lowerCaseFilter = newvalue.toLowerCase();
-				if (books.getShelf().toLowerCase().contains(lowerCaseFilter)) {
-					return true;
-				}
-				return false;
-			});
+			//filteredBooks.setPredicate(books -> {
+				//if (newvalue.equals(null) || newvalue.isEmpty()) {
+					//return true;
+				//}
+				//String lowerCaseFilter = newvalue.toLowerCase();
+				//if (books.getShelf().toLowerCase().contains(lowerCaseFilter)) {
+					//return true;
+				//}
+				//return false;
+			//});
 		});
 		
 		publisherFilterField.textProperty().addListener((observable,oldvalue,newvalue) -> {
-			filteredBooks.setPredicate(books -> {
-				if (newvalue.equals(null) || newvalue.isEmpty()) {
-					return true;
-				}
-				String lowerCaseFilter = newvalue.toLowerCase();
-				if (books.getPublisher().toLowerCase().contains(lowerCaseFilter)) {
-					return true;
-				}
-				return false;
-			});
+			//filteredBooks.setPredicate(books -> {
+				//if (newvalue.equals(null) || newvalue.isEmpty()) {
+					//return true;
+				//}
+				//String lowerCaseFilter = newvalue.toLowerCase();
+				//if (books.getPublisher().toLowerCase().contains(lowerCaseFilter)) {
+					//return true;
+				//}
+				//return false;
+			//});
 		});
 		
 		genreFilterField.textProperty().addListener((observable,oldvalue,newvalue) -> {
-			filteredBooks.setPredicate(books -> {
-				if (newvalue.equals(null) || newvalue.isEmpty()) {
-					return true;
-				}
-				String lowerCaseFilter = newvalue.toLowerCase();
-				if (books.getGenre().toLowerCase().contains(lowerCaseFilter)) {
-					return true;
-				}
-				return false;
-			});
+			//filteredBooks.setPredicate(books -> {
+				//if (newvalue.equals(null) || newvalue.isEmpty()) {
+					//return true;
+				//}
+				//String lowerCaseFilter = newvalue.toLowerCase();
+				//if (books.getGenre().toLowerCase().contains(lowerCaseFilter)) {
+					//return true;
+				//}
+				//return false;
+			//});
 		});
 		
 		// 3. Wrap the FilteredList in a SortedList. 
