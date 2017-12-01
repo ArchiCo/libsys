@@ -1,9 +1,10 @@
 package backend;
 
-import java.util.Collections;
 import java.util.InputMismatchException;
 import java.util.Random;
 import java.util.Scanner;
+
+import backend.FlexibleBookComparator.Order;
 
 public class LibraryMenu {
 	public static final int CUSTOMER_REGISTRATION = 1;
@@ -58,14 +59,21 @@ public class LibraryMenu {
 				case PRINT_CUSTOMER_HISTORY:
 					printCustomerHistory();
 					break;
+
 				case SORT_BOOK:
-					Collections.sort(this.library.listBooks, new BookComparator());
-					for (Book s : this.library.listBooks) {
-						System.out.println(s.getAuthor());
+					library.sortListBooksBy(Order.Author);
+					for (Book book : this.library.listBooks) {
+						System.out.println("");
+						System.out.println(book);
 					}
 					break;
+
 				case PRINT_POPULAR_BOOKS:
-					printPopularBooks();
+					library.printPopularBooks();
+					for (Book popularBook : this.library.popularBooks) {
+						System.out.println("");
+						System.out.println(popularBook);
+					}
 					break;
 				case QUIT:
 					System.out.println();
@@ -157,24 +165,9 @@ public class LibraryMenu {
 		return null;
 	}
 
-	private void printPopularBooks() {
-		for (Book popularBook : this.library.popularBooks) {
-			popularBook.resetLentTimes();
-			for (Book g : this.library.listBooks) {
-				if (g != null && g.getISBN().equals(popularBook.getISBN())) {
-					int totalBookpop = popularBook.getLentTimes() + g.getLentTimes();
-					popularBook.setLentTimes(totalBookpop);
-				}
-
-			}
-			System.out.println(popularBook);
-		}
-
-	}
-
 	private void customerHistory(Customer customer) {
-		for (Book s : customer.getCustomerHistory()) {
-			System.out.println(s);
+		for (Book book : customer.getCustomerHistory()) {
+			System.out.println(book);
 		}
 	}
 
@@ -229,7 +222,8 @@ public class LibraryMenu {
 		String publisher = sc.nextLine();
 		System.out.print("Please enter book's ISBN: ");
 		String isbn = sc.nextLine();
-		this.library.addBook(name, isbn, publisher, genre, "", author);
+		Book b = new Book(name, isbn, publisher, genre, "", author);
+		this.library.addBook(b);
 	}
 
 	private void advanceTime() {

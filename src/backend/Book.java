@@ -90,7 +90,8 @@ public class Book {
 		result += "Author: " + getAuthor() + END_OF_LINE;
 		result += "Genre: " + getGenre() + END_OF_LINE;
 		result += "Publisher: " + getPublisher() + END_OF_LINE;
-		result += "Shelf: " + getShelf();
+		result += "Shelf: " + getShelf() + END_OF_LINE;
+		result += "Popularity" + getLentTimes();
 		return result;
 	}
 }
