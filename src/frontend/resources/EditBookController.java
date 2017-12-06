@@ -26,8 +26,6 @@ public class EditBookController implements Initializable{
 	private Button cancelBtn;
 	@FXML
 	private Button saveBtn;
-	@FXML
-	public TextField LIDField;
 	
 	
 
@@ -38,19 +36,16 @@ public class EditBookController implements Initializable{
 	public void closeEvent(ActionEvent event) throws IOException {
 		
 		//if the source of the event is the register button
-		if(event.getSource().equals(cancelBtn) ) {
-			// get a handle to the stage
+					// get a handle to the stage
 		    Stage stage = (Stage) cancelBtn.getScene().getWindow();
 		    // do what you have to do
-		    stage.close();
-		}
-		
-		else if(event.getSource().equals(saveBtn)) {
-		}
-
+            stage.close();
 	}
 
-
+    public void saveChanges(){
+        Stage stage = (Stage) cancelBtn.getScene().getWindow();
+        stage.close();
+    }
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
