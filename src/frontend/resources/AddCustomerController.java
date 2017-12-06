@@ -16,7 +16,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.scene.Node;
 
-public class AddBookController implements Initializable{
+public class AddCustomerController implements Initializable{
 
 	@FXML
 	private Button cancelBtn;

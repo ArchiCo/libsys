@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frontend.resources.LibraryController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frontend.resources.AddCustomerController">
    <children>
       <BorderPane layoutX="21.0" layoutY="93.0" prefHeight="400.0" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <center>
@@ -79,12 +79,12 @@
                      </GridPane.margin></TextField>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="5">
                      <children>
-                        <Button layoutX="47.0" layoutY="20.0" mnemonicParsing="false" text="Cancel" />
+                        <Button fx:id="cancelBtn" layoutX="47.0" layoutY="20.0" mnemonicParsing="false" onAction="#closeEvent" text="Cancel" />
                      </children>
                   </AnchorPane>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
                      <children>
-                        <Button fx:id="addCustomerBtn" layoutX="47.0" layoutY="20.0" mnemonicParsing="false" onAction="#addCustomerEvent" text="Add customer" AnchorPane.rightAnchor="30.0" />
+                        <Button fx:id="saveBtn" layoutX="47.0" layoutY="20.0" mnemonicParsing="false" text="Add customer" AnchorPane.rightAnchor="30.0" />
                      </children>
                   </AnchorPane>
                </children>

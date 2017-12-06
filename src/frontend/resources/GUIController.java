@@ -1,6 +1,6 @@
 package frontend.resources;
 
-import frontend.Frontend;
+import frontend.MainApp;
 import java.io.IOException;
 
 import javafx.event.ActionEvent;

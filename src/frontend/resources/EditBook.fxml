@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<BorderPane prefHeight="400.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frontend.resources.AddBookController">
+<BorderPane prefHeight="400.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frontend.resources.EditBookController">
    <center>
       <GridPane BorderPane.alignment="CENTER">
         <columnConstraints>
@@ -89,7 +89,7 @@
                <GridPane.margin>
                   <Insets right="20.0" />
                </GridPane.margin></TextField>
-            <TextField GridPane.columnIndex="1">
+            <TextField fx:id="LIDfield" promptText="asd" GridPane.columnIndex="1">
                <GridPane.margin>
                   <Insets right="20.0" />
                </GridPane.margin></TextField>
@@ -100,7 +100,7 @@
       <AnchorPane prefHeight="61.0" prefWidth="300.0" BorderPane.alignment="CENTER">
          <children>
             <Button fx:id="cancelBtn" layoutX="43.0" layoutY="15.0" mnemonicParsing="false" onAction="#closeEvent" text="Cancel" />
-            <Button fx:id="addbookBtn" layoutX="185.0" layoutY="15.0" mnemonicParsing="false" text="Add Book" />
+            <Button fx:id="addbookBtn" layoutX="185.0" layoutY="15.0" mnemonicParsing="false" text="Save Changes" />
          </children>
       </AnchorPane>
    </bottom>

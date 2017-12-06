@@ -6,6 +6,8 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -33,11 +35,50 @@ public class RegistrationController implements Initializable{
 	@FXML
 	private PasswordField registrationPassw = new PasswordField();
 	
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		String test = "123";
+		regID.setPromptText(test);
+		completeRegBtn.setDisable(true);
 		
+		regID.textProperty().addListener(new ChangeListener<String>() {
+
+	        @Override
+	        public void changed(ObservableValue<? extends String> ov, String t, String t1) {
+	            //System.out.println(t+"====="+t1);
+	           if(t1.equals("") || registrationUsername.equals("") || registrationPassw.getLength()<8)
+	               completeRegBtn.setDisable(true);
+	           else
+	               completeRegBtn.setDisable(false);
+	        }
+		  });
 		
-	}
+		registrationUsername.textProperty().addListener(new ChangeListener<String>(){
+
+	        @Override
+	        public void changed(ObservableValue<? extends String> ov, String t, String t1) {
+	            //System.out.println(t+"====="+t1);
+	           if(registrationUsername.getText().isEmpty()||regID.getText().equals("") || registrationPassw.getLength()<8)
+	               completeRegBtn.setDisable(true);
+	           else
+	               completeRegBtn.setDisable(false);
+	        }
+		  });
+	
+	
+	registrationPassw.textProperty().addListener(new ChangeListener<String>(){
+
+        @Override
+        public void changed(ObservableValue<? extends String> ov, String t, String t1) {
+            //System.out.println(t+"====="+t1);
+           if(registrationPassw.getLength()<8 || registrationUsername.getText().isEmpty() || regID.getText().isEmpty())
+               completeRegBtn.setDisable(true);
+           else
+               completeRegBtn.setDisable(false);
+        }
+	  });
+}
 
 	
 	 @FXML
@@ -63,9 +104,6 @@ public class RegistrationController implements Initializable{
 					regOK.showAndWait();
 				}
 			 }
-	
-}
-	  
-	 
-	}
+		 }
+	  }
 }

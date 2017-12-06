@@ -1,24 +1,30 @@
 package frontend.resources;
 
-import java.awt.Insets;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Optional;
 import java.util.ResourceBundle;
-
+import java.util.function.Predicate;
+import backend.*;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.stage.Stage;
-import javafx.scene.*;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
-import javafx.stage.*;
-import javafx.scene.control.Alert.*;
-import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.stage.Stage;
+import javafx.scene.Node;
 
 public class LibraryController implements Initializable{
 
@@ -28,9 +34,14 @@ public class LibraryController implements Initializable{
 	private Button editCustomerBtn;
 	@FXML
 	private Button addCustomerBtn;
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-	}
+	@FXML
+	private Button addBookBtn;
+	@FXML
+	private Button editBookBtn;
+
+	
+		
+
 
 	
 	 @FXML
@@ -49,47 +60,19 @@ public class LibraryController implements Initializable{
 
 	}
 
+	 
 	 @FXML
-	private void editCustomerEvent(ActionEvent event) throws IOException {
-		 
-		 
-		if(event.getSource().equals(editCustomerBtn) ) {
-			TextInputDialog dialog = new TextInputDialog();
-			dialog.setTitle("Customer edit");
-			dialog.setHeaderText("Edit the customer data");
-			GridPane grid = new GridPane();
-			grid.setHgap(10);
-			grid.setVgap(10);
-			TextField ID=new TextField();
-			ID.setPromptText("ID");
-			TextField username = new TextField();
-			username.setPromptText("Username");
-			TextField phone=new TextField();
-			phone.setPromptText("Phone");
-			TextField address= new TextField();
-			address.setPromptText("Address");
-			grid.add(new Label("ID:"), 0, 0);
-			grid.add(ID, 1, 0);
-			grid.add(new Label("Username:"), 0, 1);
-			grid.add(username, 1, 1);
-			grid.add(new Label("Phone"), 0, 2);
-			grid.add(phone, 1, 2);
-			grid.add(new Label("Address"),0,3);
-			grid.add(address, 1, 3);
-			dialog.getDialogPane().setContent(grid);
-			// Traditional way to get the response value.
-			Optional<String> result = dialog.showAndWait();
-
-			if (!ID.getText().isEmpty() && !username.getText().isEmpty() && !phone.getText().isEmpty() && !address.getText().isEmpty()){
-			if(result.isPresent()) {
-			System.out.println("Your name: " + username.getText());
-		    System.out.println("Your ID: "+ ID.getText());
-		    System.out.println("Your address: "+ address.getText());
-			System.out.println("Your phone number: " +phone.getText());}
+		private void editCustomerEvent(ActionEvent event) throws IOException {
+			if(event.getSource().equals(editCustomerBtn) ) {
+				
+				Parent root = FXMLLoader.load(getClass().getResource("EditCustomer.fxml"));
+				Scene scene = new Scene(root);
+				Stage window = new Stage ();
+				window.setScene(scene);
+				window.show();
 			}
-		}
-	}
-
+	 }
+	 
 	 @FXML
 		private void addCustomerEvent(ActionEvent event) throws IOException {
 			 
@@ -103,4 +86,36 @@ public class LibraryController implements Initializable{
 				window.show();
 			}
 		}
+	 
+	 @FXML
+		private void addBookEvent(ActionEvent event) throws IOException {
+			 
+			if(event.getSource().equals(addBookBtn)) {
+				
+				Parent root = FXMLLoader.load(getClass().getResource("AddBook.fxml"));
+				Scene scene = new Scene(root);
+				Stage window = new Stage ();
+				window.setScene(scene);
+				window.show();
+				
+			}
+		}
+	 
+	 @FXML
+		private void editBookEvent(ActionEvent event) throws IOException {
+			 
+			if(event.getSource().equals(editBookBtn)) {
+				
+				Parent root = FXMLLoader.load(getClass().getResource("EditBook.fxml"));
+				Scene scene = new Scene(root);
+				Stage window = new Stage ();
+				window.setScene(scene);
+				window.show();
+			}
+		}
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		// TODO Auto-generated method stub
+		
+	}
 }
