@@ -1,4 +1,4 @@
-package frontend.resources;
+package RecycleBin;
 
 import frontend.Frontend;
 import java.io.IOException;
