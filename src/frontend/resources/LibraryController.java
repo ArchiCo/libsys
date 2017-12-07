@@ -3,12 +3,15 @@ package frontend.resources;
 import frontend.*;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Observable;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -20,9 +23,13 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Cell;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.scene.Node;
@@ -51,7 +58,6 @@ public class LibraryController implements Initializable{
 	@FXML
 	private TableColumn<Book, String> genreCol;
 	
-	
 	//search textfields
 	@FXML
 	private TextField IDFilterField;
@@ -65,7 +71,23 @@ public class LibraryController implements Initializable{
 	private TextField publisherFilterField;
 	@FXML
 	private TextField genreFilterField;
-	 
+	
+	//Book details
+	@FXML 
+	private Label LIDLabel;
+	@FXML 
+	private Label ISBNLabel;
+	@FXML 
+	private Label titleLabel;
+	@FXML 
+	private Label authorLabel;
+	@FXML 
+	private Label genreLabel;
+	@FXML 
+	private Label publisherLabel;
+	@FXML 
+	private Label publicationDateLabel;
+	
 	//list of books arraylist
 	ObservableList<Book> books = FXCollections.observableArrayList();
 	
@@ -98,6 +120,7 @@ public class LibraryController implements Initializable{
 		publisherCol.setCellValueFactory(cellData -> cellData.getValue().getPublisherProperty());
 		genreCol.setCellValueFactory(cellData -> cellData.getValue().getGenreProperty());
 		
+		////////////////////////////////SEARCH FUNCTION BOOK TABLE///////////////////////////
 		ObjectProperty<Predicate<Book>> IDFilter = new SimpleObjectProperty<>();
 		ObjectProperty<Predicate<Book>> titleFilter = new SimpleObjectProperty<>();
 		ObjectProperty<Predicate<Book>> authorFilter = new SimpleObjectProperty<>();
@@ -159,8 +182,31 @@ public class LibraryController implements Initializable{
 		
 		// 5. Add sorted (and filtered) data to the table.
 		bookTable.setItems(sortedBooks);
+		//ObservableList(Arraylist) >> FilteredList >> Sortedlist(comparator bind) >> into table
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+		///////////////////Details section of book////////////////////////
 		
-		//ObservableList(Arraylist) >> FilteredList >> Sortedlist(comparator bind) >> into table 
+		Book chosenBook;
+		//---Apparently getselectionmodel is not as good as gettablerow()--- do i care
+		chosenBook = bookTable.getSelectionModel().selectedItemProperty().get();
+		bookTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Book>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Book> observable, Book oldValue, Book newValue) {
+				if (newValue != null) {
+					LIDLabel.setText(newValue.getID());
+					titleLabel.setText(newValue.getTitle());
+					authorLabel.setText(newValue.getAuthor());
+					genreLabel.setText(newValue.getGenre());
+					publisherLabel.setText(newValue.getPublisher());
+				}
+			}
+		});
+		
+		//------------------------------------------------------------------------//
+		
+		
+		
 	}
 	
 	public void handleButtonAction(ActionEvent event) throws IOException {
@@ -173,9 +219,10 @@ public class LibraryController implements Initializable{
 			window = (Stage) (logoutBtn.getScene().getWindow());
 			window.setScene(newScene);
 			window.show();
-		}
-		
-		
+		}	
+	}
+	
+	public void showBookDetails(MouseEvent event) {
 		
 	}
 	

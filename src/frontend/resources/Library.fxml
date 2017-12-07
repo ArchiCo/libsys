@@ -136,37 +136,37 @@
                                                                   <Font size="15.0" />
                                                                </font>
                                                             </Label>
-                                                            <Label prefHeight="26.0" prefWidth="103.0" text="Text" GridPane.columnIndex="1">
+                                                            <Label fx:id="LIDLabel" prefHeight="26.0" prefWidth="103.0" text="Text" GridPane.columnIndex="1">
                                                                <font>
                                                                   <Font size="15.0" />
                                                                </font>
                                                             </Label>
-                                                            <Label prefHeight="26.0" prefWidth="103.0" text="LID" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                            <Label fx:id="ISBNLabel" prefHeight="26.0" prefWidth="103.0" text="LID" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                                                <font>
                                                                   <Font size="15.0" />
                                                                </font>
                                                             </Label>
-                                                            <Label prefHeight="26.0" prefWidth="103.0" text="LID" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                                            <Label fx:id="titleLabel" prefHeight="26.0" prefWidth="103.0" text="LID" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                                                <font>
                                                                   <Font size="15.0" />
                                                                </font>
                                                             </Label>
-                                                            <Label prefHeight="26.0" prefWidth="103.0" text="LID" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                                            <Label fx:id="authorLabel" prefHeight="26.0" prefWidth="103.0" text="LID" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                                                <font>
                                                                   <Font size="15.0" />
                                                                </font>
                                                             </Label>
-                                                            <Label prefHeight="26.0" prefWidth="103.0" text="LID" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                                            <Label fx:id="genreLabel" prefHeight="26.0" prefWidth="103.0" text="LID" GridPane.columnIndex="1" GridPane.rowIndex="4">
                                                                <font>
                                                                   <Font size="15.0" />
                                                                </font>
                                                             </Label>
-                                                            <Label prefHeight="26.0" prefWidth="103.0" text="LID" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                                                            <Label fx:id="publicationDateLabel" prefHeight="26.0" prefWidth="103.0" text="LID" GridPane.columnIndex="1" GridPane.rowIndex="5">
                                                                <font>
                                                                   <Font size="15.0" />
                                                                </font>
                                                             </Label>
-                                                            <Label prefHeight="26.0" prefWidth="103.0" text="LID" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                                                            <Label fx:id="publisherLabel" prefHeight="26.0" prefWidth="103.0" text="LID" GridPane.columnIndex="1" GridPane.rowIndex="6">
                                                                <font>
                                                                   <Font size="15.0" />
                                                                </font>
