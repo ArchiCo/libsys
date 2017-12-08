@@ -11,7 +11,6 @@ public class Customer {
 	private ArrayList<Book> customerHistory;
 
 	public Customer(String libraryID, String name, String address, int phoneNumber) {
-		customerHistory = new ArrayList<Book>();
 		this.libraryID = libraryID;
 		this.name = name;
 		this.address = address;
@@ -65,8 +64,8 @@ public class Customer {
 	}
 
 	public String toString() {
-		String result = "Name: " + getName() + "." + END_OF_LINE;
-		result += "Address: " + getAddress() + "." + END_OF_LINE;
+		String result = "Name: " + getName() + END_OF_LINE;
+		result += "Address: " + getAddress() + END_OF_LINE;
 		result += "Phone Number: " + getPhoneNumber() + END_OF_LINE;
 		result += "Library ID: " + getLibraryID();
 		return result;

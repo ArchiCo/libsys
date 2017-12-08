@@ -33,7 +33,6 @@ public class Library {
 		this.listBooks.remove(book);
 		book.setLentCustomer(regCustomer);
 		book.setLendDuration(duration);
-		book.bookPopularityUp();
 		regCustomer.addToCustomerHistory(book);
 
 	}

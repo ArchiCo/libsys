@@ -1,5 +1,7 @@
 package backend;
 
+import java.sql.Date;
+
 public class Book {
 	final String END_OF_LINE = System.lineSeparator();
 	private int liid;
@@ -91,7 +93,7 @@ public class Book {
 		result += "Publisher: " + getPublisher() + END_OF_LINE;
 		result += "Shelf: " + getShelf() + END_OF_LINE;
 		result += "Popularity: " + getLentTimes();
-		return result;
-	}
+			return result;
+		}
 
-}
+	}
