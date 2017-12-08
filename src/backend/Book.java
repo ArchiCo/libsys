@@ -91,7 +91,7 @@ public class Book {
 		result += "Genre: " + getGenre() + END_OF_LINE;
 		result += "Publisher: " + getPublisher() + END_OF_LINE;
 		result += "Shelf: " + getShelf() + END_OF_LINE;
-		result += "Popularity" + getLentTimes();
+		result += "Popularity: " + getLentTimes();
 		return result;
 	}
 }

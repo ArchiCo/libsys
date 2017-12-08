@@ -15,14 +15,13 @@ public class FlexibleBookComparator implements Comparator<Book> {
 		case Name:
 			return book1.getName().compareTo(book2.getName());
 
-		case Author:
-			return book1.getAuthor().compareTo(book2.getAuthor());
-
-		default: { // popularity since last option
+		case Popularity: { // popularity since last option
 			return book1.getLentTimes() > book2.getLentTimes() ? -1
 					: book1.getLentTimes() == book2.getLentTimes() ? 0 : 1;
 
 		}
+		default:
+			return book1.getAuthor().compareTo(book2.getAuthor());
 		}
 	}
 
