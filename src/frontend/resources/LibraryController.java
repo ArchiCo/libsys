@@ -90,6 +90,7 @@ public class LibraryController implements Initializable{
 	
 	//list of books arraylist
 	ObservableList<Book> books = FXCollections.observableArrayList();
+	ObservableList<Customer> customers = FXCollections.observableArrayList();
 	
 	public LibraryController() {
 		
@@ -105,6 +106,9 @@ public class LibraryController implements Initializable{
 		books.add(new Book("A12", "D", "sa", "13A", "A", "AAAc"));
 		books.add(new Book("A12", "D", "sa", "13A", "A", "AAAd"));
 		books.add(new Book("A2", "F", "ha", "1A", "A", "AAAd"));
+		
+		customers.add(new Customer("1111", "Damn", "Next Door", 1029435));
+		customers.add(new Customer("2222", "Egg", "Over there", 3959591));
 	}
 	
 	@Override
@@ -202,7 +206,6 @@ public class LibraryController implements Initializable{
 				}
 			}
 		});
-		
 		//------------------------------------------------------------------------//
 		
 		

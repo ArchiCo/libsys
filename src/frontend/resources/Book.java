@@ -1,16 +1,28 @@
 package frontend.resources;
 
+import java.beans.Customizer;
+import java.sql.Date;
+
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class Book {
 
 	private SimpleStringProperty ID;
+	private SimpleStringProperty isbn;
 	private SimpleStringProperty title;
 	private SimpleStringProperty author;
 	private SimpleStringProperty shelf;
 	private SimpleStringProperty publisher;
 	private SimpleStringProperty genre;
+	private ObjectProperty<Date> lendDate;
+	private ObjectProperty<Date> dueDate;
+	private ObjectProperty<Date> returnDate;
+	private ObjectProperty<Customer> lentCustomer;
+	private SimpleIntegerProperty lendDuration;
+	private SimpleIntegerProperty lentTimes;
 	
 	public Book(String ID, String title, String author, String shelf, String publisher, String genre) {
 		this.ID = new SimpleStringProperty(ID);
@@ -85,6 +97,13 @@ public class Book {
 	}
 	public void setGenre(String newGenre) {
 		genre.set(newGenre);
+	}
+	
+	public ObjectProperty<Date> getLendDate() {
+		return lendDate;
+	}
+	public void setLendDate(ObjectProperty<Date> lendDate) {
+		this.lendDate = lendDate;
 	}
 	
 }
