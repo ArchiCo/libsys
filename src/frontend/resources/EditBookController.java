@@ -44,10 +44,17 @@ public class EditBookController implements Initializable{
 		    // do what you have to do
 		    stage.close();
 		}
+	}
+	
+	public void saveEvent(ActionEvent event) throws IOException {
 		
-		else if(event.getSource().equals(saveBtn)) {
+		//if the source of the event is the register button
+		if(event.getSource().equals(saveBtn) ) {
+			// get a handle to the stage
+		    Stage stage = (Stage) saveBtn.getScene().getWindow();
+		    // do what you have to do
+		    stage.close();
 		}
-
 	}
 
 

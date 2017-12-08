@@ -100,7 +100,7 @@
       <AnchorPane prefHeight="61.0" prefWidth="300.0" BorderPane.alignment="CENTER">
          <children>
             <Button fx:id="cancelBtn" layoutX="43.0" layoutY="15.0" mnemonicParsing="false" onAction="#closeEvent" text="Cancel" />
-            <Button fx:id="addbookBtn" layoutX="185.0" layoutY="15.0" mnemonicParsing="false" text="Add Book" />
+            <Button fx:id="addBookBtn" layoutX="185.0" layoutY="15.0" mnemonicParsing="false" onAction="#addEvent" text="Add Book" />
          </children>
       </AnchorPane>
    </bottom>

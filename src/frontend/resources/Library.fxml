@@ -41,28 +41,27 @@
                                                         <items>
                                                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="301.0" prefWidth="616.0">
                                                                <children>
-                                                                  <TableView prefHeight="425.0" prefWidth="616.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                  <TableView fx:id="bookTable" prefHeight="425.0" prefWidth="616.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                                     <columns>
-                                                                      <TableColumn prefWidth="95.00000154972076" text="ID" />
-                                                                      <TableColumn prefWidth="102.0000228881836" text="Title" />
-                                                                        <TableColumn prefWidth="127.00006103515625" text="Author" />
-                                                                        <TableColumn prefWidth="117.66665649414062" text="Shelf" />
-                                                                        <TableColumn prefWidth="85.00006103515625" text="Publisher" />
-                                                                        <TableColumn prefWidth="79.0" text="Genre" />
+                                                                      <TableColumn fx:id="bookIDCol" prefWidth="95.00000154972076" text="ID" />
+                                                                      <TableColumn fx:id="bookTitleCol" prefWidth="102.0000228881836" text="Title" />
+                                                                        <TableColumn fx:id="bookAuthorCol" prefWidth="127.00006103515625" text="Author" />
+                                                                        <TableColumn fx:id="bookShelfCol" prefWidth="117.66665649414062" text="Shelf" />
+                                                                        <TableColumn fx:id="bookPublisherCol" prefWidth="85.00006103515625" text="Publisher" />
+                                                                        <TableColumn fx:id="bookGenreCol" prefWidth="79.0" text="Genre" />
                                                                     </columns>
                                                                   </TableView>
                                                                </children>
                                                             </AnchorPane>
                                                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                                                                <children>
-                                                                  <TextField layoutX="335.0" layoutY="57.0" />
-                                                                  <Button layoutX="500.0" layoutY="47.0" mnemonicParsing="false" prefHeight="45.0" prefWidth="102.0" text="Search" />
-                                                                  <TextField layoutX="80.0" layoutY="14.0" />
+                                                                  <TextField fx:id="publisherFilterField" layoutX="335.0" layoutY="57.0" />
+                                                                  <TextField fx:id="IDFilterField" layoutX="80.0" layoutY="14.0" />
                                                                   <TextField layoutX="35.0" layoutY="435.0" text="Author" />
-                                                                  <TextField layoutX="80.0" layoutY="57.0" />
-                                                                  <TextField layoutX="80.0" layoutY="99.0" />
-                                                                  <TextField layoutX="335.0" layoutY="14.0" />
-                                                                  <TextField layoutX="335.0" layoutY="99.0" />
+                                                                  <TextField fx:id="titleFilterField" layoutX="80.0" layoutY="57.0" />
+                                                                  <TextField fx:id="authorFilterField" layoutX="80.0" layoutY="99.0" />
+                                                                  <TextField fx:id="shelfFilterField" layoutX="335.0" layoutY="14.0" />
+                                                                  <TextField fx:id="genreFilterField" layoutX="335.0" layoutY="99.0" />
                                                                   <Text layoutX="14.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ID" />
                                                                   <Text layoutX="14.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Title" />
                                                                   <Text layoutX="17.0" layoutY="116.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Author" />
@@ -187,10 +186,10 @@
                                 <items>
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="542.0" prefWidth="436.0">
                                        <children>
-                                          <TableView layoutX="-3.0" layoutY="15.0" prefHeight="554.0" prefWidth="279.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="15.0">
+                                          <TableView fx:id="customerTable" layoutX="-3.0" layoutY="15.0" prefHeight="554.0" prefWidth="279.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="15.0">
                                             <columns>
-                                              <TableColumn prefWidth="70.0" text="ID" />
-                                              <TableColumn prefWidth="161.3333282470703" text="Name" />
+                                              <TableColumn fx:id="customerIDCol" prefWidth="70.0" text="ID" />
+                                              <TableColumn fx:id="customerNameCol" prefWidth="161.3333282470703" text="Name" />
                                             </columns>
                                           </TableView>
                                        </children>
@@ -253,12 +252,11 @@
                                                                      <font>
                                                                         <Font name="Arial" size="12.0" />
                                                                      </font></Label>
-                                                                  <Button mnemonicParsing="false" text="Search" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                                                                   <Button fx:id="editCustomerBtn" mnemonicParsing="false" onAction="#editCustomerEvent" text="Edit Customer" GridPane.columnIndex="4" GridPane.rowIndex="4">
                                                                      <GridPane.margin>
                                                                         <Insets right="20.0" />
                                                                      </GridPane.margin></Button>
-                                                                  <TextField prefHeight="25.0" prefWidth="169.0" GridPane.rowIndex="4">
+                                                                  <TextField fx:id="cstNameField" prefHeight="25.0" prefWidth="169.0" promptText="Customer name" GridPane.rowIndex="4">
                                                                      <GridPane.margin>
                                                                         <Insets left="10.0" right="10.0" />
                                                                      </GridPane.margin></TextField>

@@ -21,7 +21,7 @@ public class AddCustomerController implements Initializable{
 	@FXML
 	private Button cancelBtn;
 	@FXML
-	private Button saveBtn;
+	private Button addCustomerBtn;
 	
 
 	
@@ -31,16 +31,17 @@ public class AddCustomerController implements Initializable{
 	public void closeEvent(ActionEvent event) throws IOException {
 		
 		//if the source of the event is the register button
-		if(event.getSource().equals(cancelBtn) ) {
 			// get a handle to the stage
 		    Stage stage = (Stage) cancelBtn.getScene().getWindow();
 		    // do what you have to do
 		    stage.close();
+	}
+	
+	public void addEvent(ActionEvent event) throws IOException{
+		if (event.getSource().equals(addCustomerBtn)) {
+	    Stage stage = (Stage) addCustomerBtn.getScene().getWindow();
+	    stage.close();
 		}
-		
-		else if(event.getSource().equals(saveBtn)) {
-		}	
-		
 	}
 
 
