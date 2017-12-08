@@ -10,4 +10,8 @@ public class Records {
 	LocalDate dateDue;
 	LocalDate dateReturned;
 	int fine;
+
+	public Records() {
+	}
+
 }

@@ -4,22 +4,22 @@ import java.util.ArrayList;
 
 public class Customer {
 	final String END_OF_LINE = System.lineSeparator();
-	private String libraryID;
+	private String username;
+	private String password;
+	private String ssn;
 	private String name;
 	private String address;
 	private int phoneNumber;
 	private ArrayList<Book> customerHistory;
 
-	public Customer(String libraryID, String name, String address, int phoneNumber) {
+	public Customer(String username, String password, String ssn, String name, String address, int phoneNumber) {
 		customerHistory = new ArrayList<Book>();
-		this.libraryID = libraryID;
+		this.setUsername(username);
+		this.setPassword(password);
+		this.setSsn(ssn);
 		this.name = name;
 		this.address = address;
 		this.phoneNumber = phoneNumber;
-	}
-
-	public String getLibraryID() {
-		return this.libraryID;
 	}
 
 	public String getName() {
@@ -56,7 +56,7 @@ public class Customer {
 
 		if (otherObject instanceof Customer) {
 			Customer otherCustomer = (Customer) otherObject;
-			boolean result = this.getLibraryID() == otherCustomer.getLibraryID();
+			boolean result = this.getUsername() == otherCustomer.getUsername();
 			return result;
 
 		} else {
@@ -64,11 +64,35 @@ public class Customer {
 		}
 	}
 
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getSsn() {
+		return ssn;
+	}
+
+	public void setSsn(String ssn) {
+		this.ssn = ssn;
+	}
+
 	public String toString() {
 		String result = "Name: " + getName() + "." + END_OF_LINE;
 		result += "Address: " + getAddress() + "." + END_OF_LINE;
 		result += "Phone Number: " + getPhoneNumber() + END_OF_LINE;
-		result += "Library ID: " + getLibraryID();
+		result += "ssn: " + getSsn();
 		return result;
 	}
 }
