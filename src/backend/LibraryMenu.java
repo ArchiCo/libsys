@@ -1,9 +1,10 @@
 package backend;
 
-import java.util.Collections;
 import java.util.InputMismatchException;
 import java.util.Random;
 import java.util.Scanner;
+
+import backend.FlexibleBookComparator.Order;
 
 public class LibraryMenu {
 	public static final int CUSTOMER_REGISTRATION = 1;
@@ -13,7 +14,9 @@ public class LibraryMenu {
 	public static final int ADD_BOOK = 5;
 	public static final int ADVANCE_TIME = 6;
 	public static final int SORT_BOOK = 7;
-	public static final int QUIT = 8;
+	public static final int PRINT_CUSTOMER_HISTORY = 8;
+	public static final int PRINT_POPULAR_BOOKS = 9;
+	public static final int QUIT = 11;
 	private Scanner sc;
 	private Library library;
 
@@ -53,10 +56,23 @@ public class LibraryMenu {
 				case ADVANCE_TIME:
 					advanceTime();
 					break;
+				case PRINT_CUSTOMER_HISTORY:
+					printCustomerHistory();
+					break;
+
 				case SORT_BOOK:
-					Collections.sort(this.library.listBooks, new BookComparator());
-					for (Book s : this.library.listBooks) {
-						System.out.println(s.getAuthor());
+					library.sortListBooksBy(Order.Author);
+					for (Book book : this.library.listBooks) {
+						System.out.println("");
+						System.out.println(book);
+					}
+					break;
+
+				case PRINT_POPULAR_BOOKS:
+					library.printPopularBooks();
+					for (Book popularBook : this.library.popularBooks) {
+						System.out.println("");
+						System.out.println(popularBook);
 					}
 					break;
 				case QUIT:
@@ -87,7 +103,9 @@ public class LibraryMenu {
 		System.out.println(" 5. Add book. ");
 		System.out.println(" 6. Advance time. ");
 		System.out.println(" 7. Sort books by author's name. ");
-		System.out.println(" 8. Quit the program.");
+		System.out.println(" 8. Print a customer's history");
+		System.out.println(" 9. Show what books are most popular. ");
+		System.out.println(" 11. Quit the program.");
 
 	}
 
@@ -122,6 +140,18 @@ public class LibraryMenu {
 		return null;
 	}
 
+	private void printCustomerHistory() {
+		System.out.print("Please show your library card: ");
+		String libraryID = sc.nextLine();
+		Customer foundCustomer = regCustomer.findCustomer(libraryID);
+		if (foundCustomer != null) {
+			System.out.println("");
+			customerHistory(foundCustomer);
+
+		} else
+			System.out.println("You are not registered in the system.");
+	}
+
 	private Book printBook() {
 		System.out.print("Please choose the book that you want to borrow and enter the book's ISBN-13: ");
 		String ISBN = sc.nextLine();
@@ -135,8 +165,10 @@ public class LibraryMenu {
 		return null;
 	}
 
-	private void printPopularBooks() {
-
+	private void customerHistory(Customer customer) {
+		for (Book book : customer.getCustomerHistory()) {
+			System.out.println(book);
+		}
 	}
 
 	private void lendBook() {
@@ -159,7 +191,6 @@ public class LibraryMenu {
 			int duration = sc.nextInt();
 			this.library.lendBook(foundCustomer, foundBook, duration);
 			System.out.println("Please return the book within " + duration + " days");
-			foundCustomer.addToCustomerHistory(foundBook);
 
 		}
 	}
@@ -205,7 +236,8 @@ public class LibraryMenu {
 		String publisher = sc.nextLine();
 		System.out.print("Please enter book's ISBN: ");
 		String isbn = sc.nextLine();
-		this.library.addBook(name, isbn, publisher, genre, "", author);
+		Book b = new Book(name, isbn, publisher, genre, "", author);
+		this.library.addBook(b);
 	}
 
 	private void advanceTime() {
