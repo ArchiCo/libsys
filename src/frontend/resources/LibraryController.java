@@ -186,8 +186,8 @@ public class LibraryController implements Initializable{
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 		///////////////////Details section of book////////////////////////
 		
-		Book chosenBook;
 		//---Apparently getselectionmodel is not as good as gettablerow()--- do i care
+		Book chosenBook;
 		chosenBook = bookTable.getSelectionModel().selectedItemProperty().get();
 		bookTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Book>() {
 
@@ -204,6 +204,7 @@ public class LibraryController implements Initializable{
 		});
 		
 		//------------------------------------------------------------------------//
+		
 		
 		
 		
