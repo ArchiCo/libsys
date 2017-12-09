@@ -4,7 +4,12 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
-import backend.*;
+
+import javax.swing.event.ChangeListener;
+import com.sun.xml.internal.ws.org.objectweb.asm.Label;
+
+import backend.Book;
+import backend.Customer;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -20,13 +25,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Labeled;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import javafx.scene.Node;
 
 public class LibraryController implements Initializable{
 
@@ -43,7 +45,7 @@ public class LibraryController implements Initializable{
 
 	//book directory table column initialize
 	@FXML
-	private TableView<Book> bookTable;
+	public TableView<Book> bookTable;
 	@FXML
 	private TableColumn<Book, String> bookIDCol;
 	@FXML
@@ -78,10 +80,38 @@ public class LibraryController implements Initializable{
 	@FXML
 	private TextField cstNameField;
 	
-	ObservableList<Book> books = FXCollections.observableArrayList();
-	ObservableList<Customer> customers = FXCollections.observableArrayList();
+	//Book details
+	@FXML 
+	private Label LIDLabel;
+	@FXML 
+	private Label ISBNLabel;
+	@FXML 
+	private Label titleLabel;
+	@FXML 
+	private Label authorLabel;
+	@FXML 
+	private Label genreLabel;
+	@FXML 
+	private Label publisherLabel;
+	@FXML 
+	private Label publicationDateLabel;
 
+	
+	public ObservableList<Book> books= FXCollections.observableArrayList();;
+	public ObservableList<Customer> customers = FXCollections.observableArrayList();
+	private SortedList<Book> sortedBooks;
+	private FilteredList<Book> filteredBooks;
+	
+	
+	ObjectProperty<Predicate<Book>> IDFilter = new SimpleObjectProperty<>();
+	ObjectProperty<Predicate<Book>> titleFilter = new SimpleObjectProperty<>();
+	ObjectProperty<Predicate<Book>> authorFilter = new SimpleObjectProperty<>();
+	ObjectProperty<Predicate<Book>> shelfFilter = new SimpleObjectProperty<>();
+	ObjectProperty<Predicate<Book>> publisherFilter = new SimpleObjectProperty<>();
+	ObjectProperty<Predicate<Book>> genreFilter = new SimpleObjectProperty<>();
+	
 	public LibraryController() {
+		
 		books.add(new Book("A1", "Dragons", "Nigel", "11A", "Longmaen", "revolutionary"));
 		books.add(new Book("asd", "porcodio","Salvatore","43B","Hey","fable"));
 		
@@ -91,14 +121,18 @@ public class LibraryController implements Initializable{
 		customers.add(new Customer("103","newname","yeeeea",5005043));
 		customers.add(new Customer("104","heeeey","stora ringvagen",32190));
 
+
+	}
 	
 
-		
-	}
 
  
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		
+		
+		
+		
 		// 0. Initialize the columns
 //The setCellValueFactory(...) that we set on the table columns are used to determine which field
 //inside the Book objects should be used for the particular column.
@@ -117,13 +151,7 @@ public class LibraryController implements Initializable{
 		
 		ObjectProperty<Predicate<Customer>> cstNameFilter = new SimpleObjectProperty<>();
 
-		
-		ObjectProperty<Predicate<Book>> IDFilter = new SimpleObjectProperty<>();
-		ObjectProperty<Predicate<Book>> titleFilter = new SimpleObjectProperty<>();
-		ObjectProperty<Predicate<Book>> authorFilter = new SimpleObjectProperty<>();
-		ObjectProperty<Predicate<Book>> shelfFilter = new SimpleObjectProperty<>();
-		ObjectProperty<Predicate<Book>> publisherFilter = new SimpleObjectProperty<>();
-		ObjectProperty<Predicate<Book>> genreFilter = new SimpleObjectProperty<>();
+
 		
 		cstNameFilter.bind(Bindings.createObjectBinding(() ->
 		customer -> customer.getName().toLowerCase().contains(cstNameField.getText().toLowerCase()),
@@ -185,77 +213,26 @@ public class LibraryController implements Initializable{
 				//return false; //no matches found
 			//});
 		}) ;
-		cstNameField.textProperty().addListener((observable,oldValue,newValue) -> {
-			
+		cstNameField.textProperty().addListener((observable,oldValue,newValue) -> {	
 		});
 		
 		titleFilterField.textProperty().addListener((observable,oldvalue,newvalue) -> {
-			//filteredBooks.setPredicate(books -> {
-				//if (newvalue.equals(null) || newvalue.isEmpty()) {
-					//return true;
-				//}
-				//String lowerCaseFilter = newvalue.toLowerCase();
-				//if (books.getTitle().toLowerCase().contains(lowerCaseFilter)) {
-					//return true;
-				//}
-				//return false;
-			//});
 		});
 		
 		authorFilterField.textProperty().addListener((observable,oldvalue,newvalue) -> {
-		//	filteredBooks.setPredicate(books -> {
-				//if (newvalue.equals(null) || newvalue.isEmpty()) {
-					//return true;
-				//}
-				//String lowerCaseFilter = newvalue.toLowerCase();
-				//if (books.getAuthor().toLowerCase().contains(lowerCaseFilter)) {
-					//return true;
-				//}
-				//return false;
-			//});
 		});
 		
 		shelfFilterField.textProperty().addListener((observable,oldvalue,newvalue) -> {
-			//filteredBooks.setPredicate(books -> {
-				//if (newvalue.equals(null) || newvalue.isEmpty()) {
-					//return true;
-				//}
-				//String lowerCaseFilter = newvalue.toLowerCase();
-				//if (books.getShelf().toLowerCase().contains(lowerCaseFilter)) {
-					//return true;
-				//}
-				//return false;
-			//});
 		});
 		
 		publisherFilterField.textProperty().addListener((observable,oldvalue,newvalue) -> {
-			//filteredBooks.setPredicate(books -> {
-				//if (newvalue.equals(null) || newvalue.isEmpty()) {
-					//return true;
-				//}
-				//String lowerCaseFilter = newvalue.toLowerCase();
-				//if (books.getPublisher().toLowerCase().contains(lowerCaseFilter)) {
-					//return true;
-				//}
-				//return false;
-			//});
 		});
 		
 		genreFilterField.textProperty().addListener((observable,oldvalue,newvalue) -> {
-			//filteredBooks.setPredicate(books -> {
-				//if (newvalue.equals(null) || newvalue.isEmpty()) {
-					//return true;
-				//}
-				//String lowerCaseFilter = newvalue.toLowerCase();
-				//if (books.getGenre().toLowerCase().contains(lowerCaseFilter)) {
-					//return true;
-				//}
-				//return false;
-			//});
 		});
 		
 		// 3. Wrap the FilteredList in a SortedList. 
-		SortedList<Book> sortedBooks = new SortedList<>(filteredBooks);
+		sortedBooks = new SortedList<>(filteredBooks);
 		SortedList<Customer> sortedCustomers= new SortedList<>(filteredCustomers);
 		 // 4. Bind the SortedList comparator to the TableView comparator.
 		sortedBooks.comparatorProperty().bind(bookTable.comparatorProperty());
@@ -265,7 +242,38 @@ public class LibraryController implements Initializable{
 		customerTable.setItems(sortedCustomers);
 		
 		//ObservableList(Arraylist) >> FilteredList >> Sortedlist(comparator bind) >> into table 
+		
+		
+		Book chosenBook;
+		chosenBook = bookTable.getSelectionModel().selectedItemProperty().get();
+		bookTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Book>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Book> observable, Book oldValue, Book newValue) {
+				if (newValue != null) {
+					LIDLabel.setText(newValue.getID());
+					titleLabel.setText(newValue.getTitle());
+					authorLabel.setText(newValue.getAuthor());
+					genreLabel.setText(newValue.getGenre());
+					publisherLabel.setText(newValue.getPublisher());
+				}
+			}
+		});
+		
 	}
+	
+	
+	
+	public void addBook(Book book) {		
+		this.books.add(book);
+	}
+	
+	public void refreshBookTable (){
+				ObservableList<Book> temp= FXCollections.observableArrayList();;
+				temp=books;
+		        bookTable.setItems(books);
+		    }
+
 	
 	 @FXML
 	 private void handleButtonAction(ActionEvent event) throws IOException {

@@ -1,6 +1,6 @@
 package frontend.resources;
 
-import java.awt.print.Book;
+import backend.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -24,10 +24,9 @@ public class AddBookController implements Initializable{
 	private Button addBookBtn;
 	
 
+	public LibraryController liController = new LibraryController();
 	
-	
-	
-	//registerBtn going to registration
+	//cancel button
 	public void closeEvent(ActionEvent event) throws IOException {
 		
 		//if the source of the event is the register button
@@ -37,8 +36,11 @@ public class AddBookController implements Initializable{
 		    stage.close();
 	}
 	
+	//add book button
 	public void addEvent(ActionEvent event) throws IOException{
 		if (event.getSource().equals(addBookBtn)) {
+			liController.addBook(new Book("asd", "asd", "asd", "asd", "asd", "asd"));
+			liController.refreshBookTable();
 	    Stage stage = (Stage) addBookBtn.getScene().getWindow();
 	    stage.close();
 		}
