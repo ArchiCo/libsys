@@ -16,23 +16,14 @@ import javafx.scene.layout.BorderPane;
 
 public class Frontend extends Application {
 	
-	
-	
-	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		try {
-		/*	BorderPane root = new BorderPane();
-			Scene scene = new Scene(root,400,400);
-			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-			
-			primaryStage.setTitle("Library System");
-			*/
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(getClass().getResource("/frontend/resources/Login.fxml"));
 			Parent root = loader.load();
-		    Scene scene = new Scene(root, 500, 400);
-		    primaryStage.setTitle("Login");
+		    Scene scene = new Scene(root);
+		    primaryStage.setTitle("Library System");
 			
 		    
 		    

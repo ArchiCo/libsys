@@ -36,61 +36,53 @@ import javafx.scene.Node;
 
 public class LibraryController implements Initializable{
 
+//ayy so compact and cozy
 	//Book buttons
-	@FXML
-	private Button logoutBtn, searchBtn, addBookBtn, editBookBtn, lendBookBtn;
+	@FXML private Button logoutBtn;
+	@FXML private Button lendBookBtn;
+	
 	//Customer buttons
-	@FXML
-	private Button editCustomBtn, addCustomBtn, returnBookBtn, customerSearchBtn;
+	@FXML private Button editCustomerBtn;
+	@FXML private Button addCustomerBtn;
+	@FXML private Button addBookBtn;
+	@FXML private Button editBookBtn;
+	@FXML private Button returnBookBtn;
 	//book directory table column initialize
-	@FXML
-	private TableView<Book> bookTable;
-	@FXML
-	private TableColumn<Book, String> IDCol;
-	@FXML
-	private TableColumn<Book, String> titleCol;
-	@FXML
-	private TableColumn<Book, String> authorCol;
-	@FXML
-	private TableColumn<Book, String> shelfCol;
-	@FXML
-	private TableColumn<Book, String> publisherCol;
-	@FXML
-	private TableColumn<Book, String> genreCol;
+	@FXML private TableView<Book> bookTable;
+	@FXML private TableColumn<Book, String> bookIDCol;
+	@FXML private TableColumn<Book, String> bookTitleCol;
+	@FXML private TableColumn<Book, String> bookAuthorCol;
+	@FXML private TableColumn<Book, String> bookShelfCol;
+	@FXML private TableColumn<Book, String> bookPublisherCol;
+	@FXML private TableColumn<Book, String> bookGenreCol;
+	
+	//customer directory table
+	@FXML private TableView<Customer> customerTable;
+	@FXML private TableColumn <Customer,String> customerIDCol;
+	@FXML private TableColumn <Customer,String> customerNameCol;
 	
 	//search textfields
-	@FXML
-	private TextField IDFilterField;
-	@FXML
-	private TextField titleFilterField;
-	@FXML
-	private TextField authorFilterField;
-	@FXML
-	private TextField shelfFilterField;
-	@FXML
-	private TextField publisherFilterField;
-	@FXML
-	private TextField genreFilterField;
+	@FXML private TextField IDFilterField;
+	@FXML private TextField titleFilterField;
+	@FXML private TextField authorFilterField;
+	@FXML private TextField shelfFilterField;
+	@FXML private TextField publisherFilterField;
+	@FXML private TextField genreFilterField;
+	@FXML private TextField custNameField;
 	
 	//Book details
-	@FXML 
-	private Label LIDLabel;
-	@FXML 
-	private Label ISBNLabel;
-	@FXML 
-	private Label titleLabel;
-	@FXML 
-	private Label authorLabel;
-	@FXML 
-	private Label genreLabel;
-	@FXML 
-	private Label publisherLabel;
-	@FXML 
-	private Label publicationDateLabel;
+	@FXML private Label LIDLabel;
+	@FXML private Label ISBNLabel;
+	@FXML private Label titleLabel;
+	@FXML private Label authorLabel;
+	@FXML private Label genreLabel;
+	@FXML private Label publisherLabel; 
+	@FXML private Label publicationDateLabel;
 	
 	//list of books arraylist
 	ObservableList<Book> books = FXCollections.observableArrayList();
 	ObservableList<Customer> customers = FXCollections.observableArrayList();
+	
 	
 	public LibraryController() {
 		
@@ -106,7 +98,14 @@ public class LibraryController implements Initializable{
 		books.add(new Book("A12", "D", "sa", "13A", "A", "AAAc"));
 		books.add(new Book("A12", "D", "sa", "13A", "A", "AAAd"));
 		books.add(new Book("A2", "F", "ha", "1A", "A", "AAAd"));
+		books.add(new Book("A1", "Dragons", "Nigel", "11A", "Longmaen", "revolutionary"));
+		books.add(new Book("asd", "porcodio","Salvatore","43B","Hey","fable"));
 		
+		customers.add(new Customer("100","Salvatore","street 1",400));
+		customers.add(new Customer("101","nigel","korsvagen",432432));
+		customers.add(new Customer("102","idontknow","via sassari 8",12121));
+		customers.add(new Customer("103","newname","yeeeea",5005043));
+		customers.add(new Customer("104","heeeey","stora ringvagen",32190));
 		customers.add(new Customer("1111", "Damn", "Next Door", 1029435));
 		customers.add(new Customer("2222", "Egg", "Over there", 3959591));
 	}
@@ -117,12 +116,17 @@ public class LibraryController implements Initializable{
 //The setCellValueFactory(...) that we set on the table columns are used to determine which field
 //inside the Book objects should be used for the particular column.
 		//if using ints and stuff, asObject() needs to be added after getproperty()
-		IDCol.setCellValueFactory(cellData -> cellData.getValue().getIDProperty());
-		titleCol.setCellValueFactory(cellData -> cellData.getValue().getTitleProperty());
-		authorCol.setCellValueFactory(cellData -> cellData.getValue().getAuthorProperty());
-		shelfCol.setCellValueFactory(cellData -> cellData.getValue().getShelfProperty());
-		publisherCol.setCellValueFactory(cellData -> cellData.getValue().getPublisherProperty());
-		genreCol.setCellValueFactory(cellData -> cellData.getValue().getGenreProperty());
+		
+		bookIDCol.setCellValueFactory(cellData -> cellData.getValue().getIDProperty());
+		bookTitleCol.setCellValueFactory(cellData -> cellData.getValue().getTitleProperty());
+		bookAuthorCol.setCellValueFactory(cellData -> cellData.getValue().getAuthorProperty());
+		bookShelfCol.setCellValueFactory(cellData -> cellData.getValue().getShelfProperty());
+		bookPublisherCol.setCellValueFactory(cellData -> cellData.getValue().getPublisherProperty());
+		bookGenreCol.setCellValueFactory(cellData -> cellData.getValue().getGenreProperty());
+		
+		customerIDCol.setCellValueFactory(cellData -> cellData.getValue().getLIDProperty());
+		customerNameCol.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
+		
 		
 		////////////////////////////////SEARCH FUNCTION BOOK TABLE///////////////////////////
 		ObjectProperty<Predicate<Book>> IDFilter = new SimpleObjectProperty<>();
@@ -132,6 +136,11 @@ public class LibraryController implements Initializable{
 		ObjectProperty<Predicate<Book>> publisherFilter = new SimpleObjectProperty<>();
 		ObjectProperty<Predicate<Book>> genreFilter = new SimpleObjectProperty<>();
 		
+		ObjectProperty<Predicate<Customer>> custNameFilter = new SimpleObjectProperty<>();
+		
+		custNameFilter.bind(Bindings.createObjectBinding(() ->
+		customer -> customer.getName().toLowerCase().contains(custNameField.getText().toLowerCase()),
+				custNameField.textProperty()));
 		IDFilter.bind(Bindings.createObjectBinding(() ->
 			book -> book.getID().toLowerCase().contains(IDFilterField.getText().toLowerCase()),
 				IDFilterField.textProperty()));
@@ -158,37 +167,44 @@ public class LibraryController implements Initializable{
 		
 		// 1. Wrap the ObservableList in a FilteredList (initially display all data) 	
 		FilteredList<Book> filteredBooks = new FilteredList<>(books, p -> true);
+		FilteredList<Customer> filteredCustomers = new FilteredList<>(customers, p -> true);
 		
+		// 2. Set the filter Predicate whenever the filter changes.
+		//bind the filters to each other so the predicates of each are put into 1
 		filteredBooks.predicateProperty().bind(Bindings.createObjectBinding(() ->
 				IDFilter.get().and(titleFilter.get().and(authorFilter.get().and(shelfFilter.get()
 						.and(publisherFilter.get().and(genreFilter.get()))))),
 				IDFilter, titleFilter, authorFilter, shelfFilter, publisherFilter, genreFilter));
 		
-		// 2. Set the filter Predicate whenever the filter changes.
+		filteredCustomers.predicateProperty().bind(Bindings.createObjectBinding(() ->
+		custNameFilter.get(),custNameFilter));
+		
+		
 		//addlistener calls changelistener.changed
 		IDFilterField.textProperty().addListener((observable,oldValue,newValue) -> {}) ;
-		
 		titleFilterField.textProperty().addListener((observable,oldvalue,newvalue) -> {});
-		
 		authorFilterField.textProperty().addListener((observable,oldvalue,newvalue) -> {});
-		
 		shelfFilterField.textProperty().addListener((observable,oldvalue,newvalue) -> {});
-		
-		publisherFilterField.textProperty().addListener((observable,oldvalue,newvalue) -> {});
-		
+		publisherFilterField.textProperty().addListener((observable,oldvalue,newvalue) -> {});	
 		genreFilterField.textProperty().addListener((observable,oldvalue,newvalue) -> {});
+		
+		custNameField.textProperty().addListener((observable,oldValue,newValue) -> {});
 		
 		// 3. Wrap the FilteredList in a SortedList. 
 		SortedList<Book> sortedBooks = new SortedList<>(filteredBooks);
+		SortedList<Customer> sortedCustomers= new SortedList<>(filteredCustomers);
 		
 		 // 4. Bind the SortedList comparator to the TableView comparator.
 		sortedBooks.comparatorProperty().bind(bookTable.comparatorProperty());
+		sortedCustomers.comparatorProperty().bind(customerTable.comparatorProperty());
 		
 		// 5. Add sorted (and filtered) data to the table.
 		bookTable.setItems(sortedBooks);
+		customerTable.setItems(sortedCustomers);
+		
 		//ObservableList(Arraylist) >> FilteredList >> Sortedlist(comparator bind) >> into table
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-		///////////////////Details section of book////////////////////////
+		///////////////////BOOK DETAILS////////////////////////
 		
 		//---Apparently getselectionmodel is not as good as gettablerow()--- do i care
 		Book chosenBook;
@@ -206,9 +222,7 @@ public class LibraryController implements Initializable{
 				}
 			}
 		});
-		//-----------------------------------------------------------------------//
-		
-		
+		/////////////////////////////////////////////////////////////////////////////////
 		
 		
 	}
@@ -225,7 +239,68 @@ public class LibraryController implements Initializable{
 			window.show();
 		}	
 	}
-	
+	@FXML
+	private void logoutEvent(ActionEvent event) throws IOException {
+		if(event.getSource().equals(logoutBtn) ) {
+			Stage window;
+			Parent registerParent = FXMLLoader.load(getClass().getResource("Login.fxml"));
+			Scene registerScene = new Scene(registerParent);
+			window = (Stage) logoutBtn.getScene().getWindow();
+			window.setScene(registerScene);
+			window.show();
+		}
+
+	}
+	@FXML
+	private void editCustomerEvent(ActionEvent event) throws IOException {
+		if(event.getSource().equals(editCustomerBtn) ) {
+			
+			Parent root = FXMLLoader.load(getClass().getResource("EditCustomer.fxml"));
+			Scene scene = new Scene(root);
+			Stage window = new Stage ();
+			window.setScene(scene);
+			window.show();
+		}
+	}
+	@FXML
+	private void addCustomerEvent(ActionEvent event) throws IOException {
+		 
+		 
+		if(event.getSource().equals(addCustomerBtn) ) {
+			
+			Parent root = FXMLLoader.load(getClass().getResource("AddCustomer.fxml"));
+			Scene scene = new Scene(root);
+			Stage window = new Stage ();
+			window.setScene(scene);
+			window.show();
+		}
+	}
+	@FXML
+	private void addBookEvent(ActionEvent event) throws IOException {
+		 
+		if(event.getSource().equals(addBookBtn)) {
+			
+			Parent root = FXMLLoader.load(getClass().getResource("AddBook.fxml"));
+			Scene scene = new Scene(root);
+			Stage window = new Stage ();
+			window.setScene(scene);
+			window.show();
+			
+		}
+	}
+	@FXML
+	private void editBookEvent(ActionEvent event) throws IOException {
+		 
+		if(event.getSource().equals(editBookBtn)) {
+			
+			Parent root = FXMLLoader.load(getClass().getResource("EditBook.fxml"));
+			Scene scene = new Scene(root);
+			Stage window = new Stage ();
+			window.setScene(scene);
+			window.show();
+		}
+	}
+	@FXML
 	public void showBookDetails(MouseEvent event) {
 		
 	}

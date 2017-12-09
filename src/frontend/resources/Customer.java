@@ -1,5 +1,7 @@
 package frontend.resources;
 
+import java.util.ArrayList;
+
 import com.sun.org.apache.bcel.internal.generic.I2D;
 
 import javafx.beans.property.IntegerProperty;
@@ -8,13 +10,20 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class Customer {
+	
+	final String END_OF_LINE = System.lineSeparator();
 
 	private SimpleStringProperty LID;
 	private SimpleStringProperty name;
 	private SimpleStringProperty address;
 	private SimpleIntegerProperty phoneNum;
 	
+	private ArrayList<Book> customerHistory;
+	
 	public Customer(String LID, String name, String address, int phoneNum) {
+		
+		customerHistory = new ArrayList<Book>();
+		
 		this.LID = new SimpleStringProperty(LID);
 		this.name = new SimpleStringProperty(name);
 		this.address = new SimpleStringProperty(address);
@@ -26,7 +35,7 @@ public class Customer {
 	public String getLID() {
 		return LID.get();
 	}
-	public StringProperty getLIDProp() {
+	public StringProperty getLIDProperty() {
 		return LID;
 	}
 	public void setLID(String newLID) {
@@ -37,7 +46,7 @@ public class Customer {
 	public String getName() {
 		return name.get();
 	}
-	public StringProperty getNameProp() {
+	public StringProperty getNameProperty() {
 		return name;
 	}
 	public void setNAme(String newName) {
@@ -48,7 +57,7 @@ public class Customer {
 	public String getAddress() {
 		return address.get();
 	}
-	public StringProperty getAddressProp() {
+	public StringProperty getAddressProperty() {
 		return address;
 	}
 	public void setAddress(String newAddress) {
@@ -59,11 +68,49 @@ public class Customer {
 	public int getPhoneNum() {
 		return phoneNum.get();
 	}
-	public IntegerProperty getPhoneNumProp() {
+	public IntegerProperty getPhoneNumProperty() {
 		return phoneNum;
 	}
 	public void setPhoneNum(int newPhoneNum) {
 		phoneNum.set(newPhoneNum);
+	}
+	
+	public ArrayList<Book> getCustomerHistory() {
+		return this.customerHistory;
+	}
+
+	public void addToCustomerHistory(Book book) {
+		boolean exists = false;
+		for (Book s : this.customerHistory) {
+			if (s.getID() == book.getID()) {
+				exists = true;
+				break;
+			}
+
+		}
+		if (exists == false) {
+			customerHistory.add(book);
+		}
+	}
+
+	public boolean equals(Object otherObject) {
+
+		if (otherObject instanceof Customer) {
+			Customer otherCustomer = (Customer) otherObject;
+			boolean result = this.getLID() == otherCustomer.getLID();
+			return result;
+
+		} else {
+			return false;
+		}
+	}
+
+	public String toString() {
+		String result = "Name: " + getName() + "." + END_OF_LINE;
+		result += "Address: " + getAddress() + "." + END_OF_LINE;
+		result += "Phone Number: " + getPhoneNum() + END_OF_LINE;
+		result += "Library ID: " + getLID();
+		return result;
 	}
 	
 }

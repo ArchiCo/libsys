@@ -9,6 +9,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class Book {
+	
+	final String END_OF_LINE = System.lineSeparator();
 
 	private SimpleStringProperty ID;
 	private SimpleStringProperty isbn;
@@ -99,11 +101,92 @@ public class Book {
 		genre.set(newGenre);
 	}
 	
+	//ISBN
+	public SimpleStringProperty isbnProperty() {
+		return this.isbn;
+	}
+	public String getIsbn() {
+		return this.isbnProperty().get();
+	}
+	public void setIsbn(final String newIsbn) {
+		this.isbnProperty().set(newIsbn);
+	}
+	
+	//Due Date
+	public ObjectProperty<Date> dueDateProperty() {
+		return this.dueDate;
+	}
+	public Date getDueDate() {
+		return this.dueDateProperty().get();
+	}
+	public void setDueDate(final Date dueDate) {
+		this.dueDateProperty().set(dueDate);
+	}
+	
+	//Return Date
+	public ObjectProperty<Date> returnDateProperty() {
+		return this.returnDate;
+	}
+	public Date getReturnDate() {
+		return this.returnDateProperty().get();
+	}
+	public void setReturnDate(final Date returnDate) {
+		this.returnDateProperty().set(returnDate);
+	}
+	
+	///////////////The getters and setters below need 1 more method each////////////
 	public ObjectProperty<Date> getLendDate() {
 		return lendDate;
 	}
 	public void setLendDate(ObjectProperty<Date> lendDate) {
 		this.lendDate = lendDate;
 	}
+	
+	public Customer getLentCustomer() {
+		return this.lentCustomer.get();
+	}
+
+	public int getLendDuration() {
+		return this.lendDuration.get();
+	}
+
+	public int getLentTimes() {
+		return this.lentTimes.get();
+	}
+
+	public void resetLentTimes() {
+		this.lentTimes.set(0);
+	}
+
+	public void setLentTimes(int newLent) {
+		this.lentTimes.set(newLent); 
+	}
+
+	public void bookPopularityUp() {
+		this.lentTimes.set(lentTimes.get() + 1);
+	}
+
+	public void setLentCustomer(Customer newCustomer) {
+		this.lentCustomer.set(newCustomer);
+	}
+
+	public void setLendDuration(int duration) {
+		this.lendDuration.set(duration);
+	}
+
+	public String toString() {
+		String result = "Title: " + getTitle() + "." + END_OF_LINE;
+		result += "ISBN-13: " + getIsbn() + "." + END_OF_LINE;
+		result += "Author: " + getAuthor() + END_OF_LINE;
+		result += "Genre: " + getGenre() + END_OF_LINE;
+		result += "Publisher: " + getPublisher() + END_OF_LINE;
+		result += "Shelf: " + getShelf() + END_OF_LINE;
+		result += "Popularity" + getLentTimes();
+		return result;
+	}
+	
+
+	
+
 	
 }
