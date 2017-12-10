@@ -8,6 +8,7 @@ import java.util.Observable;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -37,7 +38,7 @@ import javafx.scene.Node;
 
 
 public class LibraryController implements Initializable{
-
+	public static Customer chosenCustomer;
 	@FXML
 	private Button logoutBtn;
 	@FXML
@@ -52,18 +53,18 @@ public class LibraryController implements Initializable{
 	//book directory table column initialize
 	@FXML
 	public TableView<Book> bookTable;
+	@FXML 
+	public TableColumn<Book, String> bookIDCol;
 	@FXML
-	private TableColumn<Book, String> bookIDCol;
+	public TableColumn<Book, String> bookTitleCol;
 	@FXML
-	private TableColumn<Book, String> bookTitleCol;
+	public TableColumn<Book, String> bookAuthorCol;
 	@FXML
-	private TableColumn<Book, String> bookAuthorCol;
+	public TableColumn<Book, String> bookShelfCol;
 	@FXML
-	private TableColumn<Book, String> bookShelfCol;
+	public TableColumn<Book, String> bookPublisherCol;
 	@FXML
-	private TableColumn<Book, String> bookPublisherCol;
-	@FXML
-	private TableColumn<Book, String> bookGenreCol;
+	public TableColumn<Book, String> bookGenreCol;
 	
 	//customers directory table and columns
 	@FXML private TableView<Customer> customerTable;
@@ -102,6 +103,20 @@ public class LibraryController implements Initializable{
 	@FXML 
 	private Label publicationDateLabel;
 
+	//customer details
+	@FXML
+	private Label cstIDLabel;
+	@FXML
+	private Label cstNameLabel;
+	@FXML
+	private Label cstPhoneLabel;
+	@FXML
+	private Label cstAddressLabel;
+	@FXML
+	private Label cstDelayedLabel;
+	@FXML
+	private Label cstDelayedfeeLabel;
+	
 	
 	public ObservableList<Book> books= FXCollections.observableArrayList();;
 	public ObservableList<Customer> customers = FXCollections.observableArrayList();
@@ -121,11 +136,11 @@ public class LibraryController implements Initializable{
 		books.add(new Book("A1", "Dragons", "Nigel", "11A", "Longmaen", "revolutionary"));
 		books.add(new Book("asd", "porcodio","Salvatore","43B","Hey","fable"));
 		
-		customers.add(new Customer("100","Salvatore","street 1",400));
-		customers.add(new Customer("101","nigel","korsvagen",432432));
-		customers.add(new Customer("102","idontknow","via sassari 8",12121));
-		customers.add(new Customer("103","newname","yeeeea",5005043));
-		customers.add(new Customer("104","heeeey","stora ringvagen",32190));
+		customers.add(new Customer("100","Salvatore","street 1","400"));
+		customers.add(new Customer("101","nigel","korsvagen","432432"));
+		customers.add(new Customer("102","idontknow","via sassari 8","12121"));
+		customers.add(new Customer("103","newname","yeeeea","5005043"));
+		customers.add(new Customer("104","heeeey","stora ringvagen","32190"));
 
 
 	}
@@ -136,6 +151,8 @@ public class LibraryController implements Initializable{
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		
+		bookIDCol.setVisible(false);
+		System.out.println(bookIDCol.isVisible());
 		
 		
 		
@@ -266,17 +283,23 @@ public class LibraryController implements Initializable{
 			}
 		});
 		
-		Customer chosenCustomer;
 		chosenCustomer=customerTable.getSelectionModel().selectedItemProperty().get();
+		
 		customerTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Customer>() {
 			
 			@Override
 			public void changed(ObservableValue< ? extends Customer> observable, Customer oldValue, Customer newValue) {
-				
+				if (newValue!=null) {
+					System.out.println(chosenCustomer.toString());
+					cstIDLabel.setText(newValue.getLibraryID());
+					cstNameLabel.setText(newValue.getName());
+					cstPhoneLabel.setText(newValue.getPhoneNumber());
+					cstAddressLabel.setText(newValue.getAddress());
+//					cstDelayedLabel
+				}
 			}
 			
 		});
-		
 	}
 	
 	
@@ -284,13 +307,17 @@ public class LibraryController implements Initializable{
 	public void addBook(Book book) {		
 		this.books.add(book);
 	}
-	
-	public void refreshBookTable (){
-				ObservableList<Book> temp= FXCollections.observableArrayList();;
-				temp=books;
-		        bookTable.setItems(books);
-		    }
+	///////////////////////TRY/////////////////////
+	public static void refresh_table(TableView table){
+	       table.refresh();
+	}
 
+	public static void getSelection() {
+		
+	}
+	
+	
+	
 	
 	 @FXML
 	 private void handleButtonAction(ActionEvent event) throws IOException {

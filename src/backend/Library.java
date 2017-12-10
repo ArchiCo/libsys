@@ -12,9 +12,9 @@ public class Library {
 	public Library() {
 		this.listBooks = new ArrayList<Book>();
 		this.listLentBooks = new ArrayList<Book>();
-		book1 = new Book("Java", "978-0133761313", "Pearson", "Education", "", "Y. Daniel Liang");
-		book2 = new Book("Math", "978-0073383095", "McGraw-Hill Education", "Education", "", "Kenneth H Rosen");
-		book3 = new Book("Interfaces", "978-1449379704", "O'Reilly Media", "Education", "", "Jenifer Tidwell");
+		book1 = new Book("Java", "978-0133761313", "Pearson", "Education", "4", "Y. Daniel Liang");
+		book2 = new Book("Math", "978-0073383095", "McGraw-Hill Education", "Education", "2", "Kenneth H Rosen");
+		book3 = new Book("Interfaces", "978-1449379704", "O'Reilly Media", "Education", "1", "Jenifer Tidwell");
 		this.listBooks.add(book1);
 		this.listBooks.add(book2);
 		this.listBooks.add(book3);

@@ -98,7 +98,6 @@
                                                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                         </rowConstraints>
                                                          <children>
                                                             <Label prefHeight="26.0" prefWidth="103.0" text="LID">
@@ -126,12 +125,7 @@
                                                                   <Font size="16.0" />
                                                                </font>
                                                             </Label>
-                                                            <Label prefHeight="26.0" prefWidth="126.0" text="Publication Date" GridPane.rowIndex="5">
-                                                               <font>
-                                                                  <Font size="16.0" />
-                                                               </font>
-                                                            </Label>
-                                                            <Label prefHeight="26.0" prefWidth="103.0" text="Publisher" GridPane.rowIndex="6">
+                                                            <Label prefHeight="26.0" prefWidth="103.0" text="Publisher" GridPane.rowIndex="5">
                                                                <font>
                                                                   <Font size="16.0" />
                                                                </font>
@@ -141,8 +135,7 @@
                                                             <Label fx:id="titleLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                                             <Label fx:id="authorLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                                                             <Label fx:id="genreLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                                                            <Label fx:id="publicationDateLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                                                            <Label fx:id="publisherLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                                                            <Label fx:id="publisherLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                                                          </children>
                                                       </GridPane>
                                                       <TitledPane animated="false" layoutY="205.0" prefHeight="246.0" prefWidth="551.0" text="Lending records" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="205.0">
@@ -226,11 +219,11 @@
                                                                      <font>
                                                                         <Font name="System Bold" size="12.0" />
                                                                      </font></Label>
-                                                                  <Label text="Delayed" GridPane.columnIndex="3">
+                                                                  <Label text="Delayed" GridPane.columnIndex="2" GridPane.halignment="CENTER">
                                                                      <font>
                                                                         <Font name="Arial Bold" size="12.0" />
                                                                      </font></Label>
-                                                                  <Label text="Delayed Fee" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                                                                  <Label text="Delayed Fee" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1">
                                                                      <font>
                                                                         <Font name="Arial Bold" size="12.0" />
                                                                      </font></Label>
@@ -244,14 +237,10 @@
                                                                         <Font name="System Bold" size="12.0" />
                                                                      </font>
                                                                   </Label>
-                                                                  <Label text="Has dragon°" GridPane.columnIndex="1" />
-                                                                  <Label text="Has dragon°" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                                  <Label text="Has dragon°" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                                                  <Label text="Has dragon°" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                                                  <Label text="Book Cover" GridPane.columnIndex="3" GridPane.rowIndex="2">
-                                                                     <font>
-                                                                        <Font name="Arial" size="12.0" />
-                                                                     </font></Label>
+                                                                  <Label fx:id="cstIDLabel" text="Has dragon°" GridPane.columnIndex="1" />
+                                                                  <Label fx:id="cstNameLabel" text="Has dragon°" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                                  <Label fx:id="cstPhoneLabel" text="Has dragon°" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                                                  <Label fx:id="cstAddressLabel" text="Has dragon°" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                                                                   <Button fx:id="editCustomerBtn" mnemonicParsing="false" onAction="#editCustomerEvent" text="Edit Customer" GridPane.columnIndex="4" GridPane.rowIndex="4">
                                                                      <GridPane.margin>
                                                                         <Insets right="20.0" />
@@ -260,6 +249,8 @@
                                                                      <GridPane.margin>
                                                                         <Insets left="10.0" right="10.0" />
                                                                      </GridPane.margin></TextField>
+                                                                  <Label fx:id="cstDelayedLabel" text="Label" GridPane.columnIndex="3" GridPane.halignment="LEFT" />
+                                                                  <Label fx:id="cstDelayedfeeLabel" text="Label" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="1" />
                                                                </children>
                                                             </GridPane>
                                                          </children>

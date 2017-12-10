@@ -9,7 +9,8 @@ public class RegisteredCustomer {
 		this.customers = new ArrayList<Customer>();
 	}
 
-	public void registerCustomer(String libraryID, String name, String address, int phoneNumber) {
+	
+	public void registerCustomer(String libraryID, String name, String address, String phoneNumber) {
 		Customer newCustomer = new Customer(libraryID, name, address, phoneNumber);
 		this.customers.add(newCustomer);
 	}

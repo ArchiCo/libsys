@@ -11,10 +11,10 @@ public class Customer {
 	private SimpleStringProperty name;
 
 	private String address;
-	private int phoneNumber;
+	private String phoneNumber;
 	private ArrayList<Book> customerHistory;
 
-	public Customer(String libraryID, String name, String address, int phoneNumber) {
+	public Customer(String libraryID, String name, String address, String phoneNumber) {
 		customerHistory = new ArrayList<Book>();
 		
 		this.libraryID = new SimpleStringProperty(libraryID);
@@ -55,7 +55,7 @@ public class Customer {
 		return this.address;
 	}
 
-	public int getPhoneNumber() {
+	public String getPhoneNumber() {
 		return this.phoneNumber;
 	}
 
