@@ -82,38 +82,9 @@ public class LibraryController implements Initializable{
 	
 	private LibraryMenu libraryMenu;
 	
-	//list of books arraylist
-	ObservableList<Book> books = FXCollections.observableArrayList();
-	ObservableList<Customer> customers = FXCollections.observableArrayList();
-	
 	
 	public LibraryController(LibraryMenu libraryMenu) {
-	
 		this.libraryMenu = libraryMenu;
-		
-		books.add(new Book("A1", "Dragons", "Nigel", "11A", "Longmaen", "revolutionary"));
-		/*books.add(new Book("A2", "bumblebee", "God", "2AB", "Penguin",	"Religion"));
-		books.add(new Book("B2", "rawr", "hemp", "1337A", "Bleh", "New Age"));
-		books.add(new Book("G201", "Help meh", "Salvatore", "The Forbidden One", "The Illegal One", "Self Halp"));
-		books.add(new Book("T65", "Salva-me", "Salvatore", "Shelf of Help", "Help em All", "Troll"));
-		books.add(new Book("A1", "A", "a", "1A", "A", "AAA"));
-		books.add(new Book("A1", "B", "a", "1A", "A", "AAAb"));
-		books.add(new Book("A14", "B", "ra", "12A", "A", "AAAb"));
-		books.add(new Book("A13", "A", "ra", "12A", "A", "AAAc"));
-		books.add(new Book("A12", "D", "sa", "13A", "A", "AAAc"));
-		books.add(new Book("A12", "D", "sa", "13A", "A", "AAAd"));
-		books.add(new Book("A2", "F", "ha", "1A", "A", "AAAd"));
-		books.add(new Book("A1", "Dragons", "Nigel", "11A", "Longmaen", "revolutionary"));
-		books.add(new Book("asd", "porcodio","Salvatore","43B","Hey","fable"));
-		
-		customers.add(new Customer("100","Salvatore","street 1",400));
-		customers.add(new Customer("101","nigel","korsvagen",432432));
-		customers.add(new Customer("102","idontknow","via sassari 8",12121));
-		customers.add(new Customer("103","newname","yeeeea",5005043));
-		customers.add(new Customer("104","heeeey","stora ringvagen",32190));
-		customers.add(new Customer("1111", "Damn", "Next Door", 1029435));
-		customers.add(new Customer("2222", "Egg", "Over there", 3959591));
-		*/
 	}
 	
 	public LibraryController() {
@@ -127,7 +98,7 @@ public class LibraryController implements Initializable{
 //The setCellValueFactory(...) that we set on the table columns are used to determine which field
 //inside the Book objects should be used for the particular column.
 		//if using ints and stuff, asObject() needs to be added after getproperty()
-		LibraryMenu libraryMenu = new LibraryMenu();
+		this.libraryMenu = new LibraryMenu();
 		
 		bookIDCol.setCellValueFactory(cellData -> cellData.getValue().getIDProperty());
 		bookTitleCol.setCellValueFactory(cellData -> cellData.getValue().getTitleProperty());
@@ -304,7 +275,13 @@ public class LibraryController implements Initializable{
 		 
 		if(event.getSource().equals(addBookBtn)) {
 			
+			Book newBook = new Book("rawr","rawr","rawr","awr","awrw","rawr");
 			Parent root = FXMLLoader.load(getClass().getResource("AddBook.fxml"));
+			//FXMLLoader loader = new FXMLLoader();
+			//AddBookController addBookController = loader.getController();
+			
+			this.libraryMenu.getBooks().add(newBook);
+			
 			Scene scene = new Scene(root);
 			Stage window = new Stage ();
 			window.setScene(scene);

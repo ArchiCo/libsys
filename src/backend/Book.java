@@ -26,6 +26,10 @@ public class Book {
 	private SimpleIntegerProperty lendDuration;
 	private SimpleIntegerProperty lentTimes;
 	
+	
+	public Book() {
+		
+	}
 	public Book(String ID, String title, String author, String shelf, String publisher, String genre) {
 		this.ID = new SimpleStringProperty(ID);
 		this.title = new SimpleStringProperty(title);

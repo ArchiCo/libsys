@@ -57,7 +57,9 @@ public class LibraryMenu extends Application{
 		    Scene scene = new Scene(root);
 		    primaryStage.setTitle("Library System");
 
+		    //gets the controller of where the program starts
 			LoginController loginController = loader.getController();
+			//sets library menu reference to this instance of the librarymenu? i think
 			loginController.setLibraryMenu(this);
 		    
 		    primaryStage.setScene(scene);

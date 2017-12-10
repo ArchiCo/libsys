@@ -1,10 +1,11 @@
 package frontend.resources;
 
-import java.awt.print.Book;
+import backend.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import backend.LibraryMenu;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,33 +23,35 @@ public class AddBookController implements Initializable{
 	private Button cancelBtn;
 	@FXML
 	private Button addBookBtn;
-	
 
+	private Book newBook;
 	
 	
 	
-	//registerBtn going to registration
+	
 	public void closeEvent(ActionEvent event) throws IOException {
 		
-		//if the source of the event is the register button
-			// get a handle to the stage
 		    Stage stage = (Stage) cancelBtn.getScene().getWindow();
-		    // do what you have to do
 		    stage.close();
 	}
 	
 	public void addEvent(ActionEvent event) throws IOException{
 		if (event.getSource().equals(addBookBtn)) {
 	    Stage stage = (Stage) addBookBtn.getScene().getWindow();
+	    
 	    stage.close();
 		}
 	}
 
-
+	public void setBook(Book newBook) {
+		this.newBook = newBook;
+		
+		
+	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		
+	
 		
 	}
 	
