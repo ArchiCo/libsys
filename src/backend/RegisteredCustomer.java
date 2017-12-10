@@ -15,7 +15,7 @@ public class RegisteredCustomer {
 
 	public Customer findCustomer(String libraryID) {
 		for (Customer s : this.customers) {
-			if (s != null && s.getLibraryID().equals(libraryID))
+			if (s != null && s.getLID().equals(libraryID))
 				return s;
 		}
 		return null;

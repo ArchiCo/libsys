@@ -1,6 +1,7 @@
 package frontend;
 
 import frontend.resources.*;
+import backend.*;
 import java.util.Observable;
 
 import javafx.application.Application;
@@ -13,7 +14,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 
-
 public class Frontend extends Application {
 	
 	@Override
@@ -25,6 +25,7 @@ public class Frontend extends Application {
 		    Scene scene = new Scene(root);
 		    primaryStage.setTitle("Library System");
 			
+		    
 		    primaryStage.setScene(scene);
 			primaryStage.show();
 		} catch(Exception e) {

@@ -7,6 +7,7 @@ import java.util.Observable;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 
+import backend.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -79,15 +80,19 @@ public class LibraryController implements Initializable{
 	@FXML private Label publisherLabel; 
 	@FXML private Label publicationDateLabel;
 	
+	private LibraryMenu libraryMenu;
+	
 	//list of books arraylist
 	ObservableList<Book> books = FXCollections.observableArrayList();
 	ObservableList<Customer> customers = FXCollections.observableArrayList();
 	
 	
-	public LibraryController() {
+	public LibraryController(LibraryMenu libraryMenu) {
+	
+		this.libraryMenu = libraryMenu;
 		
 		books.add(new Book("A1", "Dragons", "Nigel", "11A", "Longmaen", "revolutionary"));
-		books.add(new Book("A2", "bumblebee", "God", "2AB", "Penguin",	"Religion"));
+		/*books.add(new Book("A2", "bumblebee", "God", "2AB", "Penguin",	"Religion"));
 		books.add(new Book("B2", "rawr", "hemp", "1337A", "Bleh", "New Age"));
 		books.add(new Book("G201", "Help meh", "Salvatore", "The Forbidden One", "The Illegal One", "Self Halp"));
 		books.add(new Book("T65", "Salva-me", "Salvatore", "Shelf of Help", "Help em All", "Troll"));
@@ -108,7 +113,13 @@ public class LibraryController implements Initializable{
 		customers.add(new Customer("104","heeeey","stora ringvagen",32190));
 		customers.add(new Customer("1111", "Damn", "Next Door", 1029435));
 		customers.add(new Customer("2222", "Egg", "Over there", 3959591));
+		*/
 	}
+	
+	public LibraryController() {
+	}
+
+	
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -116,6 +127,7 @@ public class LibraryController implements Initializable{
 //The setCellValueFactory(...) that we set on the table columns are used to determine which field
 //inside the Book objects should be used for the particular column.
 		//if using ints and stuff, asObject() needs to be added after getproperty()
+		LibraryMenu libraryMenu = new LibraryMenu();
 		
 		bookIDCol.setCellValueFactory(cellData -> cellData.getValue().getIDProperty());
 		bookTitleCol.setCellValueFactory(cellData -> cellData.getValue().getTitleProperty());
@@ -166,8 +178,8 @@ public class LibraryController implements Initializable{
 			genreFilterField.textProperty()));
 		
 		// 1. Wrap the ObservableList in a FilteredList (initially display all data) 	
-		FilteredList<Book> filteredBooks = new FilteredList<>(books, p -> true);
-		FilteredList<Customer> filteredCustomers = new FilteredList<>(customers, p -> true);
+		FilteredList<Book> filteredBooks = new FilteredList<>(libraryMenu.getBooks(), p -> true);
+		FilteredList<Customer> filteredCustomers = new FilteredList<>(libraryMenu.getCustomers(), p -> true);
 		
 		// 2. Set the filter Predicate whenever the filter changes.
 		//bind the filters to each other so the predicates of each are put into 1
@@ -220,13 +232,25 @@ public class LibraryController implements Initializable{
 					genreLabel.setText(newValue.getGenre());
 					publisherLabel.setText(newValue.getPublisher());
 				}
+				else {
+					LIDLabel.setText("");
+					titleLabel.setText("");
+					authorLabel.setText("");
+					genreLabel.setText("");
+					publisherLabel.setText("");
+				}
 			}
 		});
 		/////////////////////////////////////////////////////////////////////////////////
 		
 		
 	}
+	public void setLibraryMenu(LibraryMenu libraryMenu) {
+		this.libraryMenu = libraryMenu;
+	}
 	
+	
+	@FXML
 	public void handleButtonAction(ActionEvent event) throws IOException {
 		Stage window;
 		
@@ -304,6 +328,7 @@ public class LibraryController implements Initializable{
 	public void showBookDetails(MouseEvent event) {
 		
 	}
+
 	
 	
 	

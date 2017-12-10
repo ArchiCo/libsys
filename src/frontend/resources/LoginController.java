@@ -4,6 +4,13 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javax.sound.midi.ControllerEventListener;
+
+import com.sun.glass.ui.TouchInputSupport;
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.Loader;
+
+import backend.Library;
+import backend.LibraryMenu;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,16 +29,22 @@ public class LoginController implements Initializable{
 	@FXML
 	private Button registerBtn;
 	
-
+	private LibraryMenu libraryMenu;
 	
+	public LoginController() {
+		
+	}
 	
+	public void setLibraryMenu(LibraryMenu libraryMenu) {
+		this.libraryMenu = libraryMenu;
+	}
 	
 	//registerBtn going to registration
 	public void changeScreenBtn(ActionEvent event) throws IOException {
 		
 		//if the source of the event is the register button
 		if(event.getSource().equals(registerBtn) ) {
-			Stage window;
+		Stage window;
 			//load the registration scene into a parent
 		Parent registerParent = FXMLLoader.load(getClass().getResource("Registration.fxml"));
 		//make a new scene with the loaded fxml
@@ -46,8 +59,9 @@ public class LoginController implements Initializable{
 		else if(event.getSource().equals(loginBtn)) {
 			
 			//loadWindow("Library.fxml", "Book Directory");
-			 Stage window;
-			Parent bookParent = FXMLLoader.load(getClass().getResource("Library.fxml"));
+			Stage window;
+			Parent bookParent = FXMLLoader.load(getClass().getResource("/frontend/resources/Library.fxml"));
+			
 			Scene bookScene = new Scene(bookParent);
 			
 			window = (Stage) (loginBtn.getScene().getWindow());
@@ -57,6 +71,7 @@ public class LoginController implements Initializable{
 		}	
 		
 	}
+	
 	
 	public void loadWindow(String location, String title) throws IOException {
 		

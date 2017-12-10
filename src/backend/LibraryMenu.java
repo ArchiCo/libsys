@@ -1,5 +1,7 @@
 package backend;
 
+import frontend.*;
+import frontend.resources.*;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.InputMismatchException;
@@ -9,8 +11,22 @@ import java.util.Scanner;
 import java.util.TimeZone;
 
 import backend.FlexibleBookComparator.Order;
+import frontend.resources.LibraryController;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXMLLoader;
+import java.util.Observable;
 
-public class LibraryMenu {
+import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXMLLoader;
+import javafx.stage.Stage;
+import sun.security.jgss.LoginConfigImpl;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
+
+public class LibraryMenu extends Application{
 	public static final int CUSTOMER_REGISTRATION = 1;
 	public static final int PRINT_CUSTOMER = 2;
 	public static final int LEND_BOOK = 3;
@@ -25,14 +41,46 @@ public class LibraryMenu {
 	private Library library;
 
 	private RegisteredCustomer regCustomer;
+	private LoginController loginController;
+	private LibraryController libraryController;
+	
+	private Stage primaryStage;
+	
+	
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+		try {
+			this.primaryStage = primaryStage;
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(LibraryMenu.class.getResource("/frontend/resources/Login.fxml"));
+			Parent root = loader.load();
+		    Scene scene = new Scene(root);
+		    primaryStage.setTitle("Library System");
 
+			LoginController loginController = loader.getController();
+			loginController.setLibraryMenu(this);
+		    
+		    primaryStage.setScene(scene);
+			primaryStage.show();
+			
+						
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public LibraryMenu() {
 		this.library = new Library();
 		this.regCustomer = new RegisteredCustomer();
+		this.libraryController = new LibraryController(this);
+		
 		sc = new Scanner(System.in);
+		
 	}
 
 	public void run() {
+		
 		int option = 0;
 		do {
 			try {
@@ -66,7 +114,7 @@ public class LibraryMenu {
 
 				case SORT_BOOK:
 					library.sortListBooksBy(Order.Author);
-					for (Book book : this.library.listBooks) {
+					for (Book book : this.library.books) {
 						System.out.println("");
 						System.out.println(book);
 					}
@@ -94,6 +142,13 @@ public class LibraryMenu {
 			}
 		} while (option != QUIT);
 
+	}
+	
+	public ObservableList<Book> getBooks() {
+		return library.books;
+	}
+	public ObservableList<Customer> getCustomers() {
+		return library.customers;
 	}
 
 	private void printMenuOptions() {
@@ -214,7 +269,7 @@ public class LibraryMenu {
 		System.out.print("Please enter author's name: ");
 		String authorName = sc.nextLine();
 		int counter = 0;
-		for (Book s : this.library.listBooks) {
+		for (Book s : this.library.books) {
 			if (s != null && s.getAuthor().contains(authorName)) {
 				System.out.println();
 				System.out.println("===============================");

@@ -1,5 +1,6 @@
 package initializer;
 
+import backend.LibraryMenu;
 import frontend.Frontend;
 import javafx.application.Application;
 

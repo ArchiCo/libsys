@@ -2,45 +2,87 @@ package backend;
 
 import java.util.ArrayList;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 public class Customer {
+	
 	final String END_OF_LINE = System.lineSeparator();
-	private String libraryID;
-	private String name;
-	private String address;
-	private int phoneNumber;
-	private ArrayList<Book> customerHistory;
 
-	public Customer(String libraryID, String name, String address, int phoneNumber) {
-		this.libraryID = libraryID;
-		this.name = name;
-		this.address = address;
-		this.phoneNumber = phoneNumber;
+	private SimpleStringProperty LID;
+	private SimpleStringProperty name;
+	private SimpleStringProperty address;
+	private SimpleIntegerProperty phoneNum;
+	
+	private ObservableList<Book> customerHistory;
+	
+	public Customer(String LID, String name, String address, int phoneNum) {
+		
+		customerHistory = FXCollections.observableArrayList();
+		
+		this.LID = new SimpleStringProperty(LID);
+		this.name = new SimpleStringProperty(name);
+		this.address = new SimpleStringProperty(address);
+		this.phoneNum = new SimpleIntegerProperty(phoneNum);
+		
 	}
-
-	public String getLibraryID() {
-		return this.libraryID;
+	
+	//LID
+	public String getLID() {
+		return LID.get();
 	}
-
+	public StringProperty getLIDProperty() {
+		return LID;
+	}
+	public void setLID(String newLID) {
+		LID.set(newLID);
+	}
+	
+	//name
 	public String getName() {
-		return this.name;
+		return name.get();
 	}
-
+	public StringProperty getNameProperty() {
+		return name;
+	}
+	public void setNAme(String newName) {
+		name.set(newName);
+	}
+	
+	//address
 	public String getAddress() {
-		return this.address;
+		return address.get();
 	}
-
-	public int getPhoneNumber() {
-		return this.phoneNumber;
+	public StringProperty getAddressProperty() {
+		return address;
 	}
-
-	public ArrayList<Book> getCustomerHistory() {
+	public void setAddress(String newAddress) {
+		address.set(newAddress);
+	}
+	
+	//phone
+	public int getPhoneNum() {
+		return phoneNum.get();
+	}
+	public IntegerProperty getPhoneNumProperty() {
+		return phoneNum;
+	}
+	public void setPhoneNum(int newPhoneNum) {
+		phoneNum.set(newPhoneNum);
+	}
+	
+	public ObservableList<Book> getCustomerHistory() {
 		return this.customerHistory;
 	}
 
 	public void addToCustomerHistory(Book book) {
 		boolean exists = false;
 		for (Book s : this.customerHistory) {
-			if (s.getLiid() == book.getLiid()) {
+			if (s.getID() == book.getID()) {
 				exists = true;
 				break;
 			}
@@ -55,7 +97,7 @@ public class Customer {
 
 		if (otherObject instanceof Customer) {
 			Customer otherCustomer = (Customer) otherObject;
-			boolean result = this.getLibraryID() == otherCustomer.getLibraryID();
+			boolean result = this.getLID() == otherCustomer.getLID();
 			return result;
 
 		} else {
@@ -64,10 +106,11 @@ public class Customer {
 	}
 
 	public String toString() {
-		String result = "Name: " + getName() + END_OF_LINE;
-		result += "Address: " + getAddress() + END_OF_LINE;
-		result += "Phone Number: " + getPhoneNumber() + END_OF_LINE;
-		result += "Library ID: " + getLibraryID();
+		String result = "Name: " + getName() + "." + END_OF_LINE;
+		result += "Address: " + getAddress() + "." + END_OF_LINE;
+		result += "Phone Number: " + getPhoneNum() + END_OF_LINE;
+		result += "Library ID: " + getLID();
 		return result;
 	}
+	
 }
