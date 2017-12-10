@@ -14,17 +14,27 @@ import backend.FlexibleBookComparator.Order;
 import frontend.resources.LibraryController;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+
 import java.util.Observable;
+import java.util.Optional;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 import sun.security.jgss.LoginConfigImpl;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 
 public class LibraryMenu extends Application{
 	public static final int CUSTOMER_REGISTRATION = 1;
@@ -298,6 +308,7 @@ public class LibraryMenu extends Application{
 		String isbn = sc.nextLine();
 		Book b = new Book(name, isbn, publisher, genre, "", author);
 		this.library.addBook(b);
+
 	}
 
 	private void advanceTime() {

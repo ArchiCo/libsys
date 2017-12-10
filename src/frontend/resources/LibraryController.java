@@ -3,7 +3,6 @@ package frontend.resources;
 import frontend.*;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Observable;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 
@@ -13,8 +12,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
@@ -24,16 +21,20 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Cell;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import javafx.scene.Node;
+import javafx.geometry.Insets;
+import java.util.Optional;
+import javafx.util.Pair;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.layout.GridPane;
 
 public class LibraryController implements Initializable{
 
@@ -275,20 +276,61 @@ public class LibraryController implements Initializable{
 		 
 		if(event.getSource().equals(addBookBtn)) {
 			
-			Book newBook = new Book("rawr","rawr","rawr","awr","awrw","rawr");
-			Parent root = FXMLLoader.load(getClass().getResource("AddBook.fxml"));
-			//FXMLLoader loader = new FXMLLoader();
-			//AddBookController addBookController = loader.getController();
+			TextInputDialog dialog = new TextInputDialog("walter");
+			dialog.setTitle("Text Input Dialog");
+			dialog.setHeaderText("Look, a Text Input Dialog");
+			dialog.setContentText("Please enter your name:");
+
+			GridPane grid = new GridPane();
+			grid.setHgap(10);
+			grid.setVgap(10);
+			grid.setPadding(new Insets(20, 150, 10, 10));
+
+			TextField ID = new TextField();
+			ID.setPromptText("ID");
 			
-			this.libraryMenu.getBooks().add(newBook);
+			TextField Title = new TextField();
+			Title.setPromptText("Title");
 			
-			Scene scene = new Scene(root);
-			Stage window = new Stage ();
-			window.setScene(scene);
-			window.show();
+			TextField Author = new TextField();
+			Author.setPromptText("Surname");
 			
-		}
+			TextField Shelf = new TextField();
+			Shelf.setPromptText("Shelf");
+			
+			TextField Publisher = new TextField();
+			Publisher.setPromptText("Publisher");
+			
+			TextField Genre = new TextField();
+			Genre.setPromptText("Genre");
+
+			grid.add(new Label("ID:"), 0, 0);
+			grid.add(ID, 1, 0);
+			
+			grid.add(new Label("Title:"), 0, 1);
+			grid.add(Title, 1, 1);
+			
+			grid.add(new Label("Author:"), 0, 2);
+			grid.add(Author, 1, 2);
+			
+			grid.add(new Label("Shelf:"), 0, 3);
+			grid.add(Shelf, 1, 3);
+			
+			grid.add(new Label("Publisher:"), 0, 4);
+			grid.add(Publisher, 1, 4);
+			
+			grid.add(new Label("Genre:"), 0, 5);
+			grid.add(Genre, 1, 5);
+
+			dialog.getDialogPane().setContent(grid);
+			// Traditional way to get the response value.
+			Optional<String> result = dialog.showAndWait();
+			if (result.isPresent()){
+				Book newBook = new Book(ID.getText(),Title.getText(),Author.getText(),Shelf.getText(),Publisher.getText(),Genre.getText());
+				this.libraryMenu.getBooks().add(newBook);}
+			}	
 	}
+	
 	@FXML
 	private void editBookEvent(ActionEvent event) throws IOException {
 		 
