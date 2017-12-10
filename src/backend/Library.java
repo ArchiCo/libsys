@@ -36,9 +36,9 @@ public class Library {
 		books.add(new Book("A2", "F", "ha", "1A", "A", "AAAd"));
 		books.add(new Book("A1", "Dragons", "Nigel", "11A", "Longmaen", "revolutionary"));
 		books.add(new Book("asd", "porcodio","Salvatore","43B","Hey","fable"));
-		books.add(new Book("Java", "978-0133761313", "Pearson", "Education", "", "Y. Daniel Liang"));
-		books.add(new Book("Math", "978-0073383095", "McGraw-Hill Education", "Education", "", "Kenneth H Rosen"));
-		books.add(new Book("Interfaces", "978-1449379704", "O'Reilly Media", "Education", "", "Jenifer Tidwell"));
+		books.add(new Book("978-0133761313", "Java", "Y. Daniel Liang","32H", "Pearson", "Education"));
+		books.add(new Book("978-0073383095", "Math", "Kenneth H Rosen","65N", "McGraw-Hill Education", "Education"));
+		books.add(new Book("978-1449379704", "Interfaces" , "Jeniffer Tidwell","13X", "O'Reilly Media", "Education"));
 		
 		customers.add(new Customer("100","Salvatore","street 1",400));
 		customers.add(new Customer("101","nigel","korsvagen",432432));
