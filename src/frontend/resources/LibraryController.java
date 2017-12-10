@@ -1,18 +1,17 @@
 package frontend.resources;
 
+import frontend.*;
+import backend.*;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Observable;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 
-import javax.swing.event.ChangeListener;
-import com.sun.xml.internal.ws.org.objectweb.asm.Label;
-
-import backend.Book;
-import backend.Customer;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -25,10 +24,17 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Cell;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.scene.Node;
+
 
 public class LibraryController implements Initializable{
 
@@ -245,12 +251,12 @@ public class LibraryController implements Initializable{
 		
 		
 		Book chosenBook;
-		chosenBook = bookTable.getSelectionModel().selectedItemProperty().get();
+		chosenBook= bookTable.getSelectionModel().selectedItemProperty().get();
 		bookTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Book>() {
-
+			
 			@Override
-			public void changed(ObservableValue<? extends Book> observable, Book oldValue, Book newValue) {
-				if (newValue != null) {
+			public void changed (ObservableValue< ? extends Book> observable, Book oldValue, Book newValue) {
+				if (newValue !=null) {
 					LIDLabel.setText(newValue.getID());
 					titleLabel.setText(newValue.getTitle());
 					authorLabel.setText(newValue.getAuthor());
@@ -258,6 +264,17 @@ public class LibraryController implements Initializable{
 					publisherLabel.setText(newValue.getPublisher());
 				}
 			}
+		});
+		
+		Customer chosenCustomer;
+		chosenCustomer=customerTable.getSelectionModel().selectedItemProperty().get();
+		customerTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Customer>() {
+			
+			@Override
+			public void changed(ObservableValue< ? extends Customer> observable, Customer oldValue, Customer newValue) {
+				
+			}
+			
 		});
 		
 	}

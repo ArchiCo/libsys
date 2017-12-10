@@ -136,13 +136,13 @@
                                                                   <Font size="16.0" />
                                                                </font>
                                                             </Label>
-                                                            <Label text="Label" GridPane.columnIndex="1" />
-                                                            <Label text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                            <Label text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                                            <Label text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                                            <Label text="Label" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                                                            <Label text="Label" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                                                            <Label text="Label" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                                                            <Label fx:id="LIDLabel" text="Label" GridPane.columnIndex="1" />
+                                                            <Label fx:id="ISBNLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                            <Label fx:id="titleLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                                            <Label fx:id="authorLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                                            <Label fx:id="genreLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                                            <Label fx:id="publicationDateLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                                            <Label fx:id="publisherLabel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                                                          </children>
                                                       </GridPane>
                                                       <TitledPane animated="false" layoutY="205.0" prefHeight="246.0" prefWidth="551.0" text="Lending records" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="205.0">
