@@ -1,12 +1,8 @@
 package backend;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.InputMismatchException;
-import java.util.Locale;
 import java.util.Random;
 import java.util.Scanner;
-import java.util.TimeZone;
 
 import backend.FlexibleBookComparator.Order;
 
@@ -24,11 +20,8 @@ public class LibraryMenu {
 	private Scanner sc;
 	private Library library;
 
-	private RegisteredCustomer regCustomer;
-
 	public LibraryMenu() {
 		this.library = new Library();
-		this.regCustomer = new RegisteredCustomer();
 		sc = new Scanner(System.in);
 	}
 
@@ -46,7 +39,7 @@ public class LibraryMenu {
 					registerCustomer();
 					break;
 				case PRINT_CUSTOMER:
-					printCustomer();
+					findCustomer();
 					break;
 				case LEND_BOOK:
 					lendBook();
@@ -66,19 +59,17 @@ public class LibraryMenu {
 
 				case SORT_BOOK:
 					library.sortListBooksBy(Order.Author);
-					for (Book book : this.library.listBooks) {
+					for (Book book : this.library.getListBooks()) {
 						System.out.println("");
 						System.out.println(book);
 					}
 					break;
 
-				case PRINT_POPULAR_BOOKS:
-					library.printPopularBooks();
-					for (Book popularBook : this.library.popularBooks) {
-						System.out.println("");
-						System.out.println(popularBook);
-					}
-					break;
+				/*
+				 * case PRINT_POPULAR_BOOKS: library.printPopularBooks(); for (Book popularBook
+				 * : this.library.getPopularBooks()) { System.out.println("");
+				 * System.out.println(popularBook); } break;
+				 */
 				case QUIT:
 					System.out.println();
 					break;
@@ -124,17 +115,17 @@ public class LibraryMenu {
 		String libraryID;
 		do {
 			libraryID = generateRandomChars("ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890", 4);
-		} while (this.regCustomer.findCustomer(libraryID) != null);
-		this.regCustomer.registerCustomer(libraryID, name, address, phoneNumber);
+		} while (this.library.findCustomer(libraryID) != null);
+		this.library.registerCustomer(libraryID, name, address, phoneNumber);
 		System.out.println("Here's your library card!");
-		Customer foundCustomer = regCustomer.findCustomer(libraryID);
+		Customer foundCustomer = library.findCustomer(libraryID);
 		System.out.print(foundCustomer);
 	}
 
-	private Customer printCustomer() {
+	private Customer findCustomer() {
 		System.out.print("Please show your library card: ");
 		String libraryID = sc.nextLine();
-		Customer foundCustomer = regCustomer.findCustomer(libraryID);
+		Customer foundCustomer = library.findCustomer(libraryID);
 		if (foundCustomer != null) {
 			System.out.print("");
 			System.out.print(foundCustomer);
@@ -147,7 +138,7 @@ public class LibraryMenu {
 	private void printCustomerHistory() {
 		System.out.print("Please show your library card: ");
 		String libraryID = sc.nextLine();
-		Customer foundCustomer = regCustomer.findCustomer(libraryID);
+		Customer foundCustomer = library.findCustomer(libraryID);
 		if (foundCustomer != null) {
 			System.out.println("");
 			customerHistory(foundCustomer);
@@ -176,45 +167,53 @@ public class LibraryMenu {
 	}
 
 	private void lendBook() {
-		Customer foundCustomer = printCustomer();
-		int borrowDays = 30;
-		TimeZone timeZone = TimeZone.getTimeZone("UTC+1");
-		Calendar calendar = Calendar.getInstance(timeZone);
-		SimpleDateFormat bookDate = new SimpleDateFormat("EE dd MMM yyyy", Locale.ENGLISH);
-		bookDate.setTimeZone(timeZone);
-
+		Customer foundCustomer = findCustomer();
 		System.out.println("");
 		if (foundCustomer != null) {
 			searchBook();
 			Book foundBook = printBook();
 			System.out.println("");
-			System.out.println("Today's date is " + bookDate.format(calendar.getTime()) + ".");
+			System.out.println("Today's date is " + this.library.getDate() + ".");
 			System.out.println("");
-			this.library.lendBook(foundCustomer, foundBook, borrowDays);
-			calendar.add(Calendar.DATE, borrowDays);
-			System.out.println("Please return the book " + bookDate.format(calendar.getTime()) + ".");
+			this.library.lendBook(foundCustomer, foundBook);
+			System.out.println("Please return the book in 2 weeks.");
 
 		}
 	}
 
 	private void returnBook() {
-		Customer foundCustomer = printCustomer();
+		Customer foundCustomer = findCustomer();
 		System.out.println("");
 		if (foundCustomer != null) {
-			Book book = this.library.returnBook(foundCustomer);
-			int exceededDays = this.library.getAdvancedDays() - book.getLendDuration();
-			if (exceededDays > 0)
-				System.out.println("You have exceeded borrowing duration by " + exceededDays + " days.");
-			System.out.println("You have been charged " + this.library.lateReturnCharge(book) + " SEK.");
-			this.library.retrieveBook(book);
+			Book foundLentBook = findLentBook();
+			if (foundLentBook != null) {
+				Records foundRecord = this.library.findRecord(foundCustomer, foundLentBook);
+				this.library.returnBook(foundLentBook, foundRecord);
+				long exceededDays = this.library.exceededDays(foundRecord);
+				if (exceededDays > 0) {
+					System.out.println("You have exceeded borrowing duration by " + exceededDays + " days.");
+					System.out.println("You have been charged " + foundRecord.getFine() + " SEK.");
+				}
+			}
 		}
+	}
+
+	private Book findLentBook() {
+		System.out.print("Please enter the book's ID: ");
+		int lid = sc.nextInt();
+		for (Book s : this.library.getListLentBooks()) {
+			if (s != null && s.getLid() == lid) {
+				return s;
+			}
+		}
+		return null;
 	}
 
 	private int searchBook() {
 		System.out.print("Please enter author's name: ");
 		String authorName = sc.nextLine();
 		int counter = 0;
-		for (Book s : this.library.listBooks) {
+		for (Book s : this.library.getListBooks()) {
 			if (s != null && s.getAuthor().contains(authorName)) {
 				System.out.println();
 				System.out.println("===============================");

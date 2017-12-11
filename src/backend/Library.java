@@ -1,48 +1,71 @@
 package backend;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 
 import backend.FlexibleBookComparator.Order;
 
 public class Library {
-	protected ArrayList<Book> listBooks;
-	protected ArrayList<Book> listLentBooks;
-	protected ArrayList<Book> popularBooks;
+	private ArrayList<Book> listBooks;
+	private ArrayList<Book> listLentBooks;
+	private ArrayList<Book> popularBooks;
+	private ArrayList<Customer> customers;
+	private ArrayList<Records> records;
 	private Book book1, book2, book3;
-	private static int days;
-	private final static int DAILY_OVERDUE_FEE = 2;
+	private final static long DAILY_OVERDUE_FEE = 2;
+	private LocalDate today;
 
 	public Library() {
+		today = LocalDate.now();
 		this.listBooks = new ArrayList<Book>();
 		this.listLentBooks = new ArrayList<Book>();
-		book1 = new Book("Java", "978-0133761313", "Pearson", "Education", "", "Y. Daniel Liang");
-		book2 = new Book("Math", "978-0073383095", "McGraw-Hill Education", "Education", "", "Kenneth H Rosen");
-		book3 = new Book("Interfaces", "978-1449379704", "O'Reilly Media", "Education", "", "Jenifer Tidwell");
+		this.customers = new ArrayList<Customer>();
+		this.records = new ArrayList<Records>();
+		book1 = new Book("dragon", "100", "dragon", "dragon", "", "dragon");
+		book2 = new Book("dog", "200", "dog", "dog", "", "dog");
+		book3 = new Book("cat", "300", "cat", "cat", "", "cat");
+		book1.setLid(1);
+		book2.setLid(2);
+		book3.setLid(3);
 		addBook(book1);
 		addBook(book2);
 		addBook(book3);
+	}
+
+	public void registerCustomer(String libraryID, String name, String address, int phoneNumber) {
+		Customer newCustomer = new Customer(libraryID, name, address, phoneNumber);
+		this.customers.add(newCustomer);
+	}
+
+	public Customer findCustomer(String libraryID) {
+		for (Customer s : this.customers) {
+			if (s != null && s.getLibraryID().equals(libraryID))
+				return s;
+		}
+		return null;
 	}
 
 	public void addBook(Book book) {
 		listBooks.add(book);
 	}
 
-	public void lendBook(Customer regCustomer, Book book, int duration) {
-		this.listLentBooks.add(book);
-		this.listBooks.remove(book);
-		book.setLentCustomer(regCustomer);
-		book.setLendDuration(duration);
-		regCustomer.addToCustomerHistory(book);
-
+	public void lendBook(Customer regCustomer, Book book) {
+		if (regCustomer != null && book != null) {
+			LocalDate dueDate = today.plusDays(14);
+			Records newRecord = new Records(regCustomer.getLibraryID(), book.getLid(), today, dueDate);
+			this.records.add(0, newRecord);
+			this.listLentBooks.add(book);
+			this.listBooks.remove(book);
+		}
 	}
 
-	public Book returnBook(Customer regCustomer) {
-		for (Book s : this.listLentBooks) {
-			if (s != null && s.getLentCustomer().equals(regCustomer))
-				return s;
-		}
-		return null;
+	public void returnBook(Book book, Records record) {
+		this.listBooks.add(book);
+		this.listLentBooks.remove(book);
+		record.setDateReturned(today);
+		record.setFine(lateReturnCharge(record));
 	}
 
 	public void sortListBooksBy(FlexibleBookComparator.Order sortingBy) {
@@ -53,26 +76,26 @@ public class Library {
 	}
 
 	public void printPopularBooks() {
-		this.popularBooks = new ArrayList<Book>();
+		this.setPopularBooks(new ArrayList<Book>());
 		if (this.listBooks.size() > 0) {
 			for (Book libBook : this.listBooks) {
 				boolean libExists = false;
-				if (this.popularBooks.size() == 0) {
-					popularBooks.add(libBook);
+				if (this.getPopularBooks().size() == 0) {
+					getPopularBooks().add(libBook);
 				} else
-					for (Book popBook : this.popularBooks) {
-						if (libBook.getISBN().equals(popBook.getISBN())) {
+					for (Book popBook : this.getPopularBooks()) {
+						if (libBook.getIsbn().equals(popBook.getIsbn())) {
 							libExists = true;
 							break;
 						}
 					}
 				if (libExists == false) {
-					popularBooks.add(libBook);
+					getPopularBooks().add(libBook);
 				}
 			}
-			for (Book popBook : this.popularBooks) {
+			for (Book popBook : this.getPopularBooks()) {
 				for (Book libBook : this.listBooks) {
-					if (libBook.getISBN().equals(popBook.getISBN()) && !libBook.equals(popBook)) {
+					if (libBook.getIsbn().equals(popBook.getIsbn()) && !libBook.equals(popBook)) {
 						int newLent = popBook.getLentTimes() + libBook.getLentTimes();
 						popBook.setLentTimes(newLent);
 					}
@@ -83,23 +106,23 @@ public class Library {
 		if (this.listLentBooks.size() > 0) {
 			for (Book lentBook : this.listLentBooks) {
 				boolean lentExists = false;
-				if (this.popularBooks.size() == 0) {
-					popularBooks.add(lentBook);
+				if (this.getPopularBooks().size() == 0) {
+					getPopularBooks().add(lentBook);
 				} else
-					for (Book popBook : this.popularBooks) {
-						if (lentBook.getISBN().equals(popBook.getISBN())) {
+					for (Book popBook : this.getPopularBooks()) {
+						if (lentBook.getIsbn().equals(popBook.getIsbn())) {
 							lentExists = true;
 							break;
 
 						}
 					}
 				if (lentExists == false) {
-					popularBooks.add(lentBook);
+					getPopularBooks().add(lentBook);
 				}
 			}
-			for (Book popBook : this.popularBooks) {
+			for (Book popBook : this.getPopularBooks()) {
 				for (Book lentBook : this.listLentBooks) {
-					if (lentBook.getISBN().equals(popBook.getISBN()) && !lentBook.equals(popBook)) {
+					if (lentBook.getIsbn().equals(popBook.getIsbn()) && !lentBook.equals(popBook)) {
 						int newLent = popBook.getLentTimes() + lentBook.getLentTimes();
 						popBook.setLentTimes(newLent);
 					}
@@ -113,34 +136,60 @@ public class Library {
 	public void sortPopularBooksBy(FlexibleBookComparator.Order sortingBy) {
 		FlexibleBookComparator comparator = new FlexibleBookComparator();
 		comparator.setSortingBy(sortingBy);
-		Collections.sort(this.popularBooks, comparator);
+		Collections.sort(this.getPopularBooks(), comparator);
 
-	}
-
-	public void retrieveBook(Book book) {
-		this.listBooks.add(book);
-		this.listLentBooks.remove(book);
-		book.setLentCustomer(null);
-		book.setLendDuration(0);
 	}
 
 	public Book findBook(String ISBN) {
 		for (Book s : this.listBooks) {
-			if (s != null && s.getISBN().equals(ISBN))
+			if (s != null && s.getIsbn().equals(ISBN))
 				return s;
 		}
 		return null;
 	}
 
+	public long exceededDays(Records record) {
+		return record.getDateDue().until(today, ChronoUnit.DAYS);
+	}
+
+	public long lateReturnCharge(Records record) {
+		return exceededDays(record) * DAILY_OVERDUE_FEE;
+	}
+
+	public LocalDate getDate() {
+		return today;
+	}
+
 	public void advanceDays(int days) {
-		Library.days = days;
+		today = today.plusDays(days);
 	}
 
-	public int getAdvancedDays() {
-		return Library.days;
+	public ArrayList<Records> getRecords() {
+		return records;
 	}
 
-	public int lateReturnCharge(Book book) {
-		return (Library.days - book.getLendDuration()) * DAILY_OVERDUE_FEE;
+	public ArrayList<Book> getListBooks() {
+		return listBooks;
+	}
+
+	public ArrayList<Book> getListLentBooks() {
+		return listLentBooks;
+	}
+
+	public Records findRecord(Customer regCustomer, Book book) {
+		for (Records s : records) {
+			if (s != null && s.getLibraryID().equals(regCustomer.getLibraryID()))
+				if (s.getLid() == book.getLid())
+					return s;
+		}
+		return null;
+	}
+
+	public ArrayList<Book> getPopularBooks() {
+		return popularBooks;
+	}
+
+	public void setPopularBooks(ArrayList<Book> popularBooks) {
+		this.popularBooks = popularBooks;
 	}
 }

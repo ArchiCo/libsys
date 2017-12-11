@@ -37,20 +37,11 @@ public class Customer {
 		return this.customerHistory;
 	}
 
-	public void addToCustomerHistory(Book book) {
-		boolean exists = false;
-		for (Book s : this.customerHistory) {
-			if (s.getLiid() == book.getLiid()) {
-				exists = true;
-				break;
-			}
-
-		}
-		if (exists == false) {
-			customerHistory.add(book);
-		}
-	}
-
+	/*
+	 * public void addToCustomerHistory(Book book) { boolean exists = false; for
+	 * (Book s : this.customerHistory) { if (s.getLiid() == book.getLiid()) { exists
+	 * = true; break; } } if (exists == false) { customerHistory.add(book); } }
+	 */
 	public boolean equals(Object otherObject) {
 
 		if (otherObject instanceof Customer) {
