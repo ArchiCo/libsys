@@ -40,13 +40,13 @@ public class Library {
 		books.add(new Book("978-0073383095", "Math", "Kenneth H Rosen","65N", "McGraw-Hill Education", "Education"));
 		books.add(new Book("978-1449379704", "Interfaces" , "Jeniffer Tidwell","13X", "O'Reilly Media", "Education"));
 		
-		customers.add(new Customer("100","Salvatore","street 1",400));
-		customers.add(new Customer("101","nigel","korsvagen",432432));
-		customers.add(new Customer("102","idontknow","via sassari 8",12121));
-		customers.add(new Customer("103","newname","yeeeea",5005043));
-		customers.add(new Customer("104","heeeey","stora ringvagen",32190));
-		customers.add(new Customer("1111", "Damn", "Next Door", 1029435));
-		customers.add(new Customer("2222", "Egg", "Over there", 3959591));
+		customers.add(new Customer("100","Salvatore","street 1","400"));
+		customers.add(new Customer("101","nigel","korsvagen","432432"));
+		customers.add(new Customer("102","idontknow","via sassari 8","12121"));
+		customers.add(new Customer("103","newname","yeeeea","5005043"));
+		customers.add(new Customer("104","heeeey","stora ringvagen","32190"));
+		customers.add(new Customer("1111", "Damn", "Next Door", "1029435"));
+		customers.add(new Customer("2222", "Egg", "Over there", "3959591"));
 		
 		
 	}

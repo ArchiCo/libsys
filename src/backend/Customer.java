@@ -16,18 +16,18 @@ public class Customer {
 	private SimpleStringProperty LID;
 	private SimpleStringProperty name;
 	private SimpleStringProperty address;
-	private SimpleIntegerProperty phoneNum;
+	private SimpleStringProperty phoneNum;
 	
 	private ObservableList<Book> customerHistory;
 	
-	public Customer(String LID, String name, String address, int phoneNum) {
+	public Customer(String LID, String name, String address, String phoneNum) {
 		
 		customerHistory = FXCollections.observableArrayList();
 		
 		this.LID = new SimpleStringProperty(LID);
 		this.name = new SimpleStringProperty(name);
 		this.address = new SimpleStringProperty(address);
-		this.phoneNum = new SimpleIntegerProperty(phoneNum);
+		this.phoneNum = new SimpleStringProperty(phoneNum);
 		
 	}
 	
@@ -49,7 +49,7 @@ public class Customer {
 	public StringProperty getNameProperty() {
 		return name;
 	}
-	public void setNAme(String newName) {
+	public void setName(String newName) {
 		name.set(newName);
 	}
 	
@@ -65,13 +65,13 @@ public class Customer {
 	}
 	
 	//phone
-	public int getPhoneNum() {
+	public String getPhoneNum() {
 		return phoneNum.get();
 	}
-	public IntegerProperty getPhoneNumProperty() {
+	public StringProperty getPhoneNumProperty() {
 		return phoneNum;
 	}
-	public void setPhoneNum(int newPhoneNum) {
+	public void setPhoneNum(String newPhoneNum) {
 		phoneNum.set(newPhoneNum);
 	}
 	

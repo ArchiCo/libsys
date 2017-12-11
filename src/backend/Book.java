@@ -177,6 +177,8 @@ public class Book {
 	public void setLendDuration(int duration) {
 		this.lendDuration.set(duration);
 	}
+	
+
 
 	public String toString() {
 		String result = "Title: " + getTitle() + "." + END_OF_LINE;

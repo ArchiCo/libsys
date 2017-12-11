@@ -186,7 +186,7 @@ public class LibraryMenu extends Application{
 		System.out.print("Please enter customer's address: ");
 		String address = sc.nextLine();
 		System.out.print("Please enter customer's phone number: ");
-		int phoneNumber = sc.nextInt();
+		String phoneNumber = sc.nextLine();
 		sc.nextLine();
 		String libraryID;
 		do {

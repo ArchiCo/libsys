@@ -20,6 +20,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -38,7 +40,6 @@ import javafx.scene.layout.GridPane;
 
 public class LibraryController implements Initializable{
 
-//ayy so compact and cozy
 	//Book buttons
 	@FXML private Button logoutBtn;
 	@FXML private Button lendBookBtn;
@@ -49,6 +50,7 @@ public class LibraryController implements Initializable{
 	@FXML private Button addBookBtn;
 	@FXML private Button editBookBtn;
 	@FXML private Button returnBookBtn;
+	
 	//book directory table column initialize
 	@FXML private TableView<Book> bookTable;
 	@FXML private TableColumn<Book, String> bookIDCol;
@@ -63,7 +65,21 @@ public class LibraryController implements Initializable{
 	@FXML private TableColumn <Customer,String> customerIDCol;
 	@FXML private TableColumn <Customer,String> customerNameCol;
 	
-	//search textfields
+	//
+	@FXML private TableView<Book>lentTable;
+	@FXML private TableColumn<Book,String> lentBookIDCol;
+	@FXML private TableColumn<Book,String> lentBookNameCol;
+	
+	
+	//Customer borrowed books history
+	@FXML private TableView<Book> cstHistoryTable;
+	
+	@FXML private TableColumn <Customer,String> borrowLateCol;
+	@FXML private TableColumn <Customer,String> borrowIDCol;
+	@FXML private TableColumn <Customer,String> borrowNameCol;
+	
+	
+	//search filter fields
 	@FXML private TextField IDFilterField;
 	@FXML private TextField titleFilterField;
 	@FXML private TextField authorFilterField;
@@ -81,8 +97,13 @@ public class LibraryController implements Initializable{
 	@FXML private Label publisherLabel; 
 	@FXML private Label publicationDateLabel;
 	
-	private LibraryMenu libraryMenu;
+	//Customer details
+	@FXML private Label cstIDLabel;
+	@FXML private Label cstNameLabel;
+	@FXML private Label cstPhoneLabel;
+	@FXML private Label cstAddressLabel;
 	
+	private LibraryMenu libraryMenu;
 	
 	public LibraryController(LibraryMenu libraryMenu) {
 		this.libraryMenu = libraryMenu;
@@ -91,13 +112,15 @@ public class LibraryController implements Initializable{
 	public LibraryController() {
 	}
 
-	
-	
+	private Book tempBook;
+	private Customer tempCst;
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+
+		
 		// 0. Initialize the columns
-//The setCellValueFactory(...) that we set on the table columns are used to determine which field
-//inside the Book objects should be used for the particular column.
+		//The setCellValueFactory(...) that we set on the table columns are used to determine which field
+		//inside the Book objects should be used for the particular column.
 		//if using ints and stuff, asObject() needs to be added after getproperty()
 		this.libraryMenu = new LibraryMenu();
 		
@@ -191,12 +214,13 @@ public class LibraryController implements Initializable{
 		///////////////////BOOK DETAILS////////////////////////
 		
 		//---Apparently getselectionmodel is not as good as gettablerow()--- do i care
-		Book chosenBook;
-		chosenBook = bookTable.getSelectionModel().selectedItemProperty().get();
+
 		bookTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Book>() {
 
 			@Override
 			public void changed(ObservableValue<? extends Book> observable, Book oldValue, Book newValue) {
+				tempBook=bookTable.getSelectionModel().getSelectedItem();
+				System.out.println("book row " + bookTable.getSelectionModel().getSelectedIndex());
 				if (newValue != null) {
 					LIDLabel.setText(newValue.getID());
 					titleLabel.setText(newValue.getTitle());
@@ -214,6 +238,33 @@ public class LibraryController implements Initializable{
 			}
 		});
 		/////////////////////////////////////////////////////////////////////////////////
+		/////////////////////SAME THING WITH CUSTOMER////////////////////////////////////
+		////////////////////////////////////////////////////////////////////////////////
+
+		customerTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Customer>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Customer> observable, Customer oldValue, Customer newValue) {
+				tempCst=customerTable.getSelectionModel().getSelectedItem();
+				System.out.println("customer row " +customerTable.getSelectionModel().getSelectedIndex());
+				if (newValue != null) {
+					cstIDLabel.setText(newValue.getLID());
+					cstNameLabel.setText(newValue.getName());
+					cstPhoneLabel.setText(newValue.getPhoneNum());
+					cstAddressLabel.setText(newValue.getAddress());
+				}
+				
+				else {
+					LIDLabel.setText("");
+					titleLabel.setText("");
+					authorLabel.setText("");
+					genreLabel.setText("");
+					publisherLabel.setText("");
+				}
+			}
+		});
+		
+		
 		
 		
 	}
@@ -250,25 +301,123 @@ public class LibraryController implements Initializable{
 	@FXML
 	private void editCustomerEvent(ActionEvent event) throws IOException {
 		if(event.getSource().equals(editCustomerBtn) ) {
+			TextInputDialog dialog = new TextInputDialog("Edit Book");
+//			dialog.setTitle("Text Input Dialog");
+//			dialog.setHeaderText("Look, a Text Input Dialog");
+//			dialog.setContentText("Please enter your name:");
+
+			GridPane grid = new GridPane();
+			grid.setHgap(10);
+			grid.setVgap(10);
+			grid.setPadding(new Insets(20, 150, 10, 10));
+
+			TextField ID = new TextField();
+			ID.setPromptText(tempCst.getLID());
 			
-			Parent root = FXMLLoader.load(getClass().getResource("EditCustomer.fxml"));
-			Scene scene = new Scene(root);
-			Stage window = new Stage ();
-			window.setScene(scene);
-			window.show();
-		}
+			TextField Name = new TextField();
+			Name.setPromptText(tempCst.getName());
+
+			TextField Phone = new TextField();
+			Phone.setPromptText(tempCst.getPhoneNum());
+			
+			TextField Address = new TextField();
+			Address.setPromptText(tempCst.getAddress());
+
+			grid.add(new Label("ID:"), 0, 0);
+			grid.add(ID, 1, 0);
+			
+			grid.add(new Label("Name:"), 0, 1);
+			grid.add(Name, 1, 1);
+			
+			grid.add(new Label("Address:"), 0, 2);
+			grid.add(Address, 1, 2);
+			
+			grid.add(new Label("Phone:"), 0, 3);
+			grid.add(Phone, 1, 3);
+
+			dialog.getDialogPane().setContent(grid);
+			// Traditional way to get the response value.
+			Optional<String> result = dialog.showAndWait();
+			if (result.isPresent()){
+				for (int i=0; i< libraryMenu.getCustomers().size();i++) {
+					if( libraryMenu.getCustomers().get(i).equals(tempCst)) {
+						libraryMenu.getCustomers().get(i).setLID(ID.getText());
+						libraryMenu.getCustomers().get(i).setName(Name.getText());
+						libraryMenu.getCustomers().get(i).setAddress(Address.getText());
+						libraryMenu.getCustomers().get(i).setPhoneNum(Phone.getText());
+						}
+					}
+				}
+			}
 	}
 	@FXML
 	private void addCustomerEvent(ActionEvent event) throws IOException {
 		 
 		 
-		if(event.getSource().equals(addCustomerBtn) ) {
-			
-			Parent root = FXMLLoader.load(getClass().getResource("AddCustomer.fxml"));
-			Scene scene = new Scene(root);
-			Stage window = new Stage ();
-			window.setScene(scene);
-			window.show();
+		TextInputDialog dialog = new TextInputDialog("");
+		dialog.setTitle("Text Input Dialog");
+		dialog.setHeaderText("Look, a Text Input Dialog");
+		dialog.setContentText("Please enter your name:");
+
+		GridPane grid = new GridPane();
+		grid.setHgap(10);
+		grid.setVgap(10);
+		grid.setPadding(new Insets(20, 150, 10, 10));
+
+		TextField ID = new TextField();
+		ID.setPromptText("ID");
+		
+		TextField Name = new TextField();
+		Name.setPromptText("Title");
+
+		TextField Phone = new TextField();
+		Phone.setPromptText("Phone");
+		
+		TextField Address = new TextField();
+		Address.setPromptText("Address");
+
+		grid.add(new Label("ID:"), 0, 0);
+		grid.add(ID, 1, 0);
+		
+		grid.add(new Label("Name:"), 0, 1);
+		grid.add(Name, 1, 1);
+		
+		grid.add(new Label("Address:"), 0, 2);
+		grid.add(Address, 1, 2);
+		
+		grid.add(new Label("Phone:"), 0, 3);
+		grid.add(Phone, 1, 3);
+
+		dialog.getDialogPane().setContent(grid);
+		// Traditional way to get the response value.
+		Optional<String> result = dialog.showAndWait();
+		if (result.isPresent()){
+			Boolean existing=false;
+			Customer newCustomer = new Customer(ID.getText(),Name.getText(),Address.getText(),Phone.getText());
+			///////CHECK IF THE BOOK ID ALREADY EXISTS AND IF FIELDS ARE NOT EMPTY
+			for (int i=0; i<libraryMenu.getCustomers().size();i++) {
+				if (ID.getText().equals(libraryMenu.getCustomers().get(i).getLID()))
+					existing=true;
+			}
+			///////IF IT DOES NOT, ADD THE BOOK
+			if(existing==false &&  !cstFieldsAreEmpty(ID,Name,Address,Phone)) {
+				Alert alert = new Alert(AlertType.INFORMATION);
+				alert.setTitle("Information");
+				alert.setHeaderText(null);
+				alert.setContentText("Customer correctly added.");
+
+				alert.showAndWait();
+				this.libraryMenu.getCustomers().add(newCustomer);}
+			//////IF IT DOES, DON'T ADD IT
+			else if (existing==true) {
+				
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("ERROR");
+				alert.setHeaderText("Error during adding a customer");
+				alert.setContentText("The customer is already registered in the library.");
+
+				alert.showAndWait();
+			}
 		}
 	}
 	@FXML
@@ -326,28 +475,126 @@ public class LibraryController implements Initializable{
 			// Traditional way to get the response value.
 			Optional<String> result = dialog.showAndWait();
 			if (result.isPresent()){
+				Boolean existing=false;
 				Book newBook = new Book(ID.getText(),Title.getText(),Author.getText(),Shelf.getText(),Publisher.getText(),Genre.getText());
-				this.libraryMenu.getBooks().add(newBook);}
-			}	
+				
+				///////CHECK IF THE BOOK ID ALREADY EXISTS AND IF FIELDS ARE NOT EMPTY
+				for (int i=0; i<libraryMenu.getBooks().size();i++) {
+					if (ID.getText().equals(libraryMenu.getBooks().get(i).getID()))
+						existing=true;
+				}
+				///////IF IT DOES NOT, ADD THE BOOK
+				if(existing==false &&  !bookFieldsAreEmpty(ID,Title,Author,Shelf,Publisher,Genre)) {
+					Alert alert = new Alert(AlertType.INFORMATION);
+					alert.setTitle("Information");
+					alert.setHeaderText(null);
+					alert.setContentText("Book correctly added.");
+
+					alert.showAndWait();
+					this.libraryMenu.getBooks().add(newBook);}
+				//////IF IT DOES, DON'T ADD IT
+				else if (existing==true) {
+					
+					Alert alert = new Alert(AlertType.ERROR);
+					alert.setTitle("ERROR");
+					alert.setHeaderText("Error during adding a book");
+					alert.setContentText("The book already exists in this library.");
+
+					alert.showAndWait();
+				}
+			}
+		}	
 	}
 	
 	@FXML
 	private void editBookEvent(ActionEvent event) throws IOException {
 		 
-		if(event.getSource().equals(editBookBtn)) {
-			
-			Parent root = FXMLLoader.load(getClass().getResource("EditBook.fxml"));
-			Scene scene = new Scene(root);
-			Stage window = new Stage ();
-			window.setScene(scene);
-			window.show();
-		}
+		if(event.getSource().equals(editBookBtn)) {		 
+				TextInputDialog dialog = new TextInputDialog("Edit Book");
+//				dialog.setTitle("Text Input Dialog");
+//				dialog.setHeaderText("Look, a Text Input Dialog");
+//				dialog.setContentText("Please enter your name:");
+
+				GridPane grid = new GridPane();
+				grid.setHgap(10);
+				grid.setVgap(10);
+				grid.setPadding(new Insets(20, 150, 10, 10));
+
+				TextField ID = new TextField();
+				ID.setPromptText(tempBook.getID());
+				
+				TextField Title = new TextField();
+				Title.setPromptText(tempBook.getTitle());
+				
+				TextField Author = new TextField();
+				Author.setPromptText(tempBook.getAuthor());
+				
+				TextField Shelf = new TextField();
+				Shelf.setPromptText(tempBook.getShelf());
+				
+				TextField Publisher = new TextField();
+				Publisher.setPromptText(tempBook.getPublisher());
+				
+				TextField Genre = new TextField();
+				Genre.setPromptText(tempBook.getGenre());
+
+				grid.add(new Label("ID:"), 0, 0);
+				grid.add(ID, 1, 0);
+				
+				grid.add(new Label("Title:"), 0, 1);
+				grid.add(Title, 1, 1);
+				
+				grid.add(new Label("Author:"), 0, 2);
+				grid.add(Author, 1, 2);
+				
+				grid.add(new Label("Shelf:"), 0, 3);
+				grid.add(Shelf, 1, 3);
+				
+				grid.add(new Label("Publisher:"), 0, 4);
+				grid.add(Publisher, 1, 4);
+				
+				grid.add(new Label("Genre:"), 0, 5);
+				grid.add(Genre, 1, 5);
+
+				dialog.getDialogPane().setContent(grid);
+				// Traditional way to get the response value.
+				Optional<String> result = dialog.showAndWait();
+				if (result.isPresent()){
+					for (int i=0; i< libraryMenu.getBooks().size();i++) {
+						if( libraryMenu.getBooks().get(i).equals(tempBook)) {
+							libraryMenu.getBooks().get(i).setID(ID.getText());
+							libraryMenu.getBooks().get(i).setTitle(Title.getText());
+							libraryMenu.getBooks().get(i).setAuthor(Author.getText());
+							libraryMenu.getBooks().get(i).setShelf(Shelf.getText());
+							libraryMenu.getBooks().get(i).setPublisher(Publisher.getText());
+							libraryMenu.getBooks().get(i).setGenre((Genre.getText()));
+							
+							
+						}
+					}
+				}
+			}
 	}
 	@FXML
 	public void showBookDetails(MouseEvent event) {
 		
 	}
+	
+	public Boolean bookFieldsAreEmpty(TextField a, TextField b,TextField c, TextField d, TextField e, TextField f) {
+		Boolean x=false;
+		if (a.getText().isEmpty() || b.getText().isEmpty() || c.getText().isEmpty() || d.getText().isEmpty() || e.getText().isEmpty() || f.getText().isEmpty())
+			x=true;
+		System.out.println("There's at least an empty field!");
+		return x;
+	}
 
+	public Boolean cstFieldsAreEmpty(TextField a, TextField b,TextField c, TextField d) {
+		Boolean x=false;
+		if (a.getText().isEmpty() || b.getText().isEmpty() || c.getText().isEmpty() || d.getText().isEmpty())
+			x=true;
+		System.out.println("There's at least an empty field!");
+		return x;
+	}
 	
 	
 	
