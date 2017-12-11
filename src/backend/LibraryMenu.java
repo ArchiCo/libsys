@@ -2,6 +2,8 @@ package backend;
 
 import frontend.*;
 import frontend.resources.*;
+
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.InputMismatchException;
@@ -14,27 +16,18 @@ import backend.FlexibleBookComparator.Order;
 import frontend.resources.LibraryController;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
-
 import java.util.Observable;
-import java.util.Optional;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Pair;
 import sun.security.jgss.LoginConfigImpl;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ButtonBar.ButtonData;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 
 public class LibraryMenu extends Application{
 	public static final int CUSTOMER_REGISTRATION = 1;
@@ -83,7 +76,7 @@ public class LibraryMenu extends Application{
 	}
 	
 	public LibraryMenu() {
-		this.library = new Library();
+		this.setLibrary(new Library());
 		this.regCustomer = new RegisteredCustomer();
 		this.libraryController = new LibraryController(this);
 		
@@ -125,16 +118,16 @@ public class LibraryMenu extends Application{
 					break;
 
 				case SORT_BOOK:
-					library.sortListBooksBy(Order.Author);
-					for (Book book : this.library.books) {
+					getLibrary().sortListBooksBy(Order.Author);
+					for (Book book : this.getLibrary().books) {
 						System.out.println("");
 						System.out.println(book);
 					}
 					break;
 
 				case PRINT_POPULAR_BOOKS:
-					library.printPopularBooks();
-					for (Book popularBook : this.library.popularBooks) {
+					getLibrary().printPopularBooks();
+					for (Book popularBook : this.getLibrary().popularBooks) {
 						System.out.println("");
 						System.out.println(popularBook);
 					}
@@ -157,12 +150,34 @@ public class LibraryMenu extends Application{
 	}
 	
 	public ObservableList<Book> getBooks() {
-		return library.books;
+		return getLibrary().books;
 	}
 	public ObservableList<Customer> getCustomers() {
-		return library.customers;
+		return getLibrary().customers;
 	}
 
+	public boolean addBookConfirm(Book newBook) throws IOException {
+		FXMLLoader loader = new FXMLLoader();
+		AddBookController addBookController = loader.getController();
+		
+		//create alertstage
+		Stage alertStage = new Stage();
+		alertStage.setTitle("eh");
+		alertStage.initModality(Modality.WINDOW_MODAL);
+		alertStage.initOwner(primaryStage);
+		
+		Parent root = FXMLLoader.load(getClass().getResource("AddBook.fxml"));
+		Scene scene = new Scene(root);
+		alertStage.setScene(scene);
+		
+		addBookController.setAlertStage(alertStage);
+		addBookController.setBook(newBook);
+		
+		alertStage.showAndWait();
+		
+		return addBookController.isAddBookClicked();
+		}
+	
 	private void printMenuOptions() {
 		System.out.println(" ");
 		System.out.println(" Choose an option below: ");
@@ -226,7 +241,7 @@ public class LibraryMenu extends Application{
 	private Book printBook() {
 		System.out.print("Please choose the book that you want to borrow and enter the book's ISBN-13: ");
 		String ISBN = sc.nextLine();
-		Book foundBook = this.library.findBook(ISBN);
+		Book foundBook = this.getLibrary().findBook(ISBN);
 		if (foundBook != null) {
 			System.out.print("");
 			System.out.print(foundBook);
@@ -257,7 +272,7 @@ public class LibraryMenu extends Application{
 			System.out.println("");
 			System.out.println("Today's date is " + bookDate.format(calendar.getTime()) + ".");
 			System.out.println("");
-			this.library.lendBook(foundCustomer, foundBook, borrowDays);
+			this.getLibrary().lendBook(foundCustomer, foundBook, borrowDays);
 			calendar.add(Calendar.DATE, borrowDays);
 			System.out.println("Please return the book " + bookDate.format(calendar.getTime()) + ".");
 
@@ -268,12 +283,12 @@ public class LibraryMenu extends Application{
 		Customer foundCustomer = printCustomer();
 		System.out.println("");
 		if (foundCustomer != null) {
-			Book book = this.library.returnBook(foundCustomer);
-			int exceededDays = this.library.getAdvancedDays() - book.getLendDuration();
+			Book book = this.getLibrary().returnBook(foundCustomer);
+			int exceededDays = this.getLibrary().getAdvancedDays() - book.getLendDuration();
 			if (exceededDays > 0)
 				System.out.println("You have exceeded borrowing duration by " + exceededDays + " days.");
-			System.out.println("You have been charged " + this.library.lateReturnCharge(book) + " SEK.");
-			this.library.retrieveBook(book);
+			System.out.println("You have been charged " + this.getLibrary().lateReturnCharge(book) + " SEK.");
+			this.getLibrary().retrieveBook(book);
 		}
 	}
 
@@ -281,7 +296,7 @@ public class LibraryMenu extends Application{
 		System.out.print("Please enter author's name: ");
 		String authorName = sc.nextLine();
 		int counter = 0;
-		for (Book s : this.library.books) {
+		for (Book s : this.getLibrary().books) {
 			if (s != null && s.getAuthor().contains(authorName)) {
 				System.out.println();
 				System.out.println("===============================");
@@ -307,15 +322,14 @@ public class LibraryMenu extends Application{
 		System.out.print("Please enter book's ISBN: ");
 		String isbn = sc.nextLine();
 		Book b = new Book(name, isbn, publisher, genre, "", author);
-		this.library.addBook(b);
-
+		this.getLibrary().addBook(b);
 	}
 
 	private void advanceTime() {
 		System.out.print("Enter number of days: ");
 		int days = sc.nextInt();
 		System.out.println("Advanced time by " + days + " days.");
-		this.library.advanceDays(days);
+		this.getLibrary().advanceDays(days);
 	}
 
 	public static String generateRandomChars(String candidateChars, int length) {
@@ -330,5 +344,13 @@ public class LibraryMenu extends Application{
 	public static void main(String[] args) {
 		LibraryMenu program = new LibraryMenu();
 		program.run();
+	}
+
+	public Library getLibrary() {
+		return library;
+	}
+
+	public void setLibrary(Library library) {
+		this.library = library;
 	}
 }
