@@ -1,5 +1,4 @@
 package backend;
-
 import java.util.ArrayList;
 
 public class RegisteredCustomer {
@@ -9,15 +8,14 @@ public class RegisteredCustomer {
 		this.customers = new ArrayList<Customer>();
 	}
 
-	
-	public void registerCustomer(String libraryID, String name, String address, String phoneNumber) {
+	public void registerCustomer(String libraryID, String name, String address, int phoneNumber) {
 		Customer newCustomer = new Customer(libraryID, name, address, phoneNumber);
 		this.customers.add(newCustomer);
 	}
 
 	public Customer findCustomer(String libraryID) {
 		for (Customer s : this.customers) {
-			if (s != null && s.getLibraryID().equals(libraryID))
+			if (s != null && s.getLID().equals(libraryID))
 				return s;
 		}
 		return null;

@@ -1,11 +1,12 @@
 package initializer;
 
-import frontend.MainApp;
+import backend.LibraryMenu;
+import frontend.Frontend;
 import javafx.application.Application;
 
 public class Initializer {
 
 	public static void main(String[] args) {
-		Application.launch(MainApp.class, args);
+		Application.launch(LibraryMenu.class, args);
 	}
 }

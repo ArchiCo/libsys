@@ -1,4 +1,4 @@
-package frontend.resources;
+package RecycleBin;
 
 import java.io.IOException;
 import java.net.URL;
@@ -13,35 +13,26 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
-public class LibSysController implements Initializable {
+public class RegistrationController implements Initializable{
 
 	@FXML
 	private Button backBtn;
+	@FXML
+	private Button registerBtnForreal;
+	
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		
+		
+	}
 
-	
-	Stage window;
-	
-	
-	
-	private void changeScreenBtn(ActionEvent event) throws IOException {
+	public void backToLogin(ActionEvent event) throws IOException {
 		if (event.getSource().equals(backBtn)) {
 			Parent loginParent = FXMLLoader.load(getClass().getResource("Login.fxml"));
 			Scene loginScene = new Scene(loginParent);
-			window = (Stage) backBtn.getScene().getWindow();
+			Stage window = (Stage) backBtn.getScene().getWindow();
 			window.setScene(loginScene);
-			
+			window.show();
 		}
-		window.show();
 	}
-
-
-
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	
-	
 }

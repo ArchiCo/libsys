@@ -1,6 +1,6 @@
-package frontend.resources;
+package RecycleBin;
 
-import frontend.MainApp;
+import frontend.Frontend;
 import java.io.IOException;
 
 import javafx.event.ActionEvent;

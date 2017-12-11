@@ -28,20 +28,10 @@ public class EditBookController implements Initializable{
 	private Button saveBtn;
 	@FXML
 	public TextField LIDField;
-	@FXML
-	public TextField isbnField;
-	@FXML
-	public TextField titleField;
-	@FXML
-	public TextField authorField;
-	@FXML
-	public TextField genreField;
-	@FXML
-	public TextField publisherField;
 	
 	
 
-	public LibraryController liController = new LibraryController();
+	
 	
 	
 	//registerBtn going to registration
@@ -60,12 +50,9 @@ public class EditBookController implements Initializable{
 		
 		//if the source of the event is the register button
 		if(event.getSource().equals(saveBtn) ) {
-			
-			
-			
-			
-			
+			// get a handle to the stage
 		    Stage stage = (Stage) saveBtn.getScene().getWindow();
+		    // do what you have to do
 		    stage.close();
 		}
 	}

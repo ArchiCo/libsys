@@ -1,10 +1,16 @@
 package frontend.resources;
 
-import java.awt.print.Book;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javax.sound.midi.ControllerEventListener;
+
+import com.sun.glass.ui.TouchInputSupport;
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.Loader;
+
+import backend.Library;
+import backend.LibraryMenu;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,40 +29,49 @@ public class LoginController implements Initializable{
 	@FXML
 	private Button registerBtn;
 	
-
+	private LibraryMenu libraryMenu;
 	
+	public LoginController() {
+		
+	}
 	
+	public void setLibraryMenu(LibraryMenu libraryMenu) {
+		this.libraryMenu = libraryMenu;
+	}
 	
 	//registerBtn going to registration
 	public void changeScreenBtn(ActionEvent event) throws IOException {
 		
 		//if the source of the event is the register button
 		if(event.getSource().equals(registerBtn) ) {
-			Stage window;
+		Stage window;
 			//load the registration scene into a parent
-			Parent registerParent = FXMLLoader.load(getClass().getResource("Registration.fxml"));
-			//make a new scene with the loaded FXML
-			Scene registerScene = new Scene(registerParent);
-			//get stage info
-			window = (Stage) registerBtn.getScene().getWindow();
-			//set scene to the register scene with the stage of the register button, which is the same
-			window.setScene(registerScene);
-			window.show();
+		Parent registerParent = FXMLLoader.load(getClass().getResource("Registration.fxml"));
+		//make a new scene with the loaded fxml
+		Scene registerScene = new Scene(registerParent);
+		//get stage info
+		window = (Stage) registerBtn.getScene().getWindow();
+		//set scene to the register scene with the stage of the register button, which is the same
+		window.setScene(registerScene);
+		window.show();
 		}
 		
 		else if(event.getSource().equals(loginBtn)) {
+			
 			//loadWindow("Library.fxml", "Book Directory");
 			Stage window;
-			Parent bookParent = FXMLLoader.load(getClass().getResource("Library.fxml"));
+			Parent bookParent = FXMLLoader.load(getClass().getResource("/frontend/resources/Library.fxml"));
+			
 			Scene bookScene = new Scene(bookParent);
 			
-			window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+			window = (Stage) (loginBtn.getScene().getWindow());
 			window.setScene(bookScene);
 			window.show();
 			
 		}	
 		
 	}
+	
 	
 	public void loadWindow(String location, String title) throws IOException {
 		
