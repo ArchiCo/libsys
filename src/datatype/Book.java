@@ -23,7 +23,7 @@ public class Book{
 			 publicationDate, shelf, new ArrayList<Record>());
 	}
 	
-	public Book(int    lid,
+	public Book(int lid,
 			    String isbn,
                 String title,
                 String genre,
@@ -44,7 +44,7 @@ public class Book{
 		this.records         =         records;
 	}
 	
-	public int    getLid()                { return lid; }
+	public int getLid()                   { return lid; }
 	public String getIsbn()               { return isbn; }
 	public String getGenre()              { return genre; }
 	public String getShelf()              { return shelf; }
@@ -53,6 +53,12 @@ public class Book{
 	public ArrayList<Record> getRecords() { return records; }
 	public String getPublisher()          { return publisher; }
 	public Date   getPublicationDate()    { return publicationDate; }
+	public String getPublicationDateTxt() { 
+		if (publicationDate == null) {
+			return null;
+		}
+		return publicationDate.toString(); 
+	}
 	
 	public void   setIsbn(String newIsbn) { 
 		isbn = newIsbn; 
@@ -72,6 +78,37 @@ public class Book{
 	}
 	public void   setDatePublished(Date newDatePublished) {
 		publicationDate = newDatePublished;
+	}
+	
+	public String getPrintout(Book book) {
+		String bookMeta = "LiD: "       + book.getLid()       + "\n" +
+		                  "ISBN: "      + book.getIsbn()      + "\n" +
+		                  "Title: "     + book.getTitle()     + "\n" +
+		                  "Genre: "     + book.getGenre()     + "\n" +
+		                  "Author: "    + book.getAuthor()    + "\n" +
+                          "Publisher: " + book.getPublisher() + "\n" +
+		                  "Publication Date: " + book.getPublicationDateTxt() + "\n" + 
+		                  "Shelf: "     + book.getShelf();
+		
+		
+		if (book.getRecords() != null && book.getRecords().size() > 0) {
+		    String bookRecords = "Records:\n";
+	        for (int i = 0; i < records.size(); i++) {
+	    	   bookRecords +=  "Record #" + i +
+	    			           "| ArchiveID: " + book.getRecords().get(i).getAid() +
+	    			           "| Username: "  + book.getRecords().get(i).getCid() +
+	    			           "| LiD: "       + book.getRecords().get(i).getLid() +
+	    			           "| Taken: "     + book.getRecords().get(i).getTakenDateString() +
+	    			           "| Due: "       + book.getRecords().get(i).getDueDateString() +
+	    			           "| Returned:"   + book.getRecords().get(i).getReturnedDateString();
+	    	   if (i < records.size()-1) {
+	    		   bookRecords += "\n";
+	    	   }
+		    }
+	        return bookMeta + "\n" + bookRecords;
+		}
+		
+		return bookMeta + "\nRecords: Empty.";
 	}
 }
 

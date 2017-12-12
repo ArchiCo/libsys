@@ -1,25 +1,39 @@
 package database;
-
+/*
+import java.sql.Array;
 import java.sql.DatabaseMetaData;
+import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import database.controllers.Database;
 import database.structure.Column;
 import database.structure.Table;
+import database.structure.pattern.Books;
+import datatype.Book;
+import datatype.Record;
 
 public class SQLController {
 	final int DEBUG_TIMEOUT = 5000;
-	
-	SQLDatabase postgresql;
+	public String schema  = "LibSys";
+
+	Database postgresql;
 	SQLController (String host, 
 				   int    port,
 				   String dbName,
 				   String user, 
 				   String pass) {
 		
-		postgresql = new SQLDatabase(host, port, dbName, user, pass);
+		postgresql = new Database(host, port, dbName, user, pass);
+	}
+	
+	public String getSchema() {
+		return schema;
 	}
 	
 	public boolean isConnected() {
@@ -72,6 +86,11 @@ public class SQLController {
 		return null;
 	}
 	
+	public void createSchema(String schemaName) {
+		boolean status = postgresql.createSchema(schemaName);
+		System.out.println("Schema creation status: " + status);
+	}
+	
 	public void createTable(Table table) {
 		String structureQuery = "(";
 		String primaryKeyQuery = "PRIMARY KEY(";
@@ -88,18 +107,18 @@ public class SQLController {
 					          table.getColumnType(i) + ", ";
 		}
 		structureQuery += primaryKeyQuery + "));";
-		if (table.getSchemaName() == null) {
-			createTable(table.getTableName(), structureQuery);
-		} else {
+		if (table.getSchemaName() != null || !table.getSchemaName().isEmpty()) {
 			createTable(table.getSchemaName(), 
 					    table.getTableName(), 
 					    structureQuery);
+		} else {
+			createTable(table.getTableName(), structureQuery);
 		}
 		
 	}
 	
 	public void createTable(String schemaName, String tableName, String structure) {
-		boolean status = postgresql.createTable(schemaName, tableName);
+		boolean status = postgresql.createTable(schemaName, tableName, structure);
 		System.out.println("Table creation status: " + status);
 	}
 	
@@ -118,11 +137,6 @@ public class SQLController {
 		System.out.println("Table dropping status: " + status);
 	}
 	
-	public void debugInsert(String table, String columns, String values) {
-		boolean status = postgresql.insertQueryWithSchema("LibSys", table, columns, values);
-		System.out.println("Insert operation status: " + status);
-	}
-	
 	public boolean tableIsPresent(String tableName) {
 		try {
 			ResultSet rs = postgresql.getTableName(tableName.toLowerCase());
@@ -135,58 +149,48 @@ public class SQLController {
 	    return false;
 	}
 	
-	public void searchQuery(String searchItem, String tableName) {
-		searchQuery(searchItem, tableName, null, null);
+	public boolean addBook(Book newBook) {
+		ArrayList<Book> newBooks = new ArrayList<Book>();
+		newBooks.add(newBook);
+		return addBooks(newBooks);
 	}
 	
-	public void searchQuery(String searchItem, String tableName, 
-			                   String searchParameter, String data) {
-	    ResultSet rs = null;
-		try {
-			if (searchParameter == null || data == null) {
-				rs = postgresql.outputQuery("SELECT " + searchItem + " FROM " + 
-                        tableName);
-			} else {
-		        rs = postgresql.outputQuery("SELECT " + searchItem + " FROM " + 
-			                                tableName + " WHERE " + searchParameter + 
-			                                " = " + data);
+	public boolean addBooks(ArrayList<Book> newBooks) {
+		String query = "";
+		for (int i = 0; i  < newBooks.size(); i++) {
+			query += "('"  + newBooks.get(i).getLid()  + 
+					 "','" + newBooks.get(i).getIsbn() + 
+					 "','" + newBooks.get(i).getTitle() +
+					 "','" + newBooks.get(i).getGenre() +
+					 "','" + newBooks.get(i).getAuthor() +
+					 "','" + newBooks.get(i).getPublisher() +
+					 "','" + newBooks.get(i).getPublicationDateTxt() +
+					 "')";
+			if (i < newBooks.size()-1) {
+				query += ",";
 			}
-			
-	       if (rs.getMetaData().getColumnCount() == 0) {
-	    	   System.out.println("The table is empty.");
-	    
-	       } else {
-	          ArrayList<Column> columns = new ArrayList<Column>();
-	          for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
-	    	      String datatype   = rs.getMetaData().getColumnTypeName(i);
-	    	      String columnName = rs.getMetaData().getColumnName(i);
-	    	      columns.add(new Column(columnName, datatype));
-	    	      System.out.println(i + ": " + columnName + " : " + datatype);
-	          }
-	    }
-	    
-	    
-	    
-		} catch (Exception ex) {
-			System.out.println("SQLException: " + ex.getMessage());
-		    //System.out.println("SQLState: " + ex.getSQLState());
-		    //System.out.println("VendorError: " + ex.getErrorCode());
-		} 
-	    
-	}
-	
-	/*public void debugPrint(String selection, String table) {
-		ResultSet rs = mysql.selectQuery(selection, table);
-		ArrayList<Array> arr;
-		for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
-			arr.add(rs.getArray(i));
 		}
-		for (int i = 0; i < arr.size(); i++)
-			for (int j = 0; j < arr.get(i).; j++) {
-				System.out.println(arr.get(i)[j]);
-			}
-		
-		//System.out.println("Insert operation status: " + status);
-	}*/
+		return postgresql.insertQueryWithSchema(schema, "books", query);
+	}
 	
-}
+	public boolean removeBook(Book oldBook) {
+		ArrayList<Book> oldBooks = new ArrayList<Book>();
+		return oldBooks.add(oldBook);
+	}
+	
+	public boolean removeBooks(ArrayList<Book> oldBooks) {
+		
+		try {
+			ResultSet books = postgresql.deleteQuery(schema, "books", deleteBy, conditions);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	
+	
+	public void debugInsert(String table, String columns, String values) {
+		boolean status = postgresql.insertQueryWithSchema("LibSys", table, columns, values);
+		//System.out.println("Insert operation status: " + status);
+	}
+}*/
