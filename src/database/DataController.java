@@ -1,21 +1,28 @@
-package database.controllers;
+package database;
 
 import java.io.IOException;
 
-import database.Credentials;
 import datatype.Book;
-import datatype.Customer;
+import backend.Customer;
 
-public class Controller extends Database{
+public class DataController extends Database{
 	private RecordManager   rm;
 	private CustomerManager cm;
 	private BookManager     bm;
 	
-	public Controller (Credentials creds) throws Exception {
+	public DataController () throws Exception {
+		this(new Credentials());
+	}
+	
+	public DataController (Credentials creds) throws Exception {
 		super(creds);
 		rm = new RecordManager(this);
 		cm = new CustomerManager(this);
 		bm = new BookManager(this);
+		//rm.dropTable();
+		//cm.dropTable();
+		//bm.dropTable();
+		//cm.createTable();
 	}
 	
 	public CustomerManager customers() { return cm; }
@@ -31,6 +38,10 @@ public class Controller extends Database{
 			System.out.println("[Controller, registerCustomer] ERROR: " + e.getMessage());
 		}
 		return false;
+	}
+	
+	public boolean deregisterCustomer(String customerId) {
+		return deregisterCustomer(new Customer(customerId, null, null, 0));
 	}
 	
 	public boolean deregisterCustomer(Customer customer) {

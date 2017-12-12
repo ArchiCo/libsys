@@ -4,39 +4,51 @@ import java.util.ArrayList;
 
 public class Customer {
 	final String END_OF_LINE = System.lineSeparator();
-	private String libraryID;
+	private String customerId;
 	private String name;
 	private String address;
 	private int phoneNumber;
 	private ArrayList<Book> customerHistory;
 
-	public Customer(String libraryID, String name, String address, int phoneNumber) {
-		this.libraryID = libraryID;
+	public Customer(String customerId, String name, String address, int phoneNumber) {
+		this.customerId = customerId;
 		this.name = name;
 		this.address = address;
 		this.phoneNumber = phoneNumber;
 	}
 
-	public String getLibraryID() {
-		return this.libraryID;
+	public String getCustomerId() {
+		return customerId;
 	}
 
 	public String getName() {
-		return this.name;
+		return name;
 	}
 
 	public String getAddress() {
-		return this.address;
+		return address;
 	}
 
 	public int getPhoneNumber() {
-		return this.phoneNumber;
+		return phoneNumber;
 	}
 
 	public ArrayList<Book> getCustomerHistory() {
 		return this.customerHistory;
 	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
 
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	
+	public void setPhoneNumber(int phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+	
 	/*
 	 * public void addToCustomerHistory(Book book) { boolean exists = false; for
 	 * (Book s : this.customerHistory) { if (s.getLiid() == book.getLiid()) { exists
@@ -46,7 +58,7 @@ public class Customer {
 
 		if (otherObject instanceof Customer) {
 			Customer otherCustomer = (Customer) otherObject;
-			boolean result = this.getLibraryID() == otherCustomer.getLibraryID();
+			boolean result = getCustomerId() == otherCustomer.getCustomerId();
 			return result;
 
 		} else {
@@ -58,7 +70,7 @@ public class Customer {
 		String result = "Name: " + getName() + END_OF_LINE;
 		result += "Address: " + getAddress() + END_OF_LINE;
 		result += "Phone Number: " + getPhoneNumber() + END_OF_LINE;
-		result += "Library ID: " + getLibraryID();
+		result += "Library ID: " + getCustomerId();
 		return result;
 	}
 }

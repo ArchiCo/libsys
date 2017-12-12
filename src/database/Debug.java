@@ -1,10 +1,9 @@
-package database;
+/*package database;
 import java.util.ArrayList;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Scanner;
 
-import database.controllers.Controller;
 import database.structure.Table;
 import database.structure.pattern.Books;
 import datatype.Book;
@@ -35,9 +34,9 @@ public class Debug {
 	final String DEBUG_EXIT                   = "17";
 	
 	Scanner scan  = new Scanner(System.in);
-	Controller sql;
+	DataController sql;
 	public Debug() throws Exception {
-		sql  = new Controller(new Credentials());
+		sql  = new DataController(new Credentials());
 	}
 	
 		public void run() {
@@ -115,87 +114,6 @@ public class Debug {
 					}
             		break;
             		
-            	/*case DEBUG_RECORDS_ADD_RECORD:
-            		try {
-            			//Record record = new Record("Test_User", "101", new LocalDate(2015, 1, 5), new LocalDate(2015, 1, 25));
-						System.out.println("Adding record: " + sql.registerCustomer(customer));
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-            		break;
-            		
-            	case DEBUG_CUSTOMERS_FETCH_ALL:
-            		ArrayList<Record> records = sql.records().fetchByCid("Test_User");
-            		
-            		if(customers.isEmpty()) {
-            			System.out.println("No Records Found");
-            		} else {
-            			int count = 1;
-            			for (Customer customer : customers) {
-     				       System.out.println(
-     				    		   "Customer #" + count +  
-		                           ": " + customer.getCid() +                
-		                           ", " + customer.getPassword() +               
-		                           ", " + customer.getSsn() +
-		                           ", " + customer.getName() +
-		                           ", " + customer.getSurname() +
-		                           ", " + customer.getAddress() +
-		                           ", " + customer.getPhone());
-     				       count++;
-            			}
-            		}
-            		break;
-            	case DEBUG_CUSTOMERS_DELETE:
-            		try {
-                		Customer customer = new Customer("Test_User", "Pass", "SSN12345", "Name", "Surname", "Address", "070100");
-						System.out.println("Delecting customer: " + sql.deregisterCustomer(customer));
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-            		break;
-            		
-                case DEBUG_RECORDS_DROP_TABLE:
-            		try {
-						System.out.println("DROP records status: " + sql.records().dropTable());
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-	                break;
-            		
-            	case DEBUG_RECORDS_FETCH_ALL:
-            		ArrayList<Record> records = sql.records().fetchAll();
-            		
-            		if(records.isEmpty()) {
-            			System.out.println("No Records Found");
-            		} else {
-            			int count = 1;
-            			for (Record record : records) {
-     				       System.out.println(
-     				    		   "Record #" + count +  
-		                           ": " + record.getId() +                
-		                           ", " + record.getUsername() +               
-		                           ", " + record.getLid() +
-		                           ", " + record.getTakenLocalDate().toString() +
-		                           ", " + record.getDueLocalDate().toString() +
-		                           ", " + record.getReturnedDateString());
-     				       count++;
-            			}
-            		}
-            		break;
-            		
-            	case DEBUG_RECORDS_ADD_RECORD:
-            		
-            		try {
-						System.out.println("Adding record: " + sql.records().add(new Record(0, "test_user", "200", new Date(2000,7,10), new Date(2000,8,30))));
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-            		
-            		break;*/
-            	
         		case DEBUG_EXIT: 
                     System.out.println("Finished debugging.");
         			System.exit(0);
@@ -208,122 +126,7 @@ public class Debug {
 
         } while(true);
 	}
-            	
-            	/*
-            		case SQL_CONNECTION_STATUS : 
-            			System.out.println("SQL Connection status: " + 
-            							    sql.isConnected());
-            			break;
-            				   
-            		case SQL_LIVE_STATUS : 
-            			System.out.println("SQL Live status: " + 
-            							    sql.isLive());
-            			break;
-            			
-            		case SQL_PRINT_COLUMNS : 
-            			System.out.print("Table's name: ");
-            			String table = scan.nextLine();
-            			sql.printColumnNames(table);
-            			break;	
-            			
-            		case SQL_DEBUG_INSERT : 
-            			System.out.print("Table's name: ");
-            			String table1 = scan.nextLine();
-            			System.out.print("Columns: ");
-            			String columns = scan.nextLine();
-            			System.out.print("Values: ");
-            			String values = scan.nextLine();
-            			sql.debugInsert(table1, columns, values);
-            			break;
-            			
-            		case SQL_DEBUG_CREATE : 
-	    				try {
-	    					System.out.print("Table's name: ");
-	            			String newTableName = scan.nextLine();
-	            			System.out.print("Number of columns: ");
-	            			int    newTableColumnSize = scan.nextInt();
-	            			scan.nextLine();
-	            			
-	            			
-		    				Table books = new Table(new Books().getName(), 
-		    						                new Books().getColumns());	    				
-		    				System.out.println(books.getSqlStructure());
-			    			sql.createTable(books);
-				        	} catch (Exception e) {
-						    // TODO Auto-generated catch block
-						    e.printStackTrace();
-				    	}
-            			break;
-            		
-            		case SQL_DEBUG_SELECT : 
-            			System.out.print("Selection: ");
-            			String selection = scan.nextLine();		
-            			System.out.print("Table's name: ");
-            			String tableSelect = scan.nextLine();
-            			sql.searchQuery(selection, tableSelect);
-            			break;
-            		
-            		case SQL_DEBUG_PRESENT: 
-	    				try {
-	    					System.out.print("Table's name: ");
-	            			String tbl = scan.nextLine();
-		    				System.out.println(sql.tableIsPresent(tbl));
-			    			//sql.createTable(books.getSqlStructure());
-				        	} catch (Exception e) {
-						    // TODO Auto-generated catch block
-						    e.printStackTrace();
-				    	}
-            			break;
-            			
-            		case SQL_DEBUG_BUILDER : 
-	    				try {
-		    				new Builder(sql);
-				        	} catch (Exception e) {
-						    // TODO Auto-generated catch block
-						    e.printStackTrace();
-				    	}
-            			break;
-            			
-            		case SQL_DEBUG_CREATE_SCHEMA :
-            			System.out.print("Schema to CREATE: ");
-            			String newSchema = scan.nextLine();
-            			sql.createSchema(newSchema);
-            			break;
-            			
-            		case SQL_DEBUG_DROP : 
-            			System.out.print("Table to DROP: ");
-            			String dropTable = scan.nextLine();
-            			sql.dropTable(dropTable);
-            			break;	
- 				   	
-            		case SQL_DEBUG_FIND_ALL :
-            			ArrayList<Book> books = sql.fetchAllBooks();
-            			if (books == null) {
-            				System.out.println("No books found.");
-            			} else {
-            				System.out.println("Number of items: " + books.size());
-            			    for (int i = 0; i < books.size(); i++) {
-            			    	Book book = books.get(i);
-            				    System.out.println("Book #" + (i+1) + "\n" + book.getPrintout(book) + "\n");
-            				    /*if (book.getRecords().equals(new ArrayList<Record>()) ||
-            				    	book.getRecords() == null) {
-            				    	System.out.println("No Records");
-            				    } else {
-            				       System.out.println("Records:");
-            				       for (int j = 0; j < book.getRecords().size(); j++) {
-            				       System.out.println("Record #" + j + ": " + 
-            				                           book.getRecords().get(j).getArchiveId()  + ", " +
-            				                           book.getRecords().get(j).getUsername()   + ", " +
-            				                           book.getRecords().get(j).getLid()        + ", " +
-            				                           book.getRecords().get(j).getTakenTime()  + ", " +
-            				                           book.getRecords().get(j).getDueTime()    + ", " +
-            				                           book.getRecords().get(j).getReturnedTime());
-            				       }
-            				    }
-            			    }
-            			}
-            			break;
-            			*/
+           
 		
 		private void debugMenu() {
         	System.out.println("\nDEBUG:");
@@ -353,4 +156,4 @@ public class Debug {
         	System.out.println("17. Exit");
         	System.out.print("\nSelect: ");
 		}
-}
+}*/

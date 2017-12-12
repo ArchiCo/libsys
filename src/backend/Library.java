@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import backend.FlexibleBookComparator.Order;
+import database.Credentials;
+import database.DataController;
 
 public class Library {
 	private ArrayList<Book> listBooks;
@@ -16,37 +18,64 @@ public class Library {
 	private Book book1, book2, book3;
 	private final static long DAILY_OVERDUE_FEE = 2;
 	private LocalDate today;
-
+	private DataController database; 
+	
 	public Library() {
-		today = LocalDate.now();
-		this.listBooks = new ArrayList<Book>();
-		this.listLentBooks = new ArrayList<Book>();
-		this.customers = new ArrayList<Customer>();
-		this.records = new ArrayList<Records>();
-		book1 = new Book("dragon", "100", "dragon", "dragon", "", "dragon");
-		book2 = new Book("dog", "200", "dog", "dog", "", "dog");
-		book3 = new Book("cat", "300", "cat", "cat", "", "cat");
-		book1.setLid(1);
-		book2.setLid(2);
-		book3.setLid(3);
-		addBook(book1);
-		addBook(book2);
-		addBook(book3);
+		try {
+			database = new DataController();
+			today = LocalDate.now();
+			this.listBooks = new ArrayList<Book>();
+			this.listLentBooks = new ArrayList<Book>();
+			this.customers = new ArrayList<Customer>();
+			this.records = new ArrayList<Records>();
+			book1 = new Book("dragon", "100", "dragon", "dragon", "", "dragon");
+			book2 = new Book("dog", "200", "dog", "dog", "", "dog");
+			book3 = new Book("cat", "300", "cat", "cat", "", "cat");
+			book1.setLid(1);
+			book2.setLid(2);
+			book3.setLid(3);
+			addBook(book1);
+			addBook(book2);
+			addBook(book3);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
-	public void registerCustomer(String libraryID, String name, String address, int phoneNumber) {
-		Customer newCustomer = new Customer(libraryID, name, address, phoneNumber);
-		this.customers.add(newCustomer);
+	public void registerCustomer(String customerId, String name, String address, int phoneNumber) {
+		Customer newCustomer = new Customer(customerId, name, address, phoneNumber);
+		database.registerCustomer(newCustomer);
+		//this.customers.add(newCustomer);
 	}
 
-	public Customer findCustomer(String libraryID) {
-		for (Customer s : this.customers) {
-			if (s != null && s.getLibraryID().equals(libraryID))
-				return s;
+	public Customer findCustomer(String customerId) {
+		Customer customer = database.customers().fetchByCid(customerId);
+		if (customer != null) {
+			return customer;
+		} else {
+			return null;
+		}
+		/*
+		for (Customer customer : customers) {
+			if (customer != null && customer.getCustomerId().equals(customerId));
+				return customer;
 		}
 		return null;
+		*/
+	}
+	
+	public boolean deregisterCustomer(String customerId) {
+		return database.deregisterCustomer(customerId);
 	}
 
+	public boolean changeCustomerInformation(Customer customer) {
+		try {
+			return database.customers().modify(customer);
+		} catch (Exception e) {
+			return false;
+		}
+	}
+	
 	public void addBook(Book book) {
 		listBooks.add(book);
 	}
@@ -54,7 +83,7 @@ public class Library {
 	public void lendBook(Customer regCustomer, Book book) {
 		if (regCustomer != null && book != null) {
 			LocalDate dueDate = today.plusDays(14);
-			Records newRecord = new Records(regCustomer.getLibraryID(), book.getLid(), today, dueDate);
+			Records newRecord = new Records(regCustomer.getCustomerId(), book.getLid(), today, dueDate);
 			this.records.add(0, newRecord);
 			this.listLentBooks.add(book);
 			this.listBooks.remove(book);
@@ -177,10 +206,10 @@ public class Library {
 	}
 
 	public Records findRecord(Customer regCustomer, Book book) {
-		for (Records s : records) {
-			if (s != null && s.getLibraryID().equals(regCustomer.getLibraryID()))
-				if (s.getLid() == book.getLid())
-					return s;
+		for (Records customer : records) {
+			if (customer != null && customer.getCustomerId().equals(regCustomer.getCustomerId()))
+				if (customer.getLid() == book.getLid())
+					return customer;
 		}
 		return null;
 	}

@@ -9,14 +9,16 @@ import backend.FlexibleBookComparator.Order;
 public class LibraryMenu {
 	public static final int CUSTOMER_REGISTRATION = 1;
 	public static final int PRINT_CUSTOMER = 2;
-	public static final int LEND_BOOK = 3;
-	public static final int RETURN_BOOK = 4;
-	public static final int ADD_BOOK = 5;
-	public static final int ADVANCE_TIME = 6;
-	public static final int SORT_BOOK = 7;
-	public static final int PRINT_CUSTOMER_HISTORY = 8;
-	public static final int PRINT_POPULAR_BOOKS = 9;
-	public static final int QUIT = 11;
+	public static final int MODIFY_CUSTOMER = 3;
+	public static final int REMOVE_CUSTOMER = 4;
+	public static final int LEND_BOOK = 5;
+	public static final int RETURN_BOOK = 6;
+	public static final int ADD_BOOK = 7;
+	public static final int ADVANCE_TIME = 8;
+	public static final int SORT_BOOK = 9;
+	public static final int PRINT_CUSTOMER_HISTORY = 10;
+	public static final int PRINT_POPULAR_BOOKS = 11;
+	public static final int QUIT = 12;
 	private Scanner sc;
 	private Library library;
 
@@ -40,6 +42,12 @@ public class LibraryMenu {
 					break;
 				case PRINT_CUSTOMER:
 					findCustomer();
+					break;
+				case MODIFY_CUSTOMER:
+					modifyCustomer();
+					break;
+				case REMOVE_CUSTOMER:
+					removeCustomer();
 					break;
 				case LEND_BOOK:
 					lendBook();
@@ -91,16 +99,18 @@ public class LibraryMenu {
 		System.out.println(" ");
 		System.out.println(" Choose an option below: ");
 		System.out.println(" ");
-		System.out.println(" 1. Register a customer. ");
-		System.out.println(" 2. Print a customer's information. ");
-		System.out.println(" 3. Borrow book. ");
-		System.out.println(" 4. Return book. ");
-		System.out.println(" 5. Add book. ");
-		System.out.println(" 6. Advance time. ");
-		System.out.println(" 7. Sort books by author's name. ");
-		System.out.println(" 8. Print a customer's history");
-		System.out.println(" 9. Show what books are most popular. ");
-		System.out.println(" 11. Quit the program.");
+		System.out.println("  1. Register a customer. ");
+		System.out.println("  2. Print a customer's information. ");
+		System.out.println("  3. Modify customer. ");
+		System.out.println("  4. Deregister customer. ");
+		System.out.println("  5. Borrow book. ");
+		System.out.println("  6. Return book. ");
+		System.out.println("  7. Add book. ");
+		System.out.println("  8. Advance time. ");
+		System.out.println("  9. Sort books by author's name. ");
+		System.out.println(" 10. Print a customer's history");
+		System.out.println(" 11. Show what books are most popular. ");
+		System.out.println(" 12. Quit the program.");
 
 	}
 
@@ -116,7 +126,8 @@ public class LibraryMenu {
 		do {
 			libraryID = generateRandomChars("ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890", 4);
 		} while (this.library.findCustomer(libraryID) != null);
-		this.library.registerCustomer(libraryID, name, address, phoneNumber);
+		
+		library.registerCustomer(libraryID, name, address, phoneNumber);
 		System.out.println("Here's your library card!");
 		Customer foundCustomer = library.findCustomer(libraryID);
 		System.out.print(foundCustomer);
@@ -133,6 +144,41 @@ public class LibraryMenu {
 		} else
 			System.out.println("You are not registered in the system");
 		return null;
+	}
+	
+	private void modifyCustomer() {
+		System.out.print("Please show your library card: ");
+		String libraryID = sc.nextLine();
+		
+		Customer customer = library.findCustomer(libraryID);
+		if (customer != null) {
+			System.out.print("Please enter new name: ");
+			String name = sc.nextLine();
+			System.out.print("Please enter new address: ");
+			String address = sc.nextLine();
+			System.out.print("Please enter new phone number: ");
+			String phoneNumber = sc.nextLine();
+			if (!name.isEmpty()) {
+				customer.setName(name);
+			}
+			if (!address.isEmpty()) {
+				customer.setAddress(address);
+			}
+			try {
+				if (!phoneNumber.isEmpty()) {
+					customer.setPhoneNumber(Integer.parseInt(phoneNumber));
+				}
+			} catch (Exception e) {}
+			library.changeCustomerInformation(customer);
+		} else {
+			System.out.println("Customer is not registered in the system.");
+		}
+	}
+	
+	private void removeCustomer() {
+		System.out.print("Please show your library card: ");
+		String libraryID = sc.nextLine();
+		library.deregisterCustomer(libraryID);
 	}
 
 	private void printCustomerHistory() {

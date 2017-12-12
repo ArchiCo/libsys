@@ -4,15 +4,15 @@ import java.time.LocalDate;
 
 public class Records {
 	private int archieveId;
-	private String libraryID;
+	private String customerId;
 	private int lid;
 	private LocalDate dateTaken;
 	private LocalDate dateDue;
 	private LocalDate dateReturned;
 	private long fine;
 
-	public Records(String libraryID, int lid, LocalDate dateTaken, LocalDate dateDue) {
-		this.libraryID = libraryID;
+	public Records(String customerId, int lid, LocalDate dateTaken, LocalDate dateDue) {
+		this.customerId = customerId;
 		this.lid = lid;
 		this.dateTaken = dateTaken;
 		this.dateDue = dateDue;
@@ -26,12 +26,12 @@ public class Records {
 		this.archieveId = archieveId;
 	}
 
-	public String getLibraryID() {
-		return libraryID;
+	public String getCustomerId() {
+		return customerId;
 	}
 
-	public void setLibraryID(String libraryID) {
-		this.libraryID = libraryID;
+	public void setLibraryID(String newCustomerId) {
+		this.customerId = newCustomerId;
 	}
 
 	public int getLid() {
@@ -78,7 +78,7 @@ public class Records {
 
 		if (otherObject instanceof Records) {
 			Records otherRecord = (Records) otherObject;
-			boolean result = this.getLibraryID() == otherRecord.getLibraryID() && this.getLid() == otherRecord.getLid();
+			boolean result = this.getCustomerId() == otherRecord.getCustomerId() && this.getLid() == otherRecord.getLid();
 			return result;
 
 		} else {

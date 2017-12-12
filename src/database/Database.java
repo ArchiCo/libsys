@@ -1,4 +1,4 @@
-package database.controllers;
+package database;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -11,7 +11,6 @@ import javax.sql.RowSet;
 
 import com.sun.rowset.JdbcRowSetImpl;
 
-import database.Credentials;
 import datatype.Book;
 import datatype.Customer;
 import datatype.Record;
