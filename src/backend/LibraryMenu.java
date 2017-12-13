@@ -1,5 +1,7 @@
 package backend;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Random;
 import java.util.Scanner;
@@ -9,16 +11,29 @@ import backend.FlexibleBookComparator.Order;
 public class LibraryMenu {
 	public static final int CUSTOMER_REGISTRATION = 1;
 	public static final int PRINT_CUSTOMER = 2;
-	public static final int MODIFY_CUSTOMER = 3;
-	public static final int REMOVE_CUSTOMER = 4;
-	public static final int LEND_BOOK = 5;
-	public static final int RETURN_BOOK = 6;
-	public static final int ADD_BOOK = 7;
-	public static final int ADVANCE_TIME = 8;
-	public static final int SORT_BOOK = 9;
-	public static final int PRINT_CUSTOMER_HISTORY = 10;
-	public static final int PRINT_POPULAR_BOOKS = 11;
-	public static final int QUIT = 12;
+	public static final int SHOW_CUSTOMERS = 3;
+	public static final int MODIFY_CUSTOMER = 4;
+	public static final int REMOVE_CUSTOMER = 5;
+	
+	public static final int ADD_BOOK = 6;
+	public static final int PRINT_BOOK = 7;
+	public static final int SHOW_BOOKS = 8;
+	public static final int MODIFY_BOOK = 9;
+	public static final int REMOVE_BOOK = 10;
+	
+	public static final int ADD_RECORD = 11;
+	public static final int PRINT_RECORD = 12;
+	public static final int SHOW_RECORDS = 13;
+	public static final int MODIFY_RECORD = 14;
+	public static final int REMOVE_RECORD = 15;
+	
+	public static final int LEND_BOOK = 16;
+	public static final int RETURN_BOOK = 17;
+	public static final int ADVANCE_TIME = 18;
+	public static final int SORT_BOOK = 19;
+	public static final int PRINT_CUSTOMER_HISTORY = 20;
+	public static final int PRINT_POPULAR_BOOKS = 21;
+	public static final int QUIT = 22;
 	private Scanner sc;
 	private Library library;
 
@@ -37,11 +52,15 @@ public class LibraryMenu {
 				option = sc.nextInt();
 				sc.nextLine();
 				switch (option) {
+				
 				case CUSTOMER_REGISTRATION:
 					registerCustomer();
 					break;
 				case PRINT_CUSTOMER:
 					findCustomer();
+					break;
+				case SHOW_CUSTOMERS:
+					showCustomers();
 					break;
 				case MODIFY_CUSTOMER:
 					modifyCustomer();
@@ -49,14 +68,44 @@ public class LibraryMenu {
 				case REMOVE_CUSTOMER:
 					removeCustomer();
 					break;
+					
+				case ADD_BOOK:
+					addBook();
+					break;
+				case PRINT_BOOK:
+					findBook();
+					break;
+				case SHOW_BOOKS:
+					showBooks();
+					break;
+				case MODIFY_BOOK:
+					modifyBook();
+					break;
+				case REMOVE_BOOK:
+					removeBook();
+					break;
+					
+				case ADD_RECORD:
+					addRecord();
+					break;
+				case PRINT_RECORD:
+					findRecord();
+					break;
+				case SHOW_RECORDS:
+					showRecords();
+					break;
+				case MODIFY_RECORD:
+					modifyRecord();
+					break;
+				case REMOVE_RECORD:
+					removeRecord();
+					break;
+					
 				case LEND_BOOK:
 					lendBook();
 					break;
 				case RETURN_BOOK:
 					returnBook();
-					break;
-				case ADD_BOOK:
-					addBook();
 					break;
 				case ADVANCE_TIME:
 					advanceTime();
@@ -66,8 +115,8 @@ public class LibraryMenu {
 					break;
 
 				case SORT_BOOK:
-					library.sortListBooksBy(Order.Author);
-					for (Book book : this.library.getListBooks()) {
+					//library.sortListBooksBy(Order.Author);
+					for (Book book : library.getBooksByAuthor()) {
 						System.out.println("");
 						System.out.println(book);
 					}
@@ -99,18 +148,33 @@ public class LibraryMenu {
 		System.out.println(" ");
 		System.out.println(" Choose an option below: ");
 		System.out.println(" ");
+		System.out.println(" Administrative Commands: ");
 		System.out.println("  1. Register a customer. ");
 		System.out.println("  2. Print a customer's information. ");
-		System.out.println("  3. Modify customer. ");
-		System.out.println("  4. Deregister customer. ");
-		System.out.println("  5. Borrow book. ");
-		System.out.println("  6. Return book. ");
-		System.out.println("  7. Add book. ");
-		System.out.println("  8. Advance time. ");
-		System.out.println("  9. Sort books by author's name. ");
-		System.out.println(" 10. Print a customer's history");
-		System.out.println(" 11. Show what books are most popular. ");
-		System.out.println(" 12. Quit the program.");
+		System.out.println("  3. Print all customers. ");
+		System.out.println("  4. Modify customer's information. ");
+		System.out.println("  5. Deregister customer. \n");
+		
+		System.out.println("  6. Add book. ");
+		System.out.println("  7. Print book's information. ");	
+		System.out.println("  8. Print all books. ");
+		System.out.println("  9. Modify book's information. ");
+		System.out.println(" 10. Remove book. \n");
+		
+		System.out.println(" 11. Add record. ");
+		System.out.println(" 12. Print record's information. ");	
+		System.out.println(" 13. Print all records. ");
+		System.out.println(" 14. Modify records's information. ");
+		System.out.println(" 15. Remove record. \n");		
+		
+		System.out.println("  Functions: ");
+		System.out.println(" 16. Borrow book. ");
+		System.out.println(" 17. Return book. ");
+		System.out.println(" 18. Advance time. ");
+		System.out.println(" 19. Sort books by author's name. ");
+		System.out.println(" 20. Print a customer's history");
+		System.out.println(" 21. Show what books are most popular. ");
+		System.out.println(" 22. Quit the program.");
 
 	}
 
@@ -146,6 +210,22 @@ public class LibraryMenu {
 		return null;
 	}
 	
+	private void showCustomers() {
+		try {
+			ArrayList<Customer> customers = library.getCustomersList();
+			System.out.println("Customers, total: " + customers.size());
+			if (!customers.isEmpty()) {
+				for (Customer customer : customers) {
+					System.out.println(customer.toString());
+				}
+			} else {
+				System.out.println("No customers registered in the system.");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	private void modifyCustomer() {
 		System.out.print("Please show your library card: ");
 		String libraryID = sc.nextLine();
@@ -180,7 +260,8 @@ public class LibraryMenu {
 		String libraryID = sc.nextLine();
 		library.deregisterCustomer(libraryID);
 	}
-
+	
+	
 	private void printCustomerHistory() {
 		System.out.print("Please show your library card: ");
 		String libraryID = sc.nextLine();
@@ -219,7 +300,7 @@ public class LibraryMenu {
 			searchBook();
 			Book foundBook = printBook();
 			System.out.println("");
-			System.out.println("Today's date is " + this.library.getDate() + ".");
+			System.out.println("Today's date is " + library.getDate() + ".");
 			System.out.println("");
 			this.library.lendBook(foundCustomer, foundBook);
 			System.out.println("Please return the book in 2 weeks.");
@@ -233,8 +314,8 @@ public class LibraryMenu {
 		if (foundCustomer != null) {
 			Book foundLentBook = findLentBook();
 			if (foundLentBook != null) {
-				Records foundRecord = this.library.findRecord(foundCustomer, foundLentBook);
-				this.library.returnBook(foundLentBook, foundRecord);
+				Record foundRecord = library.findRecord(foundCustomer, foundLentBook);
+				library.returnBook(foundLentBook, foundRecord);
 				long exceededDays = this.library.exceededDays(foundRecord);
 				if (exceededDays > 0) {
 					System.out.println("You have exceeded borrowing duration by " + exceededDays + " days.");
@@ -247,7 +328,7 @@ public class LibraryMenu {
 	private Book findLentBook() {
 		System.out.print("Please enter the book's ID: ");
 		int lid = sc.nextInt();
-		for (Book s : this.library.getListLentBooks()) {
+		for (Book s : library.getListLentBooks()) {
 			if (s != null && s.getLid() == lid) {
 				return s;
 			}
@@ -259,7 +340,7 @@ public class LibraryMenu {
 		System.out.print("Please enter author's name: ");
 		String authorName = sc.nextLine();
 		int counter = 0;
-		for (Book s : this.library.getListBooks()) {
+		for (Book s : library.getAvailableBooks()) {
 			if (s != null && s.getAuthor().contains(authorName)) {
 				System.out.println();
 				System.out.println("===============================");
@@ -274,20 +355,186 @@ public class LibraryMenu {
 	}
 
 	private void addBook() {
-		System.out.print("Please enter book's title: ");
-		String name = sc.nextLine();
-		System.out.print("Please enter book's author: ");
-		String author = sc.nextLine();
-		System.out.print("Please enter book's genre: ");
-		String genre = sc.nextLine();
-		System.out.print("Please enter book's publisher: ");
-		String publisher = sc.nextLine();
 		System.out.print("Please enter book's ISBN: ");
 		String isbn = sc.nextLine();
-		Book b = new Book(name, isbn, publisher, genre, "", author);
-		this.library.addBook(b);
+		System.out.print("Please enter book's title: ");
+		String title = sc.nextLine();
+		System.out.print("Please enter book's genre: ");
+		String genre = sc.nextLine();
+		System.out.print("Please enter book's author: ");
+		String author = sc.nextLine();
+		System.out.print("Please enter book's publisher: ");
+		String publisher = sc.nextLine();
+		this.library.addBook(isbn, title, genre, author, publisher, "");
+	}
+	
+	private Book findBook() {
+		System.out.print("Please enter book's library ID: ");
+		int libraryID = sc.nextInt();
+		Book foundBook = library.findBook(libraryID);
+		if (foundBook != null) {
+			System.out.print("");
+			System.out.print(foundBook);
+			return foundBook;
+		} else
+			System.out.println("The book is not registered in the system");
+		return null;
+	}
+	
+	private void showBooks() {
+		try {
+			ArrayList<Book> books = library.getAvailableBooks();
+			System.out.println("Books, total: " + books.size());
+			for (Book book : books) {
+				System.out.println(book.toString());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void modifyBook() {
+		System.out.print("Please enter book's library ID: ");
+		int libraryID = sc.nextInt();
+		sc.nextLine();
+		Book book = library.findBook(libraryID);
+		if (book != null) {
+
+			System.out.print("Please enter new ISBN-13: ");
+			String isbn = sc.nextLine();
+			System.out.print("Please enter new title: ");
+			String title = sc.nextLine();
+			System.out.print("Please enter new author: ");
+			String author = sc.nextLine();
+			System.out.print("Please enter new genre: ");
+			String genre = sc.nextLine();
+			System.out.print("Please enter new publisher: ");
+			String publisher = sc.nextLine();
+			System.out.print("Please enter new shelf: ");
+			String shelf = sc.nextLine();
+			
+			if (!isbn.isEmpty()) {
+				book.setIsbn(isbn);
+			}
+			if (!title.isEmpty()) {
+				book.setTitle(title);
+			}
+			if (!author.isEmpty()) {
+				book.setAuthor(author);
+			}
+			if (!genre.isEmpty()) {
+				book.setGenre(genre);
+			}
+			if (!publisher.isEmpty()) {
+				book.setPublisher(publisher);
+			}
+			if (!shelf.isEmpty()) {
+				book.setShelf(shelf);
+			}
+			library.changeBookInformation(book);
+		} else {
+			System.out.println("Book is not registered in the system.");
+		}
 	}
 
+	private void removeBook() {
+		System.out.print("Please enter book's library ID: ");
+		int libraryID = sc.nextInt();
+		sc.nextLine();
+		library.removeBook(libraryID);
+	}
+	
+	
+	private void addRecord() {
+		System.out.print("Please enter record's CID: ");
+		String cid = sc.nextLine();
+		System.out.print("Please enter record's LID: ");
+		int lid = sc.nextInt();
+		sc.nextLine();
+		System.out.print("Please enter record's date taken: ");
+		String taken = sc.nextLine();
+		System.out.print("Please enter record's date returned: ");
+		String due = sc.nextLine();
+		library.addRecord(cid, lid, taken, due);
+	}
+	
+	private Record findRecord() {
+		System.out.print("Please enter record's archive ID: ");
+		int archiveID = sc.nextInt();
+		Record foundRecord = library.findRecord(archiveID);
+		if (foundRecord != null) {
+			System.out.print("");
+			System.out.print(foundRecord);
+			return foundRecord;
+		} else
+			System.out.println("The book is not registered in the system");
+		return null;
+	}
+	
+	private void showRecords() {
+		try {
+			ArrayList<Record> records = library.getRecords();
+			System.out.println("Records, total: " + records.size());
+			for (Record record : records) {
+				System.out.println(record.toString());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void modifyRecord() {
+		System.out.print("Please enter record's archive ID: ");
+		int id = sc.nextInt();
+		sc.nextLine();
+		Record record = library.findRecord(id);
+		if (record != null) {
+
+			System.out.print("Please enter new CID: ");
+			String cid = sc.nextLine();
+			System.out.print("Please enter new LID: ");
+			int lid = sc.nextInt();
+			sc.nextLine();
+			System.out.print("Please enter new date taken: ");
+			String taken = sc.nextLine();
+			System.out.print("Please enter new date due: ");
+			String due = sc.nextLine();
+			System.out.print("Please enter new date returned: ");
+			String returned = sc.nextLine();
+			
+			try {
+				if (!cid.isEmpty()) {
+					record.setLibraryID(cid);
+				}
+				if (lid > 0) {
+					record.setLid(lid);
+				}
+				if (!taken.isEmpty()) {
+					record.setDateTaken(LocalDate.parse(taken));
+				}
+				if (!due.isEmpty()) {
+					record.setDateDue(LocalDate.parse(due));
+				}
+				if (!returned.isEmpty()) {
+					record.setDateReturned(LocalDate.parse(returned));
+				}
+				library.changeRecordInformation(record);
+			} catch (Exception e) {
+				e.printStackTrace();;
+			}
+		} else {
+			System.out.println("Book is not registered in the system.");
+		}
+	}
+
+	private void removeRecord() {
+		System.out.print("Please enter record's archive ID: ");
+		int archiveID = sc.nextInt();
+		sc.nextLine();
+		library.removeRecord(archiveID);
+	}
+	
+	
 	private void advanceTime() {
 		System.out.print("Enter number of days: ");
 		int days = sc.nextInt();

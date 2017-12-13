@@ -2,7 +2,8 @@ package backend;
 
 import java.time.LocalDate;
 
-public class Records {
+public class Record {
+	final String END_OF_LINE = System.lineSeparator();
 	private int archieveId;
 	private String customerId;
 	private int lid;
@@ -11,14 +12,24 @@ public class Records {
 	private LocalDate dateReturned;
 	private long fine;
 
-	public Records(String customerId, int lid, LocalDate dateTaken, LocalDate dateDue) {
+	public Record(int archiveId, String customerId, int lid, LocalDate dateTaken, LocalDate dateDue){
+		this(archiveId, customerId, lid, dateTaken, dateDue, null);
+	}
+	
+	public Record(String customerId, int lid, LocalDate dateTaken, LocalDate dateDue){
+		this(-1, customerId, lid, dateTaken, dateDue, null);
+	}
+	
+	public Record(int archiveId, String customerId, int lid, LocalDate dateTaken, LocalDate dateDue, LocalDate dateReturned) {
+		this.archieveId = archiveId;
 		this.customerId = customerId;
 		this.lid = lid;
 		this.dateTaken = dateTaken;
 		this.dateDue = dateDue;
+		this.dateReturned = dateReturned;
 	}
 
-	public int getArchieveId() {
+	public int getArchiveId() {
 		return archieveId;
 	}
 
@@ -76,13 +87,25 @@ public class Records {
 
 	public boolean equals(Object otherObject) {
 
-		if (otherObject instanceof Records) {
-			Records otherRecord = (Records) otherObject;
+		if (otherObject instanceof Record) {
+			Record otherRecord = (Record) otherObject;
 			boolean result = this.getCustomerId() == otherRecord.getCustomerId() && this.getLid() == otherRecord.getLid();
 			return result;
 
 		} else {
 			return false;
 		}
+	}
+	
+	public String toString() {
+		String result = "aID: " + getArchiveId() + END_OF_LINE;
+		result += "cID: " + getCustomerId() + END_OF_LINE;
+		result += "lID: " + getLid() + END_OF_LINE;
+		result += "Date taken: " + getDateTaken().toString() + END_OF_LINE;
+		result += "Date due: "   + getDateDue().toString() + END_OF_LINE;	
+		if (getDateReturned() != null) {
+			result += "Date returned: "   + getDateReturned().toString();	
+		}
+		return result;
 	}
 }

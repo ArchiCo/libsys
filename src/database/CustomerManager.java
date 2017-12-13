@@ -14,7 +14,6 @@ public class CustomerManager {
 	private final int ADDRESS_COL = 3;
 	private final int PHONE_COL = 4;
 	
-	
 	private final int MODIFY_CID = 1;
 	private final int MODIFY_NAME = 2;
 	private final int MODIFY_ADDRESS = 3;

@@ -2,7 +2,7 @@ package database;
 
 import java.io.IOException;
 
-import datatype.Book;
+import backend.Book;
 import backend.Customer;
 
 public class DataController extends Database{
@@ -19,10 +19,12 @@ public class DataController extends Database{
 		rm = new RecordManager(this);
 		cm = new CustomerManager(this);
 		bm = new BookManager(this);
-		//rm.dropTable();
-		//cm.dropTable();
-		//bm.dropTable();
-		//cm.createTable();
+		/*rm.dropTable();
+		cm.dropTable();
+		bm.dropTable();
+		cm.createTable();
+		bm.createTable();
+		rm.createTable();*/
 	}
 	
 	public CustomerManager customers() { return cm; }
@@ -59,12 +61,28 @@ public class DataController extends Database{
 	
 	public boolean addBook(Book book) {
 		try {
-			//return 
+			return bm.add(book);
 		} catch (Exception e) {
-			
+			System.out.println("[DataController, addBook] ERROR: " + e.getMessage());
+			return false;
 		}
-		return false;
 	}
 	
+	public boolean removeBook(int lid) {
+		try {
+			return bm.delete(lid);
+		} catch (Exception e) {
+			System.out.println("[DataController, removeBook] ERROR: " + e.getMessage());
+			return false;
+		}
+	}
 	
+	public boolean removeRecord(int aid) {
+		try {
+			return rm.delete(aid);
+		} catch (Exception e) {
+			System.out.println("[DataController, removeBook] ERROR: " + e.getMessage());
+			return false;
+		}
+	}	
 }

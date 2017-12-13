@@ -11,7 +11,11 @@ public class Book {
 	private String shelf;
 	private int lentTimes;
 
-	public Book(String title, String isbn, String publisher, String genre, String shelf, String author) {
+	public Book(String isbn, String title, String genre, String author, String publisher, String shelf) {
+		this(-1, isbn, title, genre, author, publisher, shelf);
+	}
+	public Book(int lid, String isbn, String title, String genre, String author, String publisher, String shelf) {
+		this.setLid(lid);
 		this.setTitle(title);
 		this.setIsbn(isbn);
 		this.setPublisher(publisher);
@@ -77,7 +81,8 @@ public class Book {
 	}
 
 	public String toString() {
-		String result = "Name: " + getTitle() + "." + END_OF_LINE;
+		String result = "LID: " + getLid() + END_OF_LINE;
+		result += "Name: " + getTitle() + "." + END_OF_LINE;
 		result += "ISBN-13: " + getIsbn() + "." + END_OF_LINE;
 		result += "Author: " + getAuthor() + END_OF_LINE;
 		result += "Genre: " + getGenre() + END_OF_LINE;

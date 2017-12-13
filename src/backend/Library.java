@@ -14,7 +14,7 @@ public class Library {
 	private ArrayList<Book> listLentBooks;
 	private ArrayList<Book> popularBooks;
 	private ArrayList<Customer> customers;
-	private ArrayList<Records> records;
+	private ArrayList<Record> records;
 	private Book book1, book2, book3;
 	private final static long DAILY_OVERDUE_FEE = 2;
 	private LocalDate today;
@@ -27,16 +27,17 @@ public class Library {
 			this.listBooks = new ArrayList<Book>();
 			this.listLentBooks = new ArrayList<Book>();
 			this.customers = new ArrayList<Customer>();
-			this.records = new ArrayList<Records>();
-			book1 = new Book("dragon", "100", "dragon", "dragon", "", "dragon");
-			book2 = new Book("dog", "200", "dog", "dog", "", "dog");
-			book3 = new Book("cat", "300", "cat", "cat", "", "cat");
+			this.records = new ArrayList<Record>();
+			book1 = new Book("100", "Book 1", "Genre 1", "Author 1", "Publisher 1", "");
+			book2 = new Book("200", "Book 2", "Genre 2", "Author 2", "Publisher 2", "");
+			book3 = new Book("300", "Book 3", "Genre 3", "Author 3", "Publisher 3", "");
+			
 			book1.setLid(1);
 			book2.setLid(2);
 			book3.setLid(3);
-			addBook(book1);
+			/*addBook(book1);
 			addBook(book2);
-			addBook(book3);
+			addBook(book3);*/
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -67,7 +68,15 @@ public class Library {
 	public boolean deregisterCustomer(String customerId) {
 		return database.deregisterCustomer(customerId);
 	}
+	
+	public boolean removeBook(int lid) {
+		return database.removeBook(lid);
+	}
 
+	public boolean removeRecord(int aid) {
+		return database.removeRecord(aid);
+	}
+	
 	public boolean changeCustomerInformation(Customer customer) {
 		try {
 			return database.customers().modify(customer);
@@ -75,34 +84,84 @@ public class Library {
 			return false;
 		}
 	}
+
+	public boolean changeBookInformation(Book book) {
+		try {
+			return database.books().modify(book);
+		} catch (Exception e) {
+			return false;
+		}
+	}
+	
+	public boolean changeRecordInformation(Record record) {
+		try {
+			return database.records().modify(record);
+		} catch (Exception e) {
+			return false;
+		}
+	}
+	
+	public void addBook(String isbn, String title, String genre, String author, String publisher, String shelf) {
+		//listBooks.add(book);
+		Book newBook = new Book(isbn, title, genre, author, publisher, shelf);
+		addBook(newBook);
+	}
 	
 	public void addBook(Book book) {
-		listBooks.add(book);
+		database.addBook(book);
+	}
+	
+	public void addRecord(String cid, int lid, String dateTaken, String dateDue) {
+		addRecord(new Record(cid, lid, LocalDate.parse(dateTaken), LocalDate.parse(dateDue)));
 	}
 
+	public void addRecord(Record record) {
+		try {
+			database.records().add(record);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public Record findRecord(int aid) {
+		Record record = database.records().fetchById(aid);
+		if (record != null) {
+			return record;
+		} else {
+			return null;
+		}
+	}
+	
 	public void lendBook(Customer regCustomer, Book book) {
 		if (regCustomer != null && book != null) {
 			LocalDate dueDate = today.plusDays(14);
-			Records newRecord = new Records(regCustomer.getCustomerId(), book.getLid(), today, dueDate);
-			this.records.add(0, newRecord);
-			this.listLentBooks.add(book);
-			this.listBooks.remove(book);
+			Record newRecord = new Record(regCustomer.getCustomerId(), book.getLid(), today, dueDate);
+			database.records().add(newRecord);
+			//this.records.add(0, newRecord);
+			//this.listLentBooks.add(book);
+			//this.listBooks.remove(book);
 		}
 	}
 
-	public void returnBook(Book book, Records record) {
-		this.listBooks.add(book);
-		this.listLentBooks.remove(book);
+	public void returnBook(Book book, Record record) {
+		//this.listBooks.add(book);
+		//this.listLentBooks.remove(book);
 		record.setDateReturned(today);
 		record.setFine(lateReturnCharge(record));
+		database.records().modify(record);
 	}
 
-	public void sortListBooksBy(FlexibleBookComparator.Order sortingBy) {
-		FlexibleBookComparator comparator = new FlexibleBookComparator();
+	public ArrayList<Book> getBooksByAuthor() {
+		return database.books().fetchAllByAuthor();
+	}
+/*	public void sortListBooksBy(FlexibleBookComparator.Order sortingBy) {
+		/*FlexibleBookComparator comparator = new FlexibleBookComparator();
 		comparator.setSortingBy(sortingBy);
-		Collections.sort(this.listBooks, comparator);
+		Collections.sort(database.books().fetchAll(), comparator);
+		//Collections.sort(this.listBooks, comparator);
+		
 
-	}
+	}*/
 
 	public void printPopularBooks() {
 		this.setPopularBooks(new ArrayList<Book>());
@@ -170,18 +229,22 @@ public class Library {
 	}
 
 	public Book findBook(String ISBN) {
-		for (Book s : this.listBooks) {
+		for (Book s : this.getAvailableBooks()) {
 			if (s != null && s.getIsbn().equals(ISBN))
 				return s;
 		}
 		return null;
 	}
+	
+	public Book findBook(int lid) {
+		return database.books().fetchByLid(lid);
+	}
 
-	public long exceededDays(Records record) {
+	public long exceededDays(Record record) {
 		return record.getDateDue().until(today, ChronoUnit.DAYS);
 	}
 
-	public long lateReturnCharge(Records record) {
+	public long lateReturnCharge(Record record) {
 		return exceededDays(record) * DAILY_OVERDUE_FEE;
 	}
 
@@ -193,20 +256,33 @@ public class Library {
 		today = today.plusDays(days);
 	}
 
-	public ArrayList<Records> getRecords() {
-		return records;
+	public ArrayList<Record> getRecords() {
+		return database.records().fetchAll();
+		//return records;
+	}
+	
+	public ArrayList<Customer> getCustomersList() {
+		return database.customers().fetchAll();
+	}
+	
+	public ArrayList<Book> getAvailableBooks() {
+		return database.books().fetchAvailable();
 	}
 
 	public ArrayList<Book> getListBooks() {
-		return listBooks;
+		return database.books().fetchAll();
+		//return listBooks;
 	}
 
 	public ArrayList<Book> getListLentBooks() {
-		return listLentBooks;
+		return database.books().fetchBorrowed();
+		//return database.customers()
+		//return listLentBooks;
 	}
 
-	public Records findRecord(Customer regCustomer, Book book) {
-		for (Records customer : records) {
+	public Record findRecord(Customer regCustomer, Book book) {
+		//for (Record customer : records) {
+		for (Record customer : database.records().fetchAll()) {
 			if (customer != null && customer.getCustomerId().equals(regCustomer.getCustomerId()))
 				if (customer.getLid() == book.getLid())
 					return customer;
