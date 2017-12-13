@@ -29,11 +29,16 @@ public class LibraryMenu {
 	
 	public static final int LEND_BOOK = 16;
 	public static final int RETURN_BOOK = 17;
-	public static final int ADVANCE_TIME = 18;
-	public static final int SORT_BOOK = 19;
-	public static final int PRINT_CUSTOMER_HISTORY = 20;
-	public static final int PRINT_POPULAR_BOOKS = 21;
-	public static final int QUIT = 22;
+	public static final int SORT_BOOK = 18;
+	
+	public static final int BORROWED_BOOKS = 19;
+	public static final int DELAYED_BOOKS = 20;
+	public static final int BORROWING_STATUS = 21;
+	public static final int PRINT_POPULAR_BOOKS = 22;
+	public static final int PRINT_CUSTOMER_HISTORY = 23;
+	public static final int ADVANCE_TIME = 24;
+	public static final int QUIT = 25;
+	
 	private Scanner sc;
 	private Library library;
 
@@ -76,7 +81,7 @@ public class LibraryMenu {
 					findBook();
 					break;
 				case SHOW_BOOKS:
-					showBooks();
+					showBooks(library.getListBooks());
 					break;
 				case MODIFY_BOOK:
 					modifyBook();
@@ -107,19 +112,22 @@ public class LibraryMenu {
 				case RETURN_BOOK:
 					returnBook();
 					break;
-				case ADVANCE_TIME:
-					advanceTime();
-					break;
-				case PRINT_CUSTOMER_HISTORY:
-					printCustomerHistory();
-					break;
-
 				case SORT_BOOK:
 					//library.sortListBooksBy(Order.Author);
 					for (Book book : library.getBooksByAuthor()) {
 						System.out.println("");
 						System.out.println(book);
 					}
+					break;
+					
+				case BORROWED_BOOKS:
+					showBooks(library.getListLentBooks());
+					break;
+				case ADVANCE_TIME:
+					advanceTime();
+					break;
+				case PRINT_CUSTOMER_HISTORY:
+					printCustomerHistory();
 					break;
 
 				/*
@@ -167,14 +175,20 @@ public class LibraryMenu {
 		System.out.println(" 14. Modify records's information. ");
 		System.out.println(" 15. Remove record. \n");		
 		
-		System.out.println("  Functions: ");
+		System.out.println("  G-graded Functions: ");
 		System.out.println(" 16. Borrow book. ");
 		System.out.println(" 17. Return book. ");
-		System.out.println(" 18. Advance time. ");
-		System.out.println(" 19. Sort books by author's name. ");
-		System.out.println(" 20. Print a customer's history");
-		System.out.println(" 21. Show what books are most popular. ");
-		System.out.println(" 22. Quit the program.");
+		System.out.println(" 18. Sort books by author's name. \n");
+		
+		System.out.println(" VG-graded Functions: ");
+		System.out.println(" 19. Show all borrowed books. ");
+		System.out.println(" 20. Show all delayed books. ");
+		System.out.println(" 21. Print out borrowing status. ");
+		System.out.println(" 22. Show what books are most popular. ");
+		System.out.println(" 23. Print a customer's history");
+		
+		System.out.println(" 24. Advance time. ");
+		System.out.println(" 25. Quit the program.");
 
 	}
 
@@ -381,9 +395,8 @@ public class LibraryMenu {
 		return null;
 	}
 	
-	private void showBooks() {
+	private void showBooks(ArrayList<Book> books) {
 		try {
-			ArrayList<Book> books = library.getAvailableBooks();
 			System.out.println("Books, total: " + books.size());
 			for (Book book : books) {
 				System.out.println(book.toString());
@@ -532,6 +545,10 @@ public class LibraryMenu {
 		int archiveID = sc.nextInt();
 		sc.nextLine();
 		library.removeRecord(archiveID);
+	}
+	
+	private void borrowedBooks() {
+		
 	}
 	
 	
