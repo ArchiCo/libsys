@@ -123,6 +123,9 @@ public class LibraryMenu {
 				case BORROWED_BOOKS:
 					showBooks(library.getListLentBooks());
 					break;
+				case DELAYED_BOOKS:
+					showBooks(library.getListDelayedBooks());
+					break;	
 				case ADVANCE_TIME:
 					advanceTime();
 					break;
@@ -326,11 +329,11 @@ public class LibraryMenu {
 		Customer foundCustomer = findCustomer();
 		System.out.println("");
 		if (foundCustomer != null) {
-			Book foundLentBook = findLentBook();
+			Book foundLentBook = findLentBook(foundCustomer);
 			if (foundLentBook != null) {
 				Record foundRecord = library.findRecord(foundCustomer, foundLentBook);
 				library.returnBook(foundLentBook, foundRecord);
-				long exceededDays = this.library.exceededDays(foundRecord);
+				long exceededDays = library.exceededDays(foundRecord);
 				if (exceededDays > 0) {
 					System.out.println("You have exceeded borrowing duration by " + exceededDays + " days.");
 					System.out.println("You have been charged " + foundRecord.getFine() + " SEK.");
@@ -339,13 +342,13 @@ public class LibraryMenu {
 		}
 	}
 
-	private Book findLentBook() {
+	private Book findLentBook(Customer customer) {
 		System.out.print("Please enter the book's ID: ");
 		int lid = sc.nextInt();
-		for (Book s : library.getListLentBooks()) {
-			if (s != null && s.getLid() == lid) {
-				return s;
-			}
+		sc.nextLine();
+		ArrayList<Book> lentBooks = library.getBorrowedBooks(customer, lid);
+		if (!lentBooks.isEmpty()) {
+			return lentBooks.get(0);
 		}
 		return null;
 	}

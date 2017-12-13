@@ -280,6 +280,20 @@ public class Library {
 		//return listLentBooks;
 	}
 
+	public ArrayList<Book> getBorrowedBooks(Customer customer) {
+		return database.books().fetchBorrowed(customer);
+	}
+	
+	public ArrayList<Book> getBorrowedBooks(Customer customer, int lid) {
+		return database.books().fetchBorrowed(customer, lid);
+	}
+	
+	public ArrayList<Book> getListDelayedBooks() {
+		return database.books().fetchDelayed(today);
+		//return database.customers()
+		//return listLentBooks;
+	}
+	
 	public Record findRecord(Customer regCustomer, Book book) {
 		//for (Record customer : records) {
 		for (Record customer : database.records().fetchAll()) {

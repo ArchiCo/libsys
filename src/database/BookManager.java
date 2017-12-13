@@ -6,6 +6,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -29,8 +30,12 @@ public class BookManager {
 	private final String SQL_DELETE = "delete from " + destination + " where lid = ?";
 	private final String SQL_SELECT = "select * from " + destination + " where lid = ?";
 	private final String SQL_SELECT_ALL = "select * from " + destination;
-	private final String SQL_SELECT_AVAILABLE = "select * from " + destination + " where lid not in (select lid from LibSys.Records where returned is null)";
-	private final String SQL_SELECT_BORROWED = "select * from " + destination + " where lid in (select lid from LibSys.Records where returned is null)";
+	private final String SQL_SELECT_AVAILABLE = SQL_SELECT_ALL + " where lid not in (select lid from LibSys.Records where returned is null)";
+	private final String SQL_SELECT_BORROWED  = SQL_SELECT_ALL + " where lid in (select lid from LibSys.Records where returned is null)";
+	private final String SQL_SELECT_BORROWED_C = SQL_SELECT_ALL + " where lid in (select lid from LibSys.Records where (returned is null) and (cid = ?))";
+	private final String SQL_SELECT_BORROWED_CL = SQL_SELECT_ALL + " where lid in (select lid from LibSys.Records where (returned is null) and (cid = ?) and (lid = ?))";
+			
+	private final String SQL_SELECT_DELAYED   = SQL_SELECT_ALL + " where lid in (select lid from LibSys.Records where (returned is null) and ((? - due) > 0))";
 	private final String SQL_UPDATE = "update " + destination + " set isbn = ?, title = ?, genre = ?, author = ?, publisher = ?, shelf = ? where lid = ?";
 	private final String SQL_ORDER_BY_AUTHOR = " order by author";
 	private final String SQL_ORDER_ASC = " asc";
@@ -155,8 +160,47 @@ public class BookManager {
 		return fetch(SQL_SELECT_BORROWED);
 	}
 	
+	public ArrayList<Book> fetchBorrowed(Customer customer) {
+		return fetch(customer);
+	}
+
+	public ArrayList<Book> fetchBorrowed(Customer customer, int lid) {
+		return fetch(customer, lid);
+	}
+	
 	public ArrayList<Book> fetchAll() {
 		return fetch(SQL_SELECT_ALL);
+	}
+	
+	public ArrayList<Book> fetch(Customer customer) {
+		try (PreparedStatement stmt = db.getConnection().prepareStatement(SQL_SELECT_BORROWED_C)){
+			stmt.setString(1, customer.getCustomerId());  
+			return fetch(stmt);	  
+			} catch (SQLException e) {
+				System.out.println("[BookManager, fetchBorrowed(C)] SQL ERROR: " + e.getMessage());
+				return new ArrayList<Book>();
+			}
+	}
+	
+	public ArrayList<Book> fetch(Customer customer, int lid) {
+		try (PreparedStatement stmt = db.getConnection().prepareStatement(SQL_SELECT_BORROWED_CL)){
+			stmt.setString(1, customer.getCustomerId()); 
+			stmt.setInt(2, lid);
+			return fetch(stmt);	  
+			} catch (SQLException e) {
+				System.out.println("[BookManager, fetchBorrowed(CL)] SQL ERROR: " + e.getMessage());
+				return new ArrayList<Book>();
+			}
+	}
+	
+	public ArrayList<Book> fetchDelayed(LocalDate today) {
+		try (PreparedStatement stmt = db.getConnection().prepareStatement(SQL_SELECT_DELAYED)){
+			stmt.setDate(1, Date.valueOf(today));  
+			return fetch(stmt);	  
+			} catch (SQLException e) {
+				System.out.println("[BookManager, fetchDelayed] SQL ERROR: " + e.getMessage());
+				return new ArrayList<Book>();
+			}
 	}
 	
 	public ArrayList<Book> fetch(String query){

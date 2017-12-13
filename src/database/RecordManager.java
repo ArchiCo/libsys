@@ -304,7 +304,7 @@ public class RecordManager {
 	}
 	
 	public boolean dropTable() throws Exception {
-		return db.dropTable("LibSys.records");
+		return db.dropTable(destination);
 	}
 	
 	
