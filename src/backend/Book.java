@@ -88,7 +88,7 @@ public class Book {
 		result += "Genre: " + getGenre() + END_OF_LINE;
 		result += "Publisher: " + getPublisher() + END_OF_LINE;
 		result += "Shelf: " + getShelf() + END_OF_LINE;
-		result += "Popularity: ";
+		result += "Popularity: " + getLentTimes() + END_OF_LINE;
 		return result;
 	}
 

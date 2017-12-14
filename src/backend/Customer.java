@@ -10,6 +10,10 @@ public class Customer {
 	private int phoneNumber;
 	private ArrayList<Book> customerHistory;
 
+	public Customer(String customerId) {
+		this(customerId, "", "", 0);
+	}
+	
 	public Customer(String customerId, String name, String address, int phoneNumber) {
 		this.customerId = customerId;
 		this.name = name;

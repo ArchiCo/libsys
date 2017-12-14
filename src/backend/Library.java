@@ -164,7 +164,7 @@ public class Library {
 	}*/
 
 	public void printPopularBooks() {
-		this.setPopularBooks(new ArrayList<Book>());
+		/*this.setPopularBooks(new ArrayList<Book>());
 		if (this.listBooks.size() > 0) {
 			for (Book libBook : this.listBooks) {
 				boolean libExists = false;
@@ -217,8 +217,8 @@ public class Library {
 				}
 			}
 		}
-		sortPopularBooksBy(Order.Popularity);
-
+		sortPopularBooksBy(Order.Popularity);*/
+		System.out.println(database.books().fetchPopularity());
 	}
 
 	public void sortPopularBooksBy(FlexibleBookComparator.Order sortingBy) {
@@ -250,6 +250,18 @@ public class Library {
 
 	public LocalDate getDate() {
 		return today;
+	}
+	
+	public void printCustomerHistory(String cid) {
+		ArrayList<History> fetchedHistory = getCustomerHistory(cid);
+		for (History history: fetchedHistory) {
+			System.out.println(history.getBook());
+			System.out.println(history.getRecord().getDatesToString());
+		}
+	}
+	
+	public ArrayList<History> getCustomerHistory(String cid) {
+		return database.customers().fetchHistory(cid);
 	}
 
 	public void advanceDays(int days) {

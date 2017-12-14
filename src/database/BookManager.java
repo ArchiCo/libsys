@@ -34,7 +34,10 @@ public class BookManager {
 	private final String SQL_SELECT_BORROWED  = SQL_SELECT_ALL + " where lid in (select lid from LibSys.Records where returned is null)";
 	private final String SQL_SELECT_BORROWED_C = SQL_SELECT_ALL + " where lid in (select lid from LibSys.Records where (returned is null) and (cid = ?))";
 	private final String SQL_SELECT_BORROWED_CL = SQL_SELECT_ALL + " where lid in (select lid from LibSys.Records where (returned is null) and (cid = ?) and (lid = ?))";
-			
+	private final String SQL_POPULARITY = "SELECT isbn, title, genre, author, publisher, count(1) as popularity "
+	                                    + "FROM LibSys.books A INNER JOIN LibSys.records B ON A.lid = B.lid "
+			                            + "GROUP BY isbn, title, genre, author, publisher ORDER BY popularity DESC";
+	
 	private final String SQL_SELECT_DELAYED   = SQL_SELECT_ALL + " where lid in (select lid from LibSys.Records where (returned is null) and ((? - due) > 0))";
 	private final String SQL_UPDATE = "update " + destination + " set isbn = ?, title = ?, genre = ?, author = ?, publisher = ?, shelf = ? where lid = ?";
 	private final String SQL_ORDER_BY_AUTHOR = " order by author";
@@ -166,6 +169,40 @@ public class BookManager {
 
 	public ArrayList<Book> fetchBorrowed(Customer customer, int lid) {
 		return fetch(customer, lid);
+	}
+	
+	public ArrayList<Book> fetchPopularity() {
+		try (PreparedStatement stmt = db.getConnection().prepareStatement(SQL_POPULARITY)){
+			  return fetchPopularity(stmt);	  
+			} catch (SQLException e) {
+				System.out.println("[BookManager, fetchPopularity] SQL ERROR: " + e.getMessage());
+				return new ArrayList<Book>();
+			}
+	}
+	
+	private ArrayList<Book> fetchPopularity(PreparedStatement stmt) {
+		try {
+			ResultSet books = stmt.executeQuery();
+			if (books.isBeforeFirst()) {
+				ArrayList<Book> fetchedBooks = new ArrayList<Book>();
+				while (books.next()) {
+					String isbn        = books.getString(1);
+					String title       = books.getString(2);
+					String genre       = books.getString(3);
+					String author      = books.getString(4);
+					String publisher   = books.getString(5);
+					int popularity     = books.getInt(6);
+					Book book = new Book(-1, isbn, title, genre, author, publisher, "");
+					book.setLentTimes(popularity);
+					fetchedBooks.add(book);
+				}
+				return fetchedBooks;
+			}	
+		} catch (SQLException e) {
+			System.out.println("[BookManager, fetch] SQL ERROR: " + e.getMessage());
+			e.printStackTrace();
+		}
+		return new ArrayList<Book>();
 	}
 	
 	public ArrayList<Book> fetchAll() {

@@ -126,11 +126,14 @@ public class LibraryMenu {
 				case DELAYED_BOOKS:
 					showBooks(library.getListDelayedBooks());
 					break;	
-				case ADVANCE_TIME:
-					advanceTime();
+				case PRINT_POPULAR_BOOKS: 
+					library.printPopularBooks();
 					break;
 				case PRINT_CUSTOMER_HISTORY:
 					printCustomerHistory();
+					break;
+				case ADVANCE_TIME:
+					advanceTime();
 					break;
 
 				/*
@@ -305,9 +308,10 @@ public class LibraryMenu {
 	}
 
 	private void customerHistory(Customer customer) {
-		for (Book book : customer.getCustomerHistory()) {
+		/*for (Book book : customer.getCustomerHistory()) {
 			System.out.println(book);
-		}
+		}*/
+		library.printCustomerHistory(customer.getCustomerId());
 	}
 
 	private void lendBook() {

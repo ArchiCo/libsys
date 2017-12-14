@@ -2,11 +2,16 @@ package database;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import backend.Customer;
+import backend.History;
+import backend.Book;
+import backend.Record;
 
 public class CustomerManager {
 	private final int CID_COL = 1;
@@ -25,6 +30,11 @@ public class CustomerManager {
 	private final String SQL_DELETE = "delete from " + destination + " where cid = ?";
 	private final String SQL_SELECT_ALL = "select * from " + destination;
 	private final String SQL_SELECT = "select * from " + destination + " where cid = ?";
+	private final String SQL_SELECT_HISTORY = 
+			"SELECT cid, A.lid, isbn, title, genre, author, publisher, taken, due, returned " +
+			"FROM LibSys.records A LEFT JOIN LibSys.books B ON A.lid = B.lid WHERE cid = ? " +
+			"GROUP BY cid, A.lid, isbn, title, genre, author, publisher, taken, due, returned " +
+			"ORDER BY taken ASC";
 	private final String SQL_UPDATE = "update " + destination + " set name = ?, address = ?, phone = ? where cid = ?";
 	
 	private Database db;
@@ -107,21 +117,16 @@ public class CustomerManager {
 		} catch (SQLException e) {
 			System.out.println("[CustomersManager, deleteById] SQL ERROR: " + e.getMessage());
 			return false;
-		} finally {
-
 		}
 	}
-
+	
 	public ArrayList<Customer> fetchAll() {
 
-		try {
-			Connection con = db.getConnection();
-			PreparedStatement stmt = con.prepareStatement(SQL_SELECT_ALL);
+		try {PreparedStatement stmt = db.getConnection().prepareStatement(SQL_SELECT_ALL);
 			return fetch(stmt);
 		} catch (SQLException e) {
 			System.out.println("[CustomersManager, fetchAll] SQL ERROR: " + e.getMessage());
 			return new ArrayList<Customer>();
-		} finally {
 		}
 	}
 
@@ -140,7 +145,58 @@ public class CustomerManager {
 			return null;
 		}
 	}
+	
+	public ArrayList<History> fetchHistory(String cid) {
+		try (PreparedStatement stmt = db.getConnection().prepareStatement(SQL_SELECT_HISTORY);) {
 
+			stmt.setString(1, cid);
+			ArrayList<History> fetchedHistory = fetchHistory(stmt);
+			if (fetchedHistory.isEmpty()) {
+				return null;
+			} else {
+				return fetchedHistory;
+			}
+		} catch (SQLException e) {
+			System.out.println("[CustomersManager, fetchById] SQL ERROR: " + e.getMessage());
+			return null;
+		}
+	}
+	
+	private ArrayList<History> fetchHistory(PreparedStatement stmt) {
+		try {
+			ResultSet history = stmt.executeQuery();
+			if (history.isBeforeFirst()) {
+				ArrayList<History> fetchedHistory = new ArrayList<History>();
+				while (history.next()) {
+					String cid         = history.getString(1);
+					   int lid         = history.getInt(2);
+					String isbn        = history.getString(3);
+					String title       = history.getString(4);
+					String genre       = history.getString(5);
+					String author      = history.getString(6);
+					String publisher   = history.getString(7);
+					Date taken    = history.getDate(8);
+					Date due      = history.getDate(9);
+					Date returned = history.getDate(10);
+					if (history.wasNull()) {
+						fetchedHistory.add(new History(new Customer(cid), 
+								           new Book(lid, isbn, title, genre, author, publisher, ""), 
+								           new Record(cid, lid, taken.toLocalDate(), due.toLocalDate())));
+					} else {
+						fetchedHistory.add(new History(new Customer(cid), 
+						           new Book(lid, isbn, title, genre, author, publisher, ""), 
+						           new Record(cid, lid, taken.toLocalDate(), due.toLocalDate(), returned.toLocalDate())));
+					}
+				}
+				return fetchedHistory;
+			}
+		} catch (SQLException e) {
+			System.out.println("[CustomerManager, fetch] SQL ERROR: " + e.getMessage());
+			e.printStackTrace();
+		}
+		return new ArrayList<History>();
+	}
+	
 	private ArrayList<Customer> fetch(PreparedStatement stmt) {
 		try {
 			ResultSet Customers = stmt.executeQuery();
@@ -164,7 +220,10 @@ public class CustomerManager {
 
 	public boolean createTable() throws Exception {
 		return db.createTable(destination,
-				"(cid text primary key," + "name text not null," + "address text not null," + "phone int not null)");
+				"(cid text primary key," + 
+		        "name text not null,"    + 
+			    "address text not null," + 
+		        "phone int  not null)");
 	}
 
 	public boolean dropTable() throws Exception {

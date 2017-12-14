@@ -15,6 +15,10 @@ public class Record {
 	public Record(int archiveId, String customerId, int lid, LocalDate dateTaken, LocalDate dateDue){
 		this(archiveId, customerId, lid, dateTaken, dateDue, null);
 	}
+
+	public Record(String customerId, int lid, LocalDate dateTaken, LocalDate dateDue, LocalDate dateReturned){
+		this(-1, customerId, lid, dateTaken, dateDue, dateReturned);
+	}
 	
 	public Record(String customerId, int lid, LocalDate dateTaken, LocalDate dateDue){
 		this(-1, customerId, lid, dateTaken, dateDue, null);
@@ -97,6 +101,15 @@ public class Record {
 		}
 	}
 	
+	public String getDatesToString() {
+		String result = "Date taken: " + getDateTaken().toString() + END_OF_LINE;
+		result += "Date due: "   + getDateDue().toString() + END_OF_LINE;	
+		if (getDateReturned() != null) {
+			result += "Date returned: "   + getDateReturned().toString() + END_OF_LINE;	
+		}
+		return result;
+	}
+	
 	public String toString() {
 		String result = "aID: " + getArchiveId() + END_OF_LINE;
 		result += "cID: " + getCustomerId() + END_OF_LINE;
@@ -104,7 +117,7 @@ public class Record {
 		result += "Date taken: " + getDateTaken().toString() + END_OF_LINE;
 		result += "Date due: "   + getDateDue().toString() + END_OF_LINE;	
 		if (getDateReturned() != null) {
-			result += "Date returned: "   + getDateReturned().toString();	
+			result += "Date returned: "   + getDateReturned().toString() + END_OF_LINE;	
 		}
 		return result;
 	}
