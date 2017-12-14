@@ -1,5 +1,19 @@
 package backend;
 
+
+import backend.*;
+import java.util.Observable;
+import frontend.resources.*;
+
+import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXMLLoader;
+import javafx.stage.Stage;
+import sun.security.jgss.LoginConfigImpl;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
@@ -7,8 +21,12 @@ import java.util.Random;
 import java.util.Scanner;
 
 import backend.FlexibleBookComparator.Order;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
-public class LibraryMenu {
+public class LibraryMenu extends Application{
 	public static final int CUSTOMER_REGISTRATION = 1;
 	public static final int PRINT_CUSTOMER = 2;
 	public static final int SHOW_CUSTOMERS = 3;
@@ -46,7 +64,26 @@ public class LibraryMenu {
 		this.library = new Library();
 		sc = new Scanner(System.in);
 	}
-
+//////////////////////////////////////////////////////////////
+	//Application starting method
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+		try {
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(getClass().getResource("/frontend/resources/Login.fxml"));
+			Parent root = loader.load();
+		    Scene scene = new Scene(root);
+		    primaryStage.setTitle("Library System");
+			
+		    
+		    primaryStage.setScene(scene);
+			primaryStage.show();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+//////////////////////////////////////////////////////////////
+	
 	public void run() {
 		int option = 0;
 		do {
@@ -157,7 +194,8 @@ public class LibraryMenu {
 		} while (option != QUIT);
 
 	}
-
+//////////////////////////////////////////////////////////////////////////////////
+	
 	private void printMenuOptions() {
 		System.out.println(" ");
 		System.out.println(" Choose an option below: ");
