@@ -41,6 +41,9 @@ public class Customer {
 		return this.customerHistory;
 	}
 	
+	public void setLid(String newLid) {
+		this.customerId = newLid;
+	}
 	public void setName(String name) {
 		this.name = name;
 	}

@@ -236,14 +236,15 @@ public class LibraryMenu extends Application{
 
 	}
 
-	private void registerCustomer() {
-		System.out.print("Please enter customer's name: ");
+	public void registerCustomer(String name, String address, int phoneNumber) {
+	/*	System.out.print("Please enter customer's name: ");
 		String name = sc.nextLine();
 		System.out.print("Please enter customer's address: ");
 		String address = sc.nextLine();
 		System.out.print("Please enter customer's phone number: ");
 		int phoneNumber = sc.nextInt();
 		sc.nextLine();
+	*/
 		String libraryID;
 		do {
 			libraryID = generateRandomChars("ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890", 4);

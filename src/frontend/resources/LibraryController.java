@@ -6,12 +6,18 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 
+import com.sun.org.glassfish.external.probe.provider.annotations.Probe;
+
 import backend.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
@@ -31,9 +37,15 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.geometry.Insets;
+
+import java.util.ArrayList;
 import java.util.Optional;
+
+import javafx.util.Callback;
 import javafx.util.Pair;
+import sun.java2d.pipe.SpanShapeRenderer.Simple;
 import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.layout.GridPane;
@@ -53,7 +65,7 @@ public class LibraryController implements Initializable{
 	
 	//book directory table column initialize
 	@FXML private TableView<Book> bookTable;
-	@FXML private TableColumn<Book, String> bookIDCol;
+	@FXML private TableColumn<Book, Integer> bookIDCol;
 	@FXML private TableColumn<Book, String> bookTitleCol;
 	@FXML private TableColumn<Book, String> bookAuthorCol;
 	@FXML private TableColumn<Book, String> bookShelfCol;
@@ -104,9 +116,11 @@ public class LibraryController implements Initializable{
 	@FXML private Label cstAddressLabel;
 	
 	private LibraryMenu libraryMenu;
+	private Library library;
 	
-	public LibraryController(LibraryMenu libraryMenu) {
+	public LibraryController(LibraryMenu libraryMenu, Library library) {
 		this.libraryMenu = libraryMenu;
+		this.library = library;
 	}
 	
 	public LibraryController() {
@@ -123,16 +137,73 @@ public class LibraryController implements Initializable{
 		//inside the Book objects should be used for the particular column.
 		//if using ints and stuff, asObject() needs to be added after getproperty()
 		this.libraryMenu = new LibraryMenu();
+		this.library = new Library();
 		
-		bookIDCol.setCellValueFactory(cellData -> cellData.getValue().getIDProperty());
-		bookTitleCol.setCellValueFactory(cellData -> cellData.getValue().getTitleProperty());
-		bookAuthorCol.setCellValueFactory(cellData -> cellData.getValue().getAuthorProperty());
-		bookShelfCol.setCellValueFactory(cellData -> cellData.getValue().getShelfProperty());
-		bookPublisherCol.setCellValueFactory(cellData -> cellData.getValue().getPublisherProperty());
-		bookGenreCol.setCellValueFactory(cellData -> cellData.getValue().getGenreProperty());
 		
-		customerIDCol.setCellValueFactory(cellData -> cellData.getValue().getLIDProperty());
-		customerNameCol.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
+		
+		bookIDCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Book,Integer>, ObservableValue<Integer>>() {
+			@Override
+			public ObservableValue<Integer> call(CellDataFeatures<Book, Integer> param) {
+				Book book = param.getValue();
+				SimpleIntegerProperty convertedLid = getIntegerProperty(book.getLid());
+				return convertedLid.asObject();
+			}
+		});
+		bookTitleCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Book,String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
+				Book book = param.getValue();
+				SimpleStringProperty convertedTitle = getStringProperty(book.getTitle());
+				return convertedTitle;
+			}
+		});
+		bookAuthorCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Book,String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
+				Book book = param.getValue();
+				SimpleStringProperty convertedAuthor = getStringProperty(book.getAuthor());
+				return convertedAuthor;
+			}
+		});
+		bookShelfCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Book,String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
+				Book book = param.getValue();
+				SimpleStringProperty convertedShelf = getStringProperty(book.getShelf());
+				return convertedShelf;
+			}
+		});
+		bookPublisherCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Book,String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
+				Book book = param.getValue();
+				SimpleStringProperty convertedPublisher = getStringProperty(book.getPublisher());
+				return convertedPublisher;
+			}
+		});
+		bookGenreCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Book,String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
+				Book book = param.getValue();
+				SimpleStringProperty convertedGenre = getStringProperty(book.getGenre());
+				return convertedGenre;
+			}
+		});
+		customerIDCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Customer,String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Customer, String> param) {
+				Customer customer = param.getValue();
+				SimpleStringProperty convertedCstId = getStringProperty(customer.getCustomerId());
+				return convertedCstId;
+			}
+		});
+		customerNameCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Customer,String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Customer, String> param) {
+				Customer customer = param.getValue();
+				SimpleStringProperty convertedCstName = getStringProperty(customer.getName());
+				return convertedCstName;
+			}});
 		
 		
 		////////////////////////////////SEARCH FUNCTION BOOK TABLE///////////////////////////
@@ -149,7 +220,7 @@ public class LibraryController implements Initializable{
 		customer -> customer.getName().toLowerCase().contains(custNameField.getText().toLowerCase()),
 				custNameField.textProperty()));
 		IDFilter.bind(Bindings.createObjectBinding(() ->
-			book -> book.getID().toLowerCase().contains(IDFilterField.getText().toLowerCase()),
+			book -> Integer.toString(book.getLid()).toLowerCase().contains(IDFilterField.getText().toLowerCase()),
 				IDFilterField.textProperty()));
 		
 		titleFilter.bind(Bindings.createObjectBinding(() ->
@@ -173,8 +244,9 @@ public class LibraryController implements Initializable{
 			genreFilterField.textProperty()));
 		
 		// 1. Wrap the ObservableList in a FilteredList (initially display all data) 	
-		FilteredList<Book> filteredBooks = new FilteredList<>(libraryMenu.getBooks(), p -> true);
-		FilteredList<Customer> filteredCustomers = new FilteredList<>(libraryMenu.getCustomers(), p -> true);
+		
+		FilteredList<Book> filteredBooks = new FilteredList<>(getObsBooks(library.getListBooks()), p -> true);
+		FilteredList<Customer> filteredCustomers = new FilteredList<>(getObsCustomers(library.getCustomersList()), p -> true);
 		
 		// 2. Set the filter Predicate whenever the filter changes.
 		//bind the filters to each other so the predicates of each are put into 1
@@ -222,7 +294,7 @@ public class LibraryController implements Initializable{
 				tempBook=bookTable.getSelectionModel().getSelectedItem();
 				System.out.println("book row " + bookTable.getSelectionModel().getSelectedIndex());
 				if (newValue != null) {
-					LIDLabel.setText(newValue.getID());
+					LIDLabel.setText(Integer.toString(newValue.getLid()));
 					titleLabel.setText(newValue.getTitle());
 					authorLabel.setText(newValue.getAuthor());
 					genreLabel.setText(newValue.getGenre());
@@ -248,9 +320,9 @@ public class LibraryController implements Initializable{
 				tempCst=customerTable.getSelectionModel().getSelectedItem();
 				System.out.println("customer row " +customerTable.getSelectionModel().getSelectedIndex());
 				if (newValue != null) {
-					cstIDLabel.setText(newValue.getLID());
+					cstIDLabel.setText(newValue.getCustomerId());
 					cstNameLabel.setText(newValue.getName());
-					cstPhoneLabel.setText(newValue.getPhoneNum());
+					cstPhoneLabel.setText(Integer.toString(newValue.getPhoneNumber()));
 					cstAddressLabel.setText(newValue.getAddress());
 				}
 				
@@ -312,13 +384,13 @@ public class LibraryController implements Initializable{
 			grid.setPadding(new Insets(20, 150, 10, 10));
 
 			TextField ID = new TextField();
-			ID.setPromptText(tempCst.getLID());
+			ID.setPromptText(tempCst.getCustomerId());
 			
 			TextField Name = new TextField();
 			Name.setPromptText(tempCst.getName());
 
 			TextField Phone = new TextField();
-			Phone.setPromptText(tempCst.getPhoneNum());
+			Phone.setPromptText(Integer.toString(tempCst.getPhoneNumber()));
 			
 			TextField Address = new TextField();
 			Address.setPromptText(tempCst.getAddress());
@@ -339,12 +411,12 @@ public class LibraryController implements Initializable{
 			// Traditional way to get the response value.
 			Optional<String> result = dialog.showAndWait();
 			if (result.isPresent()){
-				for (int i=0; i< libraryMenu.getCustomers().size();i++) {
-					if( libraryMenu.getCustomers().get(i).equals(tempCst)) {
-						libraryMenu.getCustomers().get(i).setLID(ID.getText());
-						libraryMenu.getCustomers().get(i).setName(Name.getText());
-						libraryMenu.getCustomers().get(i).setAddress(Address.getText());
-						libraryMenu.getCustomers().get(i).setPhoneNum(Phone.getText());
+				for (int i=0; i< library.getCustomersList().size();i++) {
+					if( library.getCustomersList().get(i).equals(tempCst)) {
+						library.getCustomersList().get(i).setLid(ID.getText());
+						library.getCustomersList().get(i).setName(Name.getText());
+						library.getCustomersList().get(i).setAddress(Address.getText());
+						library.getCustomersList().get(i).setPhoneNumber(Integer.parseInt(Phone.getText()));
 						}
 					}
 				}
@@ -364,8 +436,8 @@ public class LibraryController implements Initializable{
 		grid.setVgap(10);
 		grid.setPadding(new Insets(20, 150, 10, 10));
 
-		TextField ID = new TextField();
-		ID.setPromptText("ID");
+	//	TextField ID = new TextField();
+	//	ID.setPromptText("ID");
 		
 		TextField Name = new TextField();
 		Name.setPromptText("Title");
@@ -376,8 +448,8 @@ public class LibraryController implements Initializable{
 		TextField Address = new TextField();
 		Address.setPromptText("Address");
 
-		grid.add(new Label("ID:"), 0, 0);
-		grid.add(ID, 1, 0);
+	//	grid.add(new Label("ID:"), 0, 0);
+	//	grid.add(ID, 1, 0);
 		
 		grid.add(new Label("Name:"), 0, 1);
 		grid.add(Name, 1, 1);
@@ -393,10 +465,17 @@ public class LibraryController implements Initializable{
 		Optional<String> result = dialog.showAndWait();
 		if (result.isPresent()){
 			Boolean existing=false;
-			Customer newCustomer = new Customer(ID.getText(),Name.getText(),Address.getText(),Phone.getText());
+			libraryMenu.registerCustomer(Name.getText(), Address.getText(), Integer.parseInt(Phone.getText()));
+			
+			//Start working on the LibraryMenu function to connect
+			}
+		customerTable.setItems(getObsCustomers(library.getCustomersList()));
+		customerTable.refresh();
+		}
+		/*	
 			///////CHECK IF THE BOOK ID ALREADY EXISTS AND IF FIELDS ARE NOT EMPTY
-			for (int i=0; i<libraryMenu.getCustomers().size();i++) {
-				if (ID.getText().equals(libraryMenu.getCustomers().get(i).getLID()))
+			for (int i=0; i<libraryMenu.getCustomersList().size();i++) {
+				if (ID.getText().equals(libraryMenu.getCustomersList().get(i).getLID()))
 					existing=true;
 			}
 			///////IF IT DOES NOT, ADD THE BOOK
@@ -407,7 +486,7 @@ public class LibraryController implements Initializable{
 				alert.setContentText("Customer correctly added.");
 
 				alert.showAndWait();
-				this.libraryMenu.getCustomers().add(newCustomer);}
+				this.libraryMenu.getCustomersList().add(newCustomer);}
 			//////IF IT DOES, DON'T ADD IT
 			else if (existing==true) {
 				
@@ -418,8 +497,9 @@ public class LibraryController implements Initializable{
 
 				alert.showAndWait();
 			}
-		}
+		}	
 	}
+	*/
 	@FXML
 	private void addBookEvent(ActionEvent event) throws IOException {
 		 
@@ -479,8 +559,8 @@ public class LibraryController implements Initializable{
 				Book newBook = new Book(ID.getText(),Title.getText(),Author.getText(),Shelf.getText(),Publisher.getText(),Genre.getText());
 				
 				///////CHECK IF THE BOOK ID ALREADY EXISTS AND IF FIELDS ARE NOT EMPTY
-				for (int i=0; i<libraryMenu.getBooks().size();i++) {
-					if (ID.getText().equals(libraryMenu.getBooks().get(i).getID()))
+				for (int i=0; i < getObsBooks(library.getListBooks()).size();i++) {
+					if (ID.getText().equals(getObsBooks(library.getListBooks()).get(i).getLid()))
 						existing=true;
 				}
 				///////IF IT DOES NOT, ADD THE BOOK
@@ -491,7 +571,7 @@ public class LibraryController implements Initializable{
 					alert.setContentText("Book correctly added.");
 
 					alert.showAndWait();
-					this.libraryMenu.getBooks().add(newBook);}
+					this.getObsBooks(library.getListBooks()).add(newBook);}
 				//////IF IT DOES, DON'T ADD IT
 				else if (existing==true) {
 					
@@ -503,7 +583,8 @@ public class LibraryController implements Initializable{
 					alert.showAndWait();
 				}
 			}
-		}	
+		}
+		bookTable.refresh();
 	}
 	
 	@FXML
@@ -519,9 +600,10 @@ public class LibraryController implements Initializable{
 				grid.setHgap(10);
 				grid.setVgap(10);
 				grid.setPadding(new Insets(20, 150, 10, 10));
-
+// tostring = int >> string
+// parseint = string >> int
 				TextField ID = new TextField();
-				ID.setPromptText(tempBook.getID());
+				ID.setPromptText(Integer.toString(tempBook.getLid()));
 				
 				TextField Title = new TextField();
 				Title.setPromptText(tempBook.getTitle());
@@ -560,14 +642,14 @@ public class LibraryController implements Initializable{
 				// Traditional way to get the response value.
 				Optional<String> result = dialog.showAndWait();
 				if (result.isPresent()){
-					for (int i=0; i< libraryMenu.getBooks().size();i++) {
-						if( libraryMenu.getBooks().get(i).equals(tempBook)) {
-							libraryMenu.getBooks().get(i).setID(ID.getText());
-							libraryMenu.getBooks().get(i).setTitle(Title.getText());
-							libraryMenu.getBooks().get(i).setAuthor(Author.getText());
-							libraryMenu.getBooks().get(i).setShelf(Shelf.getText());
-							libraryMenu.getBooks().get(i).setPublisher(Publisher.getText());
-							libraryMenu.getBooks().get(i).setGenre((Genre.getText()));
+					for (int i=0; i< getObsBooks(library.getListBooks()).size();i++) {
+						if( getObsBooks(library.getListBooks()).get(i).equals(tempBook)) {
+							getObsBooks(library.getListBooks()).get(i).setLid((Integer.parseInt(ID.getText())));
+							getObsBooks(library.getListBooks()).get(i).setTitle(Title.getText());
+							getObsBooks(library.getListBooks()).get(i).setAuthor(Author.getText());
+							getObsBooks(library.getListBooks()).get(i).setShelf(Shelf.getText());
+							getObsBooks(library.getListBooks()).get(i).setPublisher(Publisher.getText());
+							getObsBooks(library.getListBooks()).get(i).setGenre((Genre.getText()));
 							
 							
 						}
@@ -596,8 +678,25 @@ public class LibraryController implements Initializable{
 		return x;
 	}
 	
+	///////////////////////////////////////CONVERSION METHODS/////////////////////////////////////////////////
+	private ObservableList<Book> getObsBooks(ArrayList<Book> arrayToConvert) {
+		return FXCollections.observableArrayList(arrayToConvert);
+	}
+	private ObservableList<Customer> getObsCustomers(ArrayList<Customer> arrayToConvert) {
+		return FXCollections.observableArrayList(arrayToConvert);
+	}
+	private ObservableList<Record> getObsRecords(ArrayList<Record> arrayToConvert) {
+		return FXCollections.observableArrayList(arrayToConvert);
+	}
 	
-	
+	private SimpleStringProperty getStringProperty(String string) {
+		SimpleStringProperty convertedString = new SimpleStringProperty(string);
+		return convertedString;
+	}
+	private SimpleIntegerProperty getIntegerProperty(int number) {
+		SimpleIntegerProperty convertedInt = new SimpleIntegerProperty(number);
+		return convertedInt;
+	}
 	
 	
 	
