@@ -87,7 +87,8 @@ public class LibraryController implements Initializable{
 	@FXML private TextField publisherFilterField;
 	@FXML private TextField genreFilterField;
 	@FXML private TextField custNameField;
-	
+	//reset button
+	@FXML private Button resetBtn;
 	//Book details
 	@FXML private Label LIDLabel;
 	@FXML private Label ISBNLabel;
@@ -596,7 +597,20 @@ public class LibraryController implements Initializable{
 		return x;
 	}
 	
-	
+	@FXML
+	private void resetSearchEvent(ActionEvent event) throws IOException {
+		 
+		if(event.getSource().equals(resetBtn)) {	
+			IDFilterField.clear();
+			shelfFilterField.clear();
+			titleFilterField.clear();
+			publisherFilterField.clear();
+			authorFilterField.clear();
+			genreFilterField.clear();
+			
+		}
+		
+	}
 	
 	
 	

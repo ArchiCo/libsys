@@ -47,7 +47,9 @@ public class Library {
 		customers.add(new Customer("104","heeeey","stora ringvagen","32190"));
 		customers.add(new Customer("1111", "Damn", "Next Door", "1029435"));
 		customers.add(new Customer("2222", "Egg", "Over there", "3959591"));
-		
+//		RegisteredCustomer temp= new RegisteredCustomer();
+//		temp.registerCustomer("", "", "", "");
+//		customers temporary=temp.find
 		
 	}
 

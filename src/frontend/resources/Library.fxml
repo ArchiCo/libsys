@@ -68,7 +68,7 @@
                                                                   <Text layoutX="318.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Shelf" />
                                                                   <Text layoutX="318.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Publisher" />
                                                                   <Text layoutX="320.0" layoutY="116.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Genre" />
-                                                                  <Button layoutX="550.0" layoutY="57.0" mnemonicParsing="false" text="Reset" />
+                                                                  <Button fx:id="resetBtn" layoutX="550.0" layoutY="57.0" mnemonicParsing="false" onAction="#resetSearchEvent" text="Reset" />
                                                                </children>
                                                             </AnchorPane>
                                                         </items>
