@@ -140,70 +140,70 @@ public class LibraryController implements Initializable{
 		this.library = new Library();
 		
 		
-		
-		bookIDCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Book,Integer>, ObservableValue<Integer>>() {
-			@Override
-			public ObservableValue<Integer> call(CellDataFeatures<Book, Integer> param) {
-				Book book = param.getValue();
-				SimpleIntegerProperty convertedLid = getIntegerProperty(book.getLid());
-				return convertedLid.asObject();
-			}
-		});
-		bookTitleCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Book,String>, ObservableValue<String>>() {
-			@Override
-			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
-				Book book = param.getValue();
-				SimpleStringProperty convertedTitle = getStringProperty(book.getTitle());
-				return convertedTitle;
-			}
-		});
-		bookAuthorCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Book,String>, ObservableValue<String>>() {
-			@Override
-			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
-				Book book = param.getValue();
-				SimpleStringProperty convertedAuthor = getStringProperty(book.getAuthor());
-				return convertedAuthor;
-			}
-		});
-		bookShelfCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Book,String>, ObservableValue<String>>() {
-			@Override
-			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
-				Book book = param.getValue();
-				SimpleStringProperty convertedShelf = getStringProperty(book.getShelf());
-				return convertedShelf;
-			}
-		});
-		bookPublisherCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Book,String>, ObservableValue<String>>() {
-			@Override
-			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
-				Book book = param.getValue();
-				SimpleStringProperty convertedPublisher = getStringProperty(book.getPublisher());
-				return convertedPublisher;
-			}
-		});
-		bookGenreCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Book,String>, ObservableValue<String>>() {
-			@Override
-			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
-				Book book = param.getValue();
-				SimpleStringProperty convertedGenre = getStringProperty(book.getGenre());
-				return convertedGenre;
-			}
-		});
-		customerIDCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Customer,String>, ObservableValue<String>>() {
-			@Override
-			public ObservableValue<String> call(CellDataFeatures<Customer, String> param) {
-				Customer customer = param.getValue();
-				SimpleStringProperty convertedCstId = getStringProperty(customer.getCustomerId());
-				return convertedCstId;
-			}
-		});
-		customerNameCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Customer,String>, ObservableValue<String>>() {
-			@Override
-			public ObservableValue<String> call(CellDataFeatures<Customer, String> param) {
-				Customer customer = param.getValue();
-				SimpleStringProperty convertedCstName = getStringProperty(customer.getName());
-				return convertedCstName;
-			}});
+		refreshTable();
+//		bookIDCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Book,Integer>, ObservableValue<Integer>>() {
+//			@Override
+//			public ObservableValue<Integer> call(CellDataFeatures<Book, Integer> param) {
+//				Book book = param.getValue();
+//				SimpleIntegerProperty convertedLid = getIntegerProperty(book.getLid());
+//				return convertedLid.asObject();
+//			}
+//		});
+//		bookTitleCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Book,String>, ObservableValue<String>>() {
+//			@Override
+//			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
+//				Book book = param.getValue();
+//				SimpleStringProperty convertedTitle = getStringProperty(book.getTitle());
+//				return convertedTitle;
+//			}
+//		});
+//		bookAuthorCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Book,String>, ObservableValue<String>>() {
+//			@Override
+//			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
+//				Book book = param.getValue();
+//				SimpleStringProperty convertedAuthor = getStringProperty(book.getAuthor());
+//				return convertedAuthor;
+//			}
+//		});
+//		bookShelfCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Book,String>, ObservableValue<String>>() {
+//			@Override
+//			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
+//				Book book = param.getValue();
+//				SimpleStringProperty convertedShelf = getStringProperty(book.getShelf());
+//				return convertedShelf;
+//			}
+//		});
+//		bookPublisherCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Book,String>, ObservableValue<String>>() {
+//			@Override
+//			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
+//				Book book = param.getValue();
+//				SimpleStringProperty convertedPublisher = getStringProperty(book.getPublisher());
+//				return convertedPublisher;
+//			}
+//		});
+//		bookGenreCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Book,String>, ObservableValue<String>>() {
+//			@Override
+//			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
+//				Book book = param.getValue();
+//				SimpleStringProperty convertedGenre = getStringProperty(book.getGenre());
+//				return convertedGenre;
+//			}
+//		});
+//		customerIDCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Customer,String>, ObservableValue<String>>() {
+//			@Override
+//			public ObservableValue<String> call(CellDataFeatures<Customer, String> param) {
+//				Customer customer = param.getValue();
+//				SimpleStringProperty convertedCstId = getStringProperty(customer.getCustomerId());
+//				return convertedCstId;
+//			}
+//		});
+//		customerNameCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Customer,String>, ObservableValue<String>>() {
+//			@Override
+//			public ObservableValue<String> call(CellDataFeatures<Customer, String> param) {
+//				Customer customer = param.getValue();
+//				SimpleStringProperty convertedCstName = getStringProperty(customer.getName());
+//				return convertedCstName;
+//			}});
 		
 		
 		////////////////////////////////SEARCH FUNCTION BOOK TABLE///////////////////////////
@@ -469,8 +469,7 @@ public class LibraryController implements Initializable{
 			
 			//Start working on the LibraryMenu function to connect
 			}
-		customerTable.setItems(getObsCustomers(library.getCustomersList()));
-		customerTable.refresh();
+		refreshTable();
 		}
 		/*	
 			///////CHECK IF THE BOOK ID ALREADY EXISTS AND IF FIELDS ARE NOT EMPTY
@@ -571,7 +570,10 @@ public class LibraryController implements Initializable{
 					alert.setContentText("Book correctly added.");
 
 					alert.showAndWait();
-					this.getObsBooks(library.getListBooks()).add(newBook);}
+					library.addBook(newBook);
+					
+					refreshTable();
+					bookTable.refresh();}
 				//////IF IT DOES, DON'T ADD IT
 				else if (existing==true) {
 					
@@ -584,7 +586,7 @@ public class LibraryController implements Initializable{
 				}
 			}
 		}
-		bookTable.refresh();
+		
 	}
 	
 	@FXML
@@ -665,16 +667,16 @@ public class LibraryController implements Initializable{
 	public Boolean bookFieldsAreEmpty(TextField a, TextField b,TextField c, TextField d, TextField e, TextField f) {
 		Boolean x=false;
 		if (a.getText().isEmpty() || b.getText().isEmpty() || c.getText().isEmpty() || d.getText().isEmpty() || e.getText().isEmpty() || f.getText().isEmpty())
-			x=true;
-		System.out.println("There's at least an empty field!");
+			{x=true;
+			System.out.println("There's at least an empty field!");}
 		return x;
 	}
 
 	public Boolean cstFieldsAreEmpty(TextField a, TextField b,TextField c, TextField d) {
 		Boolean x=false;
 		if (a.getText().isEmpty() || b.getText().isEmpty() || c.getText().isEmpty() || d.getText().isEmpty())
-			x=true;
-		System.out.println("There's at least an empty field!");
+			{x=true;
+			System.out.println("There's at least an empty field!");}
 		return x;
 	}
 	
@@ -698,8 +700,72 @@ public class LibraryController implements Initializable{
 		return convertedInt;
 	}
 	
-	
-	
+	public void refreshTable() {
+		bookIDCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Book,Integer>, ObservableValue<Integer>>() {
+			@Override
+			public ObservableValue<Integer> call(CellDataFeatures<Book, Integer> param) {
+				Book book = param.getValue();
+				SimpleIntegerProperty convertedLid = getIntegerProperty(book.getLid());
+				return convertedLid.asObject();
+			}
+		});
+		bookTitleCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Book,String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
+				Book book = param.getValue();
+				SimpleStringProperty convertedTitle = getStringProperty(book.getTitle());
+				return convertedTitle;
+			}
+		});
+		bookAuthorCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Book,String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
+				Book book = param.getValue();
+				SimpleStringProperty convertedAuthor = getStringProperty(book.getAuthor());
+				return convertedAuthor;
+			}
+		});
+		bookShelfCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Book,String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
+				Book book = param.getValue();
+				SimpleStringProperty convertedShelf = getStringProperty(book.getShelf());
+				return convertedShelf;
+			}
+		});
+		bookPublisherCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Book,String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
+				Book book = param.getValue();
+				SimpleStringProperty convertedPublisher = getStringProperty(book.getPublisher());
+				return convertedPublisher;
+			}
+		});
+		bookGenreCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Book,String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
+				Book book = param.getValue();
+				SimpleStringProperty convertedGenre = getStringProperty(book.getGenre());
+				return convertedGenre;
+			}
+		});
+		customerIDCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Customer,String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Customer, String> param) {
+				Customer customer = param.getValue();
+				SimpleStringProperty convertedCstId = getStringProperty(customer.getCustomerId());
+				return convertedCstId;
+			}
+		});
+		customerNameCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Customer,String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Customer, String> param) {
+				Customer customer = param.getValue();
+				SimpleStringProperty convertedCstName = getStringProperty(customer.getName());
+				return convertedCstName;
+			}});
+		
+	}
 	
 	
 
