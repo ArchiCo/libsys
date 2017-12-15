@@ -90,6 +90,15 @@ public class LibraryController implements Initializable{
 	@FXML private TableColumn <Customer,String> borrowIDCol;
 	@FXML private TableColumn <Customer,String> borrowNameCol;
 	
+	//Borrowed books table
+	@FXML private TableView <Book> borrowedTable;
+	@FXML private TableColumn <Book,Integer>borrowedIDCol;
+	@FXML private TableColumn <Book,String>borrowedTitleCol;
+	@FXML private TableColumn <Book,String>borrowedAuthorCol;
+	@FXML private TableColumn <Book,String>borrowedPublisherCol;
+	@FXML private TableColumn <Book,String>borrowedGenreCol;
+	@FXML private TableColumn <Book,String>borrowedDelayedCol;
+	@FXML private TableColumn <Book,String>delayFeeCol;
 	
 	//search filter fields
 	@FXML private TextField IDFilterField;
@@ -99,6 +108,9 @@ public class LibraryController implements Initializable{
 	@FXML private TextField publisherFilterField;
 	@FXML private TextField genreFilterField;
 	@FXML private TextField custNameField;
+	
+	//Reset button
+	@FXML private Button resetBtn;
 	
 	//Book details
 	@FXML private Label LIDLabel;
@@ -141,6 +153,7 @@ public class LibraryController implements Initializable{
 		
 		
 		refreshTable();
+		showBorrowedBooks();
 //		bookIDCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Book,Integer>, ObservableValue<Integer>>() {
 //			@Override
 //			public ObservableValue<Integer> call(CellDataFeatures<Book, Integer> param) {
@@ -247,7 +260,8 @@ public class LibraryController implements Initializable{
 		
 		FilteredList<Book> filteredBooks = new FilteredList<>(getObsBooks(library.getListBooks()), p -> true);
 		FilteredList<Customer> filteredCustomers = new FilteredList<>(getObsCustomers(library.getCustomersList()), p -> true);
-		
+		FilteredList<Book> filteredBorrowedBooks = new FilteredList<>(getObsBooks(library.getListLentBooks()), p -> true);
+
 		// 2. Set the filter Predicate whenever the filter changes.
 		//bind the filters to each other so the predicates of each are put into 1
 		filteredBooks.predicateProperty().bind(Bindings.createObjectBinding(() ->
@@ -272,14 +286,16 @@ public class LibraryController implements Initializable{
 		// 3. Wrap the FilteredList in a SortedList. 
 		SortedList<Book> sortedBooks = new SortedList<>(filteredBooks);
 		SortedList<Customer> sortedCustomers= new SortedList<>(filteredCustomers);
+		SortedList<Book> sortedBorrowedBooks= new SortedList<>(filteredBorrowedBooks);
 		
 		 // 4. Bind the SortedList comparator to the TableView comparator.
 		sortedBooks.comparatorProperty().bind(bookTable.comparatorProperty());
 		sortedCustomers.comparatorProperty().bind(customerTable.comparatorProperty());
-		
+		sortedBorrowedBooks.comparatorProperty().bind(borrowedTable.comparatorProperty());
 		// 5. Add sorted (and filtered) data to the table.
 		bookTable.setItems(sortedBooks);
 		customerTable.setItems(sortedCustomers);
+		borrowedTable.setItems(sortedBorrowedBooks);
 		
 		//ObservableList(Arraylist) >> FilteredList >> Sortedlist(comparator bind) >> into table
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -307,6 +323,9 @@ public class LibraryController implements Initializable{
 					genreLabel.setText("");
 					publisherLabel.setText("");
 				}
+				
+				
+				
 			}
 		});
 		/////////////////////////////////////////////////////////////////////////////////
@@ -333,6 +352,9 @@ public class LibraryController implements Initializable{
 					genreLabel.setText("");
 					publisherLabel.setText("");
 				}
+				
+				
+				
 			}
 		});
 		
@@ -344,20 +366,35 @@ public class LibraryController implements Initializable{
 		this.libraryMenu = libraryMenu;
 	}
 	
-	
+	@FXML
+	private void resetSearchEvent(ActionEvent event) throws IOException {
+		 
+		if(event.getSource().equals(resetBtn)) {	
+			IDFilterField.setText("");
+			shelfFilterField.setText("");
+			titleFilterField.setText("");
+			publisherFilterField.setText("");
+			authorFilterField.setText("");
+			genreFilterField.setText("");
+		}
+
+	}
+
 	@FXML
 	public void handleButtonAction(ActionEvent event) throws IOException {
 		Stage window;
-		
+
 		if (event.getSource().equals(logoutBtn)) {
 			Parent parent = FXMLLoader.load(getClass().getResource("Login.fxml"));
 			Scene newScene = new Scene(parent);
-			
+
 			window = (Stage) (logoutBtn.getScene().getWindow());
 			window.setScene(newScene);
 			window.show();
-		}	
+		}
 	}
+
+	
 	@FXML
 	private void logoutEvent(ActionEvent event) throws IOException {
 		if(event.getSource().equals(logoutBtn) ) {
@@ -602,10 +639,8 @@ public class LibraryController implements Initializable{
 				grid.setHgap(10);
 				grid.setVgap(10);
 				grid.setPadding(new Insets(20, 150, 10, 10));
-// tostring = int >> string
-// parseint = string >> int
-				TextField ID = new TextField();
-				ID.setPromptText(Integer.toString(tempBook.getLid()));
+				// tostring = int >> string
+				// parseint = string >> int
 				
 				TextField Title = new TextField();
 				Title.setPromptText(tempBook.getTitle());
@@ -622,40 +657,46 @@ public class LibraryController implements Initializable{
 				TextField Genre = new TextField();
 				Genre.setPromptText(tempBook.getGenre());
 
-				grid.add(new Label("ID:"), 0, 0);
-				grid.add(ID, 1, 0);
+				grid.add(new Label("Title:"), 0, 0);
+				grid.add(Title, 1, 0);
 				
-				grid.add(new Label("Title:"), 0, 1);
-				grid.add(Title, 1, 1);
+				grid.add(new Label("Author:"), 0, 1);
+				grid.add(Author, 1, 1);
 				
-				grid.add(new Label("Author:"), 0, 2);
-				grid.add(Author, 1, 2);
+				grid.add(new Label("Shelf:"), 0, 2);
+				grid.add(Shelf, 1, 2);
 				
-				grid.add(new Label("Shelf:"), 0, 3);
-				grid.add(Shelf, 1, 3);
+				grid.add(new Label("Publisher:"), 0, 3);
+				grid.add(Publisher, 1, 3);
 				
-				grid.add(new Label("Publisher:"), 0, 4);
-				grid.add(Publisher, 1, 4);
-				
-				grid.add(new Label("Genre:"), 0, 5);
-				grid.add(Genre, 1, 5);
+				grid.add(new Label("Genre:"), 0, 4);
+				grid.add(Genre, 1, 4);
+
 
 				dialog.getDialogPane().setContent(grid);
 				// Traditional way to get the response value.
 				Optional<String> result = dialog.showAndWait();
 				if (result.isPresent()){
-					for (int i=0; i< getObsBooks(library.getListBooks()).size();i++) {
-						if( getObsBooks(library.getListBooks()).get(i).equals(tempBook)) {
-							getObsBooks(library.getListBooks()).get(i).setLid((Integer.parseInt(ID.getText())));
-							getObsBooks(library.getListBooks()).get(i).setTitle(Title.getText());
-							getObsBooks(library.getListBooks()).get(i).setAuthor(Author.getText());
-							getObsBooks(library.getListBooks()).get(i).setShelf(Shelf.getText());
-							getObsBooks(library.getListBooks()).get(i).setPublisher(Publisher.getText());
-							getObsBooks(library.getListBooks()).get(i).setGenre((Genre.getText()));
-							
-							
-						}
-					}
+					Book modifyIntoThis= tempBook;
+					if(!Title.getText().isEmpty())
+						modifyIntoThis.setTitle(Title.getText());
+					if (!Author.getText().isEmpty())
+						modifyIntoThis.setAuthor(Author.getText());
+					if (!Shelf.getText().isEmpty())
+						modifyIntoThis.setShelf(Shelf.getText());
+					if (!Publisher.getText().isEmpty())
+						modifyIntoThis.setPublisher(Publisher.getText());
+					if (!Genre.getText().isEmpty())
+						modifyIntoThis.setGenre(Genre.getText());
+					
+					//tempBook=bookTable.getSelectionModel().getSelectedItem();
+//					library.findBook(tempBook.getLid()).setTitle(Title.getText());
+//					library.findBook(tempBook.getLid()).setAuthor(Author.getText());
+//					library.findBook(tempBook.getLid()).setShelf(Shelf.getText());
+//					library.findBook(tempBook.getLid()).setPublisher(Publisher.getText());
+//					library.findBook(tempBook.getLid()).setGenre(Genre.getText());
+					library.changeBookInformation(modifyIntoThis);
+					System.out.println("ciao");
 				}
 			}
 	}
@@ -767,6 +808,54 @@ public class LibraryController implements Initializable{
 		
 	}
 	
-	
+	public void showBorrowedBooks() {
+		borrowedIDCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Book,Integer>, ObservableValue<Integer>>() {
+		@Override
+		public ObservableValue<Integer> call(CellDataFeatures<Book, Integer> param) {
+			Book book = param.getValue();
+			SimpleIntegerProperty convertedLid = getIntegerProperty(book.getLid());
+			return convertedLid.asObject();
+		}
+	});
+		
+		borrowedTitleCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Book,String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
+				Book book = param.getValue();
+				SimpleStringProperty convertedTitle = getStringProperty(book.getTitle());
+				return convertedTitle;
+			}
+		});
+		
+		borrowedAuthorCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Book,String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
+				Book book = param.getValue();
+				SimpleStringProperty convertedAuthor = getStringProperty(book.getAuthor());
+				return convertedAuthor;
+			}
+		});
+		
+		borrowedPublisherCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Book,String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
+				Book book = param.getValue();
+				SimpleStringProperty convertedPublisher = getStringProperty(book.getPublisher());
+				return convertedPublisher;
+			}
+		});
+		
+		borrowedGenreCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Book,String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
+				Book book = param.getValue();
+				SimpleStringProperty convertedGenre = getStringProperty(book.getGenre());
+				return convertedGenre;
+			}
+		});
 
+		
+	}
+	
+	
 }
