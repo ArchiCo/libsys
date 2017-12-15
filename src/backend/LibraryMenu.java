@@ -414,8 +414,8 @@ public class LibraryMenu extends Application{
 		return counter;
 	}
 
-	private void addBook() {
-		System.out.print("Please enter book's ISBN: ");
+	public void addBook(String isbn, String title, String genre,String author, String publisher, String shelf ) {
+/*		System.out.print("Please enter book's ISBN: ");
 		String isbn = sc.nextLine();
 		System.out.print("Please enter book's title: ");
 		String title = sc.nextLine();
@@ -425,7 +425,8 @@ public class LibraryMenu extends Application{
 		String author = sc.nextLine();
 		System.out.print("Please enter book's publisher: ");
 		String publisher = sc.nextLine();
-		this.library.addBook(isbn, title, genre, author, publisher, "");
+	*/
+		this.library.addBook(isbn, title, genre, author, publisher, shelf);
 	}
 	
 	private Book findBook() {
@@ -496,10 +497,10 @@ public class LibraryMenu extends Application{
 		}
 	}
 
-	private void removeBook() {
+	public void removeBook(int libraryID) {
 		System.out.print("Please enter book's library ID: ");
-		int libraryID = sc.nextInt();
-		sc.nextLine();
+	//	int libraryID = sc.nextInt();
+	//	sc.nextLine();
 		library.removeBook(libraryID);
 	}
 	
