@@ -801,9 +801,8 @@ public class LibraryController implements Initializable {
 		return this.sortedBooks;
 	}
 	private SortedList<Book> refreshBookTable() {
-		//getObsBooks(library.getListBooks());
 		FilteredList<Book> filteredBooks = new FilteredList<>(getObsBooks(library.getListBooks()), p -> true);
-		sortedBooks = getSortedBooks();
+		sortedBooks = new SortedList<>(filteredBooks);
 		sortedBooks.comparatorProperty().bind(bookTable.comparatorProperty());
 		return sortedBooks;
 	}
