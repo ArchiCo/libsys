@@ -68,7 +68,7 @@
                                                                   <Text layoutX="318.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Shelf" />
                                                                   <Text layoutX="318.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Publisher" />
                                                                   <Text layoutX="320.0" layoutY="116.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Genre" />
-                                                                  <Button layoutX="550.0" layoutY="57.0" mnemonicParsing="false" text="Reset" />
+                                                                  <Button fx:id="resetBtn" layoutX="550.0" layoutY="57.0" mnemonicParsing="false" onAction="#resetSearchEvent" text="Reset" />
                                                                </children>
                                                             </AnchorPane>
                                                         </items>
@@ -375,15 +375,16 @@
                                     <content>
                                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                              <children>
-                                                <TableView prefHeight="542.0" prefWidth="1200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                <TableView fx:id="borrowedTable" prefHeight="542.0" prefWidth="1200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                    <columns>
-                                                      <TableColumn prefWidth="95.00000154972076" text="ID" />
-                                                      <TableColumn prefWidth="102.0000228881836" text="Title" />
-                                                      <TableColumn prefWidth="127.00006103515625" text="Author" />
-                                                      <TableColumn prefWidth="85.00006103515625" text="Publisher" />
-                                                      <TableColumn prefWidth="79.0" text="Genre" />
+                                                      <TableColumn fx:id="borrowedIDCol" prefWidth="95.00000154972076" text="ID" />
+                                                      <TableColumn fx:id="borrowedTitleCol" prefWidth="102.0000228881836" text="Title" />
+                                                      <TableColumn fx:id="borrowedAuthorCol" prefWidth="127.00006103515625" text="Author" />
+                                                      <TableColumn fx:id="borrowedPublisherCol" prefWidth="85.00006103515625" text="Publisher" />
+                                                      <TableColumn fx:id="borrowedGenreCol" prefWidth="79.0" text="Genre" />
+                                                      <TableColumn fx:id="borrowedDelayedCol" prefWidth="346.0" text="Delayed" />
+                                                      <TableColumn fx:id="delayFeeCol" prefWidth="361.0" text="Delay Fee" />
                                                       <TableColumn prefWidth="346.0" text="Delayed" />
-                                                      <TableColumn prefWidth="361.0" text="Delay Fee" />
                                                    </columns>
                                                 </TableView>
                                              </children></AnchorPane>
