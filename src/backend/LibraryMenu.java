@@ -74,8 +74,6 @@ public class LibraryMenu extends Application{
 			Parent root = loader.load();
 		    Scene scene = new Scene(root);
 		    primaryStage.setTitle("Library System");
-			
-		    
 		    primaryStage.setScene(scene);
 			primaryStage.show();
 		} catch(Exception e) {
