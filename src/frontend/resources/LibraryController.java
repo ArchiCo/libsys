@@ -4,13 +4,12 @@ import frontend.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.concurrent.FutureTask;
 import java.util.function.Predicate;
 
-import javax.security.auth.Refreshable;
-
-import com.sun.org.glassfish.external.probe.provider.annotations.Probe;
-
 import backend.*;
+import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -41,11 +40,11 @@ import javafx.stage.Stage;
 import javafx.geometry.Insets;
 
 import java.util.ArrayList;
+import java.util.Observable;
 import java.util.Optional;
 
 import javafx.util.Callback;
 import javafx.util.Pair;
-import sun.java2d.pipe.SpanShapeRenderer.Simple;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.ButtonType;
@@ -55,120 +54,90 @@ import javafx.scene.layout.GridPane;
 public class LibraryController implements Initializable {
 
 	// Book buttons
-	@FXML
-	private Button logoutBtn;
-	@FXML
-	private Button lendBookBtn;
+	@FXML private Button logoutBtn;
+	@FXML private Button lendBookBtn;
 
 	// Customer buttons
 	@FXML
 	private Button editCustomerBtn;
-	@FXML
-	private Button addCustomerBtn;
-	@FXML
-	private Button addBookBtn;
-	@FXML
-	private Button removeBookBtn;
-	@FXML
-	private Button editBookBtn;
-	@FXML
-	private Button returnBookBtn;
+	@FXML private Button addCustomerBtn;
+	@FXML private Button addBookBtn;
+	@FXML private Button removeBookBtn;
+	@FXML private Button editBookBtn;
+	@FXML private Button returnBookBtn;
 
 	// book directory table column initialize
-	@FXML
-	private TableView<Book> bookTable;
-	@FXML
-	private TableColumn<Book, Integer> bookIDCol;
-	@FXML
-	private TableColumn<Book, String> bookTitleCol;
-	@FXML
-	private TableColumn<Book, String> bookAuthorCol;
-	@FXML
-	private TableColumn<Book, String> bookShelfCol;
-	@FXML
-	private TableColumn<Book, String> bookPublisherCol;
-	@FXML
-	private TableColumn<Book, String> bookGenreCol;
+	@FXML private TableView<Book> bookTable;
+	@FXML private TableColumn<Book, Integer> bookIDCol;
+	@FXML private TableColumn<Book, String> bookTitleCol;
+	@FXML private TableColumn<Book, String> bookAuthorCol;
+	@FXML private TableColumn<Book, String> bookShelfCol;
+	@FXML private TableColumn<Book, String> bookPublisherCol;
+	@FXML private TableColumn<Book, String> bookGenreCol;
 
 	// customer directory table
-	@FXML
-	private TableView<Customer> customerTable;
-	@FXML
-	private TableColumn<Customer, String> customerIDCol;
-	@FXML
-	private TableColumn<Customer, String> customerNameCol;
+	@FXML private TableView<Customer> customerTable;
+	@FXML private TableColumn<Customer, String> customerIDCol;
+	@FXML private TableColumn<Customer, String> customerNameCol;
 
 	//
-	@FXML
-	private TableView<Book> lentTable;
-	@FXML
-	private TableColumn<Book, String> lentBookIDCol;
-	@FXML
-	private TableColumn<Book, String> lentBookNameCol;
+	@FXML private TableView<Book> lentTable;
+	@FXML private TableColumn<Book, String> lentBookIDCol;
+	@FXML private TableColumn<Book, String> lentBookNameCol;
 
 	// Customer borrowed books history
-	@FXML
-	private TableView<Book> cstHistoryTable;
+	@FXML private TableView<Book> cstHistoryTable;
 
-	@FXML
-	private TableColumn<Customer, String> borrowLateCol;
-	@FXML
-	private TableColumn<Customer, String> borrowIDCol;
-	@FXML
-	private TableColumn<Customer, String> borrowNameCol;
+	@FXML private TableColumn<Customer, String> borrowLateCol;
+	@FXML private TableColumn<Customer, String> borrowIDCol;
+	@FXML private TableColumn<Customer, String> borrowNameCol;
 
 	// search filter fields
-	@FXML
-	private TextField IDFilterField;
-	@FXML
-	private TextField titleFilterField;
-	@FXML
-	private TextField authorFilterField;
-	@FXML
-	private TextField shelfFilterField;
-	@FXML
-	private TextField publisherFilterField;
-	@FXML
-	private TextField genreFilterField;
-	@FXML
-	private TextField custNameField;
+	@FXML private TextField IDFilterField;
+	@FXML private TextField titleFilterField;
+	@FXML private TextField authorFilterField;
+	@FXML private TextField shelfFilterField;
+	@FXML private TextField publisherFilterField;
+	@FXML private TextField genreFilterField;
+	@FXML private TextField custNameField;
 
 	// Book details
-	@FXML
-	private Label LIDLabel;
-	@FXML
-	private Label ISBNLabel;
-	@FXML
-	private Label titleLabel;
-	@FXML
-	private Label authorLabel;
-	@FXML
-	private Label genreLabel;
-	@FXML
-	private Label publisherLabel;
-	@FXML
-	private Label publicationDateLabel;
+	@FXML private Label LIDLabel;
+	@FXML private Label ISBNLabel;
+	@FXML private Label titleLabel;
+	@FXML private Label authorLabel;
+	@FXML private Label genreLabel;
+	@FXML private Label publisherLabel;
+	@FXML private Label publicationDateLabel;
 
 	// Customer details
-	@FXML
-	private Label cstIDLabel;
-	@FXML
-	private Label cstNameLabel;
-	@FXML
-	private Label cstPhoneLabel;
-	@FXML
-	private Label cstAddressLabel;
+	@FXML private Label cstIDLabel;
+	@FXML private Label cstNameLabel;
+	@FXML private Label cstPhoneLabel;
+	@FXML private Label cstAddressLabel;
 
 	private LibraryMenu libraryMenu;
 	private Library library;
 	
-	FilteredList<Book> filteredBooks;
-	FilteredList<Customer> filteredCustomers;
+	private FilteredList<Book> filteredBooks;
+	private FilteredList<Customer> filteredCustomers;
 	
 	private SortedList<Book> sortedBooks;
 	private SortedList<Customer> sortedCustomers;
 	
+	private Book tempBook;
+	private Customer tempCst;
+	
+	ObjectProperty<Predicate<Book>> IDFilter;
+	ObjectProperty<Predicate<Book>> titleFilter;
+	ObjectProperty<Predicate<Book>> authorFilter;
+	ObjectProperty<Predicate<Book>> shelfFilter;
+	ObjectProperty<Predicate<Book>> publisherFilter;
+	ObjectProperty<Predicate<Book>> genreFilter;
 
+	ObjectProperty<Predicate<Customer>> custNameFilter;
+	
+	
 	public LibraryController(LibraryMenu libraryMenu, Library library) {
 		this.libraryMenu = libraryMenu;
 		this.library = library;
@@ -176,10 +145,7 @@ public class LibraryController implements Initializable {
 
 	public LibraryController() {
 	}
-
-	private Book tempBook;
-	private Customer tempCst;
-
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
@@ -190,18 +156,15 @@ public class LibraryController implements Initializable {
 		// if using ints and stuff, asObject() needs to be added after getproperty()
 		this.libraryMenu = new LibraryMenu();
 		this.library = new Library();
-
-		bookIDCol.setCellValueFactory(
-				new Callback<TableColumn.CellDataFeatures<Book, Integer>, ObservableValue<Integer>>() {
+		
+		bookIDCol.setCellValueFactory (new Callback<TableColumn.CellDataFeatures<Book, Integer>, ObservableValue<Integer>>() {
 					@Override
 					public ObservableValue<Integer> call(CellDataFeatures<Book, Integer> param) {
 						Book book = param.getValue();
 						SimpleIntegerProperty convertedLid = getIntegerProperty(book.getLid());
 						return convertedLid.asObject();
-					}
-				});
-		bookTitleCol.setCellValueFactory(
-				new Callback<TableColumn.CellDataFeatures<Book, String>, ObservableValue<String>>() {
+					}});
+		bookTitleCol.setCellValueFactory (new Callback<TableColumn.CellDataFeatures<Book, String>, ObservableValue<String>>() {
 					@Override
 					public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
 						Book book = param.getValue();
@@ -209,8 +172,7 @@ public class LibraryController implements Initializable {
 						return convertedTitle;
 					}
 				});
-		bookAuthorCol.setCellValueFactory(
-				new Callback<TableColumn.CellDataFeatures<Book, String>, ObservableValue<String>>() {
+		bookAuthorCol.setCellValueFactory (new Callback<TableColumn.CellDataFeatures<Book, String>, ObservableValue<String>>() {
 					@Override
 					public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
 						Book book = param.getValue();
@@ -264,16 +226,15 @@ public class LibraryController implements Initializable {
 					}
 				});
 
-		//////////////////////////////// SEARCH FUNCTION BOOK
-		//////////////////////////////// TABLE///////////////////////////
-		ObjectProperty<Predicate<Book>> IDFilter = new SimpleObjectProperty<>();
-		ObjectProperty<Predicate<Book>> titleFilter = new SimpleObjectProperty<>();
-		ObjectProperty<Predicate<Book>> authorFilter = new SimpleObjectProperty<>();
-		ObjectProperty<Predicate<Book>> shelfFilter = new SimpleObjectProperty<>();
-		ObjectProperty<Predicate<Book>> publisherFilter = new SimpleObjectProperty<>();
-		ObjectProperty<Predicate<Book>> genreFilter = new SimpleObjectProperty<>();
+		//////////////////////////////// SEARCH FUNCTION BOOK TABLE///////////////////////////
+		IDFilter = new SimpleObjectProperty<>();
+		titleFilter = new SimpleObjectProperty<>();
+		authorFilter = new SimpleObjectProperty<>();
+		shelfFilter = new SimpleObjectProperty<>();
+		publisherFilter = new SimpleObjectProperty<>();
+		genreFilter = new SimpleObjectProperty<>();
 
-		ObjectProperty<Predicate<Customer>> custNameFilter = new SimpleObjectProperty<>();
+		custNameFilter = new SimpleObjectProperty<>();
 
 		custNameFilter.bind(Bindings.createObjectBinding(
 				() -> customer -> customer.getName().toLowerCase().contains(custNameField.getText().toLowerCase()),
@@ -304,13 +265,11 @@ public class LibraryController implements Initializable {
 		// 1. Wrap the ObservableList in a FilteredList (initially display all data)
 
 		filteredBooks = new FilteredList<>(getObsBooks(library.getListBooks()), p -> true);
-		filteredCustomers = new FilteredList<>(getObsCustomers(library.getCustomersList()),
-				p -> true);
+		filteredCustomers = new FilteredList<>(getObsCustomers(library.getCustomersList()), p -> true);
 
 		// 2. Set the filter Predicate whenever the filter changes.
 		// bind the filters to each other so the predicates of each are put into 1
-		filteredBooks.predicateProperty()
-				.bind(Bindings.createObjectBinding(
+		filteredBooks.predicateProperty().bind(Bindings.createObjectBinding(
 						() -> IDFilter.get()
 								.and(titleFilter.get()
 										.and(authorFilter.get().and(
@@ -321,21 +280,14 @@ public class LibraryController implements Initializable {
 				.bind(Bindings.createObjectBinding(() -> custNameFilter.get(), custNameFilter));
 
 		// addlistener calls changelistener.changed
-		IDFilterField.textProperty().addListener((observable, oldValue, newValue) -> {
-		});
-		titleFilterField.textProperty().addListener((observable, oldvalue, newvalue) -> {
-		});
-		authorFilterField.textProperty().addListener((observable, oldvalue, newvalue) -> {
-		});
-		shelfFilterField.textProperty().addListener((observable, oldvalue, newvalue) -> {
-		});
-		publisherFilterField.textProperty().addListener((observable, oldvalue, newvalue) -> {
-		});
-		genreFilterField.textProperty().addListener((observable, oldvalue, newvalue) -> {
-		});
+		IDFilterField.textProperty().addListener((observable, oldValue, newValue) -> {});
+		titleFilterField.textProperty().addListener((observable, oldvalue, newvalue) -> {});
+		authorFilterField.textProperty().addListener((observable, oldvalue, newvalue) -> {});
+		shelfFilterField.textProperty().addListener((observable, oldvalue, newvalue) -> {});
+		publisherFilterField.textProperty().addListener((observable, oldvalue, newvalue) -> {});
+		genreFilterField.textProperty().addListener((observable, oldvalue, newvalue) -> {});
 
-		custNameField.textProperty().addListener((observable, oldValue, newValue) -> {
-		});
+		custNameField.textProperty().addListener((observable, oldValue, newValue) -> {});
 
 		// 3. Wrap the FilteredList in a SortedList.
 		sortedBooks = new SortedList<>(filteredBooks);
@@ -536,8 +488,8 @@ public class LibraryController implements Initializable {
 
 			// Start working on the LibraryMenu function to connect
 		}
-		customerTable.setItems(sortedCustomers);
-		customerTable.refresh();
+//		customerTable.setItems(sortedCustomers);
+//		customerTable.refresh();
 	}
 
 	/*
@@ -623,7 +575,7 @@ public class LibraryController implements Initializable {
 						existing = true;
 				}
 				/////// IF IT DOES NOT, ADD THE BOOK
-				if (existing == false && !bookFieldsAreEmpty(ID, Title, Author, Shelf, Publisher, Genre)) {
+				if (existing == false && !bookFieldsAreEmpty( Title, Author, Shelf, Publisher, Genre)) {
 					Alert alert = new Alert(AlertType.INFORMATION);
 					alert.setTitle("Information");
 					alert.setHeaderText(null);
@@ -632,8 +584,7 @@ public class LibraryController implements Initializable {
 					alert.showAndWait();
 					libraryMenu.addBook(ID.getText(), Title.getText(), Author.getText(), Genre.getText(),
 							Publisher.getText(), Shelf.getText());
-					bookTable.setItems(sortedBooks);
-					bookTable.refresh();
+					refreshBookTable();
 				}
 				////// IF IT DOES, DON'T ADD IT
 				else if (existing == true) {
@@ -647,7 +598,6 @@ public class LibraryController implements Initializable {
 				}
 			}
 		}
-		bookTable.refresh();
 	}
 	
 
@@ -730,6 +680,7 @@ public class LibraryController implements Initializable {
 		alert.setHeaderText("RIP Book");
 		alert.setContentText("Remove?");
 		Optional <ButtonType> result = alert.showAndWait();
+		
 		if(result.get() == ButtonType.OK) {
 			Alert confirmedBookKill = new Alert(AlertType.INFORMATION);
 			confirmedBookKill.setTitle("Book Kill Confirmed");
@@ -737,8 +688,7 @@ public class LibraryController implements Initializable {
 			confirmedBookKill.setContentText("Kill Confirmed.");
 			confirmedBookKill.showAndWait();
 			libraryMenu.removeBook(tempBook.getLid());
-			bookTable.setItems(refreshBookTable());
-			bookTable.refresh();
+			refreshBookTable();
 		} else {
 			alert.close();
 		}
@@ -747,10 +697,10 @@ public class LibraryController implements Initializable {
 		}
 	}
 
-	public Boolean bookFieldsAreEmpty(TextField a, TextField b, TextField c, TextField d, TextField e, TextField f) {
+	public Boolean bookFieldsAreEmpty(TextField a, TextField b, TextField c, TextField d, TextField e) {
 		Boolean x = false;
 		if (a.getText().isEmpty() || b.getText().isEmpty() || c.getText().isEmpty() || d.getText().isEmpty()
-				|| e.getText().isEmpty() || f.getText().isEmpty()) {
+				|| e.getText().isEmpty()) {
 			x = true;
 		System.out.println("There's at least an empty field!");
 		} else {
@@ -800,11 +750,70 @@ public class LibraryController implements Initializable {
 	private SortedList<Book> getSortedBooks(){
 		return this.sortedBooks;
 	}
-	private SortedList<Book> refreshBookTable() {
-		FilteredList<Book> filteredBooks = new FilteredList<>(getObsBooks(library.getListBooks()), p -> true);
-		sortedBooks = new SortedList<>(filteredBooks);
-		sortedBooks.comparatorProperty().bind(bookTable.comparatorProperty());
-		return sortedBooks;
+	private void refreshBookTable() {
+		custNameFilter.bind(Bindings.createObjectBinding(
+				() -> customer -> customer.getName().toLowerCase().contains(custNameField.getText().toLowerCase()),
+				custNameField.textProperty()));
+		IDFilter.bind(Bindings.createObjectBinding(() -> book -> Integer.toString(book.getLid()).toLowerCase()
+				.contains(IDFilterField.getText().toLowerCase()), IDFilterField.textProperty()));
+
+		titleFilter.bind(Bindings.createObjectBinding(
+				() -> book -> book.getTitle().toLowerCase().contains(titleFilterField.getText().toLowerCase()),
+				titleFilterField.textProperty()));
+
+		authorFilter.bind(Bindings.createObjectBinding(
+				() -> book -> book.getAuthor().toLowerCase().contains(authorFilterField.getText().toLowerCase()),
+				authorFilterField.textProperty()));
+
+		shelfFilter.bind(Bindings.createObjectBinding(
+				() -> book -> book.getShelf().toLowerCase().contains(shelfFilterField.getText().toLowerCase()),
+				shelfFilterField.textProperty()));
+
+		publisherFilter.bind(Bindings.createObjectBinding(
+				() -> book -> book.getPublisher().toLowerCase().contains(publisherFilterField.getText().toLowerCase()),
+				publisherFilterField.textProperty()));
+
+		genreFilter.bind(Bindings.createObjectBinding(
+				() -> book -> book.getGenre().toLowerCase().contains(genreFilterField.getText().toLowerCase()),
+				genreFilterField.textProperty()));
+		// 1. Wrap the ObservableList in a FilteredList (initially display all data)
+
+		filteredBooks = new FilteredList<>(getObsBooks(library.getListBooks()), p -> true);
+		filteredCustomers = new FilteredList<>(getObsCustomers(library.getCustomersList()), p -> true);
+
+		filteredBooks.predicateProperty().bind(Bindings.createObjectBinding(
+				() -> IDFilter.get()
+						.and(titleFilter.get()
+								.and(authorFilter.get().and(
+										shelfFilter.get().and(publisherFilter.get().and(genreFilter.get()))))),
+				IDFilter, titleFilter, authorFilter, shelfFilter, publisherFilter, genreFilter));
+
+		filteredCustomers.predicateProperty()
+				.bind(Bindings.createObjectBinding(() -> custNameFilter.get(), custNameFilter));
+
+		// addlistener calls changelistener.changed
+				IDFilterField.textProperty().addListener((observable, oldValue, newValue) -> {});
+				titleFilterField.textProperty().addListener((observable, oldvalue, newvalue) -> {});
+				authorFilterField.textProperty().addListener((observable, oldvalue, newvalue) -> {});
+				shelfFilterField.textProperty().addListener((observable, oldvalue, newvalue) -> {});
+				publisherFilterField.textProperty().addListener((observable, oldvalue, newvalue) -> {});
+				genreFilterField.textProperty().addListener((observable, oldvalue, newvalue) -> {});
+
+				custNameField.textProperty().addListener((observable, oldValue, newValue) -> {});
+
+				// 3. Wrap the FilteredList in a SortedList.
+				sortedBooks = new SortedList<>(filteredBooks);
+				sortedCustomers = new SortedList<>(filteredCustomers);
+
+				// 4. Bind the SortedList comparator to the TableView comparator.
+				sortedBooks.comparatorProperty().bind(bookTable.comparatorProperty());
+				sortedCustomers.comparatorProperty().bind(customerTable.comparatorProperty());
+
+				// 5. Add sorted (and filtered) data to the table.
+				bookTable.setItems(sortedBooks);
+				customerTable.setItems(sortedCustomers);
+
 	}
+	
 
 }

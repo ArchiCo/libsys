@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.function.Consumer;
 
 import backend.FlexibleBookComparator.Order;
 import database.Credentials;
@@ -20,6 +21,9 @@ public class Library {
 	private LocalDate today;
 	private DataController database; 
 	
+	private Consumer<Book> registerBookCallback;
+	private Consumer<Book> unregisterBookCallback;
+	
 	public Library() {
 		try {
 			database = new DataController();
@@ -35,6 +39,9 @@ public class Library {
 			book1.setLid(1);
 			book2.setLid(2);
 			book3.setLid(3);
+			
+			this.registerBookCallback = book -> {};
+			this.unregisterBookCallback = book -> {};
 			/*addBook(book1);
 			addBook(book2);
 			addBook(book3);*/
@@ -72,7 +79,7 @@ public class Library {
 	public boolean removeBook(int lid) {
 		return database.removeBook(lid);
 	}
-
+	
 	public boolean removeRecord(int aid) {
 		return database.removeRecord(aid);
 	}
@@ -109,6 +116,7 @@ public class Library {
 	
 	public void addBook(Book book) {
 		database.addBook(book);
+		registerBookCallback.accept(book);
 	}
 	
 	public void addRecord(String cid, int lid, String dateTaken, String dateDue) {
@@ -322,5 +330,11 @@ public class Library {
 
 	public void setPopularBooks(ArrayList<Book> popularBooks) {
 		this.popularBooks = popularBooks;
+	}
+	public void setBookRegisterCallback(Consumer<Book> registerBookCallback) {
+		this.registerBookCallback = registerBookCallback;
+	}
+	public void setBookUnregisterCallback(Consumer<Book> unregisterBookCallback) {
+		this.unregisterBookCallback = unregisterBookCallback;
 	}
 }
