@@ -285,18 +285,19 @@ public class LibraryMenu extends Application{
 		}
 	}
 
-	private void modifyCustomer() {
-		System.out.print("Please show your library card: ");
-		String libraryID = sc.nextLine();
+	public void modifyCustomer(String libraryID, String name, String address, String phoneNumber) {
+//		System.out.print("Please show your library card: ");
+//		String libraryID = sc.nextLine();
 		
 		Customer customer = library.findCustomer(libraryID);
 		if (customer != null) {
-			System.out.print("Please enter new name: ");
+		/*	System.out.print("Please enter new name: ");
 			String name = sc.nextLine();
 			System.out.print("Please enter new address: ");
 			String address = sc.nextLine();
 			System.out.print("Please enter new phone number: ");
 			String phoneNumber = sc.nextLine();
+		*/
 			if (!name.isEmpty()) {
 				customer.setName(name);
 			}
@@ -307,16 +308,17 @@ public class LibraryMenu extends Application{
 				if (!phoneNumber.isEmpty()) {
 					customer.setPhoneNumber(Integer.parseInt(phoneNumber));
 				}
-			} catch (Exception e) {}
+			} catch (Exception e) {
+			}
 			library.changeCustomerInformation(customer);
 		} else {
 			System.out.println("Customer is not registered in the system.");
 		}
 	}
 	
-	private void removeCustomer() {
-		System.out.print("Please show your library card: ");
-		String libraryID = sc.nextLine();
+	public void removeCustomer(String libraryID) {
+	//	System.out.print("Please show your library card: ");
+	//	String libraryID = sc.nextLine();
 		library.deregisterCustomer(libraryID);
 	}
 	

@@ -7,6 +7,8 @@ import java.util.ResourceBundle;
 import java.util.concurrent.FutureTask;
 import java.util.function.Predicate;
 
+import com.sun.javafx.scene.control.skin.IntegerFieldSkin;
+
 import backend.*;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
@@ -56,16 +58,16 @@ public class LibraryController implements Initializable {
 	// Book buttons
 	@FXML private Button logoutBtn;
 	@FXML private Button lendBookBtn;
-
-	// Customer buttons
-	@FXML
-	private Button editCustomerBtn;
-	@FXML private Button addCustomerBtn;
+	@FXML private Button returnBookBtn;
 	@FXML private Button addBookBtn;
 	@FXML private Button removeBookBtn;
 	@FXML private Button editBookBtn;
-	@FXML private Button returnBookBtn;
-
+	
+	// Customer buttons
+	@FXML private Button editCustomerBtn;
+	@FXML private Button addCustomerBtn;
+	@FXML private Button removeCustomerBtn;
+	
 	// book directory table column initialize
 	@FXML private TableView<Book> bookTable;
 	@FXML private TableColumn<Book, Integer> bookIDCol;
@@ -74,20 +76,24 @@ public class LibraryController implements Initializable {
 	@FXML private TableColumn<Book, String> bookShelfCol;
 	@FXML private TableColumn<Book, String> bookPublisherCol;
 	@FXML private TableColumn<Book, String> bookGenreCol;
-
 	// customer directory table
 	@FXML private TableView<Customer> customerTable;
 	@FXML private TableColumn<Customer, String> customerIDCol;
 	@FXML private TableColumn<Customer, String> customerNameCol;
 
-	//
+	//Lent table
 	@FXML private TableView<Book> lentTable;
 	@FXML private TableColumn<Book, String> lentBookIDCol;
 	@FXML private TableColumn<Book, String> lentBookNameCol;
 
 	// Customer borrowed books history
 	@FXML private TableView<Book> cstHistoryTable;
-
+	@FXML private TableColumn<Book, String> cstHistBookIDCol;
+	@FXML private TableColumn<Book, String> cstHistBookTitleCol;
+	@FXML private TableColumn<Book, String> cstHistBookAuthorCol;
+	@FXML private TableColumn<Book, String> cstHistBookGenreCol;
+	
+	
 	@FXML private TableColumn<Customer, String> borrowLateCol;
 	@FXML private TableColumn<Customer, String> borrowIDCol;
 	@FXML private TableColumn<Customer, String> borrowNameCol;
@@ -124,6 +130,7 @@ public class LibraryController implements Initializable {
 	
 	private SortedList<Book> sortedBooks;
 	private SortedList<Customer> sortedCustomers;
+	private SortedList<Book> customerHistory;
 	
 	private Book tempBook;
 	private Customer tempCst;
@@ -180,8 +187,7 @@ public class LibraryController implements Initializable {
 						return convertedAuthor;
 					}
 				});
-		bookShelfCol.setCellValueFactory(
-				new Callback<TableColumn.CellDataFeatures<Book, String>, ObservableValue<String>>() {
+		bookShelfCol.setCellValueFactory (new Callback<TableColumn.CellDataFeatures<Book, String>, ObservableValue<String>>() {
 					@Override
 					public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
 						Book book = param.getValue();
@@ -189,8 +195,7 @@ public class LibraryController implements Initializable {
 						return convertedShelf;
 					}
 				});
-		bookPublisherCol.setCellValueFactory(
-				new Callback<TableColumn.CellDataFeatures<Book, String>, ObservableValue<String>>() {
+		bookPublisherCol.setCellValueFactory( new Callback<TableColumn.CellDataFeatures<Book, String>, ObservableValue<String>>() {
 					@Override
 					public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
 						Book book = param.getValue();
@@ -198,8 +203,7 @@ public class LibraryController implements Initializable {
 						return convertedPublisher;
 					}
 				});
-		bookGenreCol.setCellValueFactory(
-				new Callback<TableColumn.CellDataFeatures<Book, String>, ObservableValue<String>>() {
+		bookGenreCol.setCellValueFactory( new Callback<TableColumn.CellDataFeatures<Book, String>, ObservableValue<String>>() {
 					@Override
 					public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
 						Book book = param.getValue();
@@ -207,8 +211,8 @@ public class LibraryController implements Initializable {
 						return convertedGenre;
 					}
 				});
-		customerIDCol.setCellValueFactory(
-				new Callback<TableColumn.CellDataFeatures<Customer, String>, ObservableValue<String>>() {
+		
+		customerIDCol.setCellValueFactory( new Callback<TableColumn.CellDataFeatures<Customer, String>, ObservableValue<String>>() {
 					@Override
 					public ObservableValue<String> call(CellDataFeatures<Customer, String> param) {
 						Customer customer = param.getValue();
@@ -216,8 +220,7 @@ public class LibraryController implements Initializable {
 						return convertedCstId;
 					}
 				});
-		customerNameCol.setCellValueFactory(
-				new Callback<TableColumn.CellDataFeatures<Customer, String>, ObservableValue<String>>() {
+		customerNameCol.setCellValueFactory( new Callback<TableColumn.CellDataFeatures<Customer, String>, ObservableValue<String>>() {
 					@Override
 					public ObservableValue<String> call(CellDataFeatures<Customer, String> param) {
 						Customer customer = param.getValue();
@@ -226,6 +229,65 @@ public class LibraryController implements Initializable {
 					}
 				});
 
+		borrowIDCol.setCellValueFactory( new Callback<TableColumn.CellDataFeatures<Customer,String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Customer, String> param) {
+				Customer customer = param.getValue();
+				SimpleStringProperty convertedCstId = getStringProperty(customer.getCustomerId());
+				return convertedCstId;
+			}
+		});
+		borrowNameCol.setCellValueFactory( new Callback<TableColumn.CellDataFeatures<Customer,String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Customer, String> param) {
+				Customer customer = param.getValue();
+				SimpleStringProperty convertedCstName = getStringProperty(customer.getName());
+				return convertedCstName;
+			}
+		});
+/*		borrowLateCol.setCellValueFactory( new Callback<TableColumn.CellDataFeatures<Customer,String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Customer, String> param) {
+				Customer customer = param.getValue();
+				SimpleStringProperty convertedCstId = getStringProperty(customer.());
+				return convertedCstId;
+			}
+		});
+*/		
+		cstHistBookIDCol.setCellValueFactory( new Callback<TableColumn.CellDataFeatures<Book,String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Book, String> param){
+				Book book = param.getValue();
+				SimpleStringProperty convertedBookId = getStringProperty(Integer.toString(book.getLid()));
+				return convertedBookId;
+			}
+		});
+		
+		cstHistBookTitleCol.setCellValueFactory (new Callback<TableColumn.CellDataFeatures<Book, String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
+				Book book = param.getValue();
+				SimpleStringProperty convertedTitle = getStringProperty(book.getTitle());
+				return convertedTitle;
+			}
+		});
+		cstHistBookAuthorCol.setCellValueFactory (new Callback<TableColumn.CellDataFeatures<Book, String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
+				Book book = param.getValue();
+				SimpleStringProperty convertedAuthor = getStringProperty(book.getAuthor());
+				return convertedAuthor;
+			}
+		});
+		cstHistBookGenreCol.setCellValueFactory( new Callback<TableColumn.CellDataFeatures<Book, String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
+				Book book = param.getValue();
+				SimpleStringProperty convertedGenre = getStringProperty(book.getGenre());
+				return convertedGenre;
+			}
+		});
+		
 		//////////////////////////////// SEARCH FUNCTION BOOK TABLE///////////////////////////
 		IDFilter = new SimpleObjectProperty<>();
 		titleFilter = new SimpleObjectProperty<>();
@@ -237,10 +299,12 @@ public class LibraryController implements Initializable {
 		custNameFilter = new SimpleObjectProperty<>();
 
 		custNameFilter.bind(Bindings.createObjectBinding(
-				() -> customer -> customer.getName().toLowerCase().contains(custNameField.getText().toLowerCase()),
+				() -> customer -> customer.getName().toLowerCase().contains(custNameField.getText().toLowerCase()), 
 				custNameField.textProperty()));
-		IDFilter.bind(Bindings.createObjectBinding(() -> book -> Integer.toString(book.getLid()).toLowerCase()
-				.contains(IDFilterField.getText().toLowerCase()), IDFilterField.textProperty()));
+		
+		IDFilter.bind(Bindings.createObjectBinding(
+				() -> book -> Integer.toString(book.getLid()).toLowerCase().contains(IDFilterField.getText().toLowerCase()), 
+				IDFilterField.textProperty()));
 
 		titleFilter.bind(Bindings.createObjectBinding(
 				() -> book -> book.getTitle().toLowerCase().contains(titleFilterField.getText().toLowerCase()),
@@ -300,9 +364,12 @@ public class LibraryController implements Initializable {
 		// 5. Add sorted (and filtered) data to the table.
 		bookTable.setItems(sortedBooks);
 		customerTable.setItems(sortedCustomers);
+		
 
 		// ObservableList(Arraylist) >> FilteredList >> Sortedlist(comparator bind) >>
 		// into table
+		
+		
 		////////////////////////////////////////////////////////////////////////////////////////////////////////
 		/////////////////// BOOK DETAILS////////////////////////
 
@@ -344,6 +411,10 @@ public class LibraryController implements Initializable {
 					cstNameLabel.setText(newValue.getName());
 					cstPhoneLabel.setText(Integer.toString(newValue.getPhoneNumber()));
 					cstAddressLabel.setText(newValue.getAddress());
+					
+					//show individual customer history
+					cstHistoryTable.setItems(getObsBooks(tempCst.getCustomerHistory()));
+					
 				}
 
 				else {
@@ -355,6 +426,8 @@ public class LibraryController implements Initializable {
 				}
 			}
 		});
+		
+
 
 	}
 
@@ -391,8 +464,9 @@ public class LibraryController implements Initializable {
 
 	@FXML
 	private void editCustomerEvent(ActionEvent event) throws IOException {
+		if(tempCst != null) {
 		if (event.getSource().equals(editCustomerBtn)) {
-			TextInputDialog dialog = new TextInputDialog("Edit Book");
+			TextInputDialog dialog = new TextInputDialog("Edit Customer");
 			// dialog.setTitle("Text Input Dialog");
 			// dialog.setHeaderText("Look, a Text Input Dialog");
 			// dialog.setContentText("Please enter your name:");
@@ -402,108 +476,147 @@ public class LibraryController implements Initializable {
 			grid.setVgap(10);
 			grid.setPadding(new Insets(20, 150, 10, 10));
 
-			TextField ID = new TextField();
-			ID.setPromptText(tempCst.getCustomerId());
+			TextField name = new TextField();
+			name.setPromptText(tempCst.getName());
 
-			TextField Name = new TextField();
-			Name.setPromptText(tempCst.getName());
+			TextField phone = new TextField();
+			phone.setPromptText(Integer.toString(tempCst.getPhoneNumber()));
 
-			TextField Phone = new TextField();
-			Phone.setPromptText(Integer.toString(tempCst.getPhoneNumber()));
+			TextField address = new TextField();
+			address.setPromptText(tempCst.getAddress());
 
-			TextField Address = new TextField();
-			Address.setPromptText(tempCst.getAddress());
+			grid.add(new Label("Name:"), 0, 0);
+			grid.add(name, 1, 0);
 
-			grid.add(new Label("ID:"), 0, 0);
-			grid.add(ID, 1, 0);
+			grid.add(new Label("Address:"), 0, 1);
+			grid.add(address, 1, 1);
 
-			grid.add(new Label("Name:"), 0, 1);
-			grid.add(Name, 1, 1);
-
-			grid.add(new Label("Address:"), 0, 2);
-			grid.add(Address, 1, 2);
-
-			grid.add(new Label("Phone:"), 0, 3);
-			grid.add(Phone, 1, 3);
+			grid.add(new Label("Phone:"), 0, 2);
+			grid.add(phone, 1, 2);
 
 			dialog.getDialogPane().setContent(grid);
-			// Traditional way to get the response value.
 			Optional<String> result = dialog.showAndWait();
+			
 			if (result.isPresent()) {
-				for (int i = 0; i < library.getCustomersList().size(); i++) {
-					if (library.getCustomersList().get(i).equals(tempCst)) {
-						library.getCustomersList().get(i).setLid(ID.getText());
-						library.getCustomersList().get(i).setName(Name.getText());
-						library.getCustomersList().get(i).setAddress(Address.getText());
-						library.getCustomersList().get(i).setPhoneNumber(Integer.parseInt(Phone.getText()));
-					}
+				Alert confirmModify = new Alert (AlertType.CONFIRMATION);
+				confirmModify.setTitle("Modify Customer");
+				confirmModify.setHeaderText("MANIPULATE THAT INFO");
+				confirmModify.setContentText("Modify Customer Info?");
+				Optional <ButtonType> choice = confirmModify.showAndWait();
+				if(choice.get() == ButtonType.OK) {
+					libraryMenu.modifyCustomer(
+							tempCst.getCustomerId(), name.getText(), address.getText(), phone.getText());
+				refreshTable();
+				}
+			}
+			else {
+				dialog.close();
+				refreshTable();
 				}
 			}
 		}
 	}
-
+		
 	@FXML
 	private void addCustomerEvent(ActionEvent event) throws IOException {
 
 		TextInputDialog dialog = new TextInputDialog("");
-		dialog.setTitle("Text Input Dialog");
-		dialog.setHeaderText("Look, a Text Input Dialog");
-		dialog.setContentText("Please enter your name:");
+		dialog.setTitle("Join the Gang");
+		dialog.setHeaderText("Participate in the rough handling of Books");
+		dialog.setContentText("What String shall we use to summon Your Gracious?");
 
 		GridPane grid = new GridPane();
 		grid.setHgap(10);
 		grid.setVgap(10);
 		grid.setPadding(new Insets(20, 150, 10, 10));
 
-		// TextField ID = new TextField();
-		// ID.setPromptText("ID");
+		TextField name = new TextField();
+		name.setPromptText("Title");
 
-		TextField Name = new TextField();
-		Name.setPromptText("Title");
-
-		TextField Phone = new TextField();
-		Phone.setPromptText("Phone");
-
-		TextField Address = new TextField();
-		Address.setPromptText("Address");
-
-		// grid.add(new Label("ID:"), 0, 0);
-		// grid.add(ID, 1, 0);
+		TextField phone = new TextField();
+		phone.setPromptText("Phone");
+		//do not allow letters
+		phone.textProperty().addListener(new ChangeListener<String>() {
+		    @Override
+		    public void changed(ObservableValue<? extends String> observable, String oldValue, 
+		        String newValue) {
+		        if (!newValue.matches("\\d*")) {
+		            phone.setText(newValue.replaceAll("[^\\d]", ""));
+		        }
+		    }
+		});
+		
+		TextField address = new TextField();
+		address.setPromptText("Address");
 
 		grid.add(new Label("Name:"), 0, 1);
-		grid.add(Name, 1, 1);
+		grid.add(name, 1, 1);
 
 		grid.add(new Label("Address:"), 0, 2);
-		grid.add(Address, 1, 2);
+		grid.add(address, 1, 2);
 
 		grid.add(new Label("Phone:"), 0, 3);
-		grid.add(Phone, 1, 3);
+		grid.add(phone, 1, 3);
 
 		dialog.getDialogPane().setContent(grid);
+		
+		final Button cancel = (Button) dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
+		cancel.addEventFilter(ActionEvent.ACTION, event1 ->
+		    System.out.println("Cancel was definitely pressed")
+		);
+		 final Button ok = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+	        ok.addEventFilter(ActionEvent.ACTION, event1 ->
+	            System.out.println("OK was definitely pressed")
+	        );
 		// Traditional way to get the response value.
 		Optional<String> result = dialog.showAndWait();
-		if (result.isPresent()) {
-			Boolean existing = false;
-			libraryMenu.registerCustomer(Name.getText(), Address.getText(), Integer.parseInt(Phone.getText()));
-
-			// Start working on the LibraryMenu function to connect
+		
+	
+	
+		if (result.isPresent() && cstFieldsAreEmpty(name, address, phone) == false) {
+			Alert confirmedGangMember = new Alert(AlertType.INFORMATION);
+			confirmedGangMember.setTitle("Woot");
+			confirmedGangMember.setHeaderText(null);
+			confirmedGangMember.setContentText("Welcome, " + name.getText());
+			confirmedGangMember.showAndWait();
+			libraryMenu.registerCustomer(name.getText(), address.getText(), Integer.parseInt(phone.getText()));
+			refreshTable();
 		}
-//		customerTable.setItems(sortedCustomers);
-//		customerTable.refresh();
+		if(result.isPresent() && cstFieldsAreEmpty(name, address, phone) == true) {
+			Alert confirmedGangMember = new Alert(AlertType.ERROR);
+			confirmedGangMember.setTitle("Field Empty");
+			confirmedGangMember.setHeaderText(null);
+			confirmedGangMember.setContentText("A field was left empty. Retry.");
+			confirmedGangMember.showAndWait();
+			refreshTable();
+			}
+		}
+	
+	@FXML
+	private void removeCustomerEvent(ActionEvent event) throws IOException{
+		if (event.getSource().equals(removeCustomerBtn)) {
+			
+			Alert alert = new Alert(AlertType.CONFIRMATION);
+			alert.setTitle("Remove Customer");
+			alert.setHeaderText("RIP Customer");
+			alert.setContentText("Remove?");
+			Optional <ButtonType> result = alert.showAndWait();
+			
+			if(result.get() == ButtonType.OK && tempCst != null) {
+				Alert confirmedCustomerKill = new Alert(AlertType.INFORMATION);
+				confirmedCustomerKill.setTitle("Customer Kill Confirmed");
+				confirmedCustomerKill.setHeaderText(null);
+				confirmedCustomerKill.setContentText("Kill Confirmed.");
+				confirmedCustomerKill.showAndWait();
+				libraryMenu.removeCustomer(tempCst.getCustomerId());
+				refreshTable();
+			} else {
+				alert.close();
+				refreshTable();
+			}
+		}
 	}
-
-	/*
-	 * ///////CHECK IF THE BOOK ID ALREADY EXISTS AND IF FIELDS ARE NOT EMPTY for
-	 * (int i=0; i<libraryMenu.getCustomersList().size();i++) { if
-	 * (ID.getText().equals(libraryMenu.getCustomersList().get(i).getLID()))
-	 * existing=true; } ///////IF IT DOES NOT, ADD THE BOOK if(existing==false &&
-	 * !cstFieldsAreEmpty(ID,Name,Address,Phone)) { Alert alert = new
-	 * Alert(AlertType.INFORMATION); alert.setTitle("Information");
-	 * alert.setHeaderText(null); alert.setContentText("Customer correctly added.");
-	 * 
-	 * alert.showAndWait(); this.libraryMenu.getCustomersList().add(newCustomer);}
-	 * //////IF IT DOES, DON'T ADD IT else if (existing==true) {
-	 * 
+/*
 	 * Alert alert = new Alert(AlertType.ERROR); alert.setTitle("ERROR");
 	 * alert.setHeaderText("Error during adding a customer");
 	 * alert.setContentText("The customer is already registered in the library.");
@@ -584,7 +697,7 @@ public class LibraryController implements Initializable {
 					alert.showAndWait();
 					libraryMenu.addBook(ID.getText(), Title.getText(), Author.getText(), Genre.getText(),
 							Publisher.getText(), Shelf.getText());
-					refreshBookTable();
+					refreshTable();
 				}
 				////// IF IT DOES, DON'T ADD IT
 				else if (existing == true) {
@@ -688,15 +801,18 @@ public class LibraryController implements Initializable {
 			confirmedBookKill.setContentText("Kill Confirmed.");
 			confirmedBookKill.showAndWait();
 			libraryMenu.removeBook(tempBook.getLid());
-			refreshBookTable();
+			refreshTable();
 		} else {
 			alert.close();
-		}
-		
-		
+			refreshTable();
+			}
 		}
 	}
-
+	@FXML
+	public void returnBookEvent() {
+		
+	}
+////////////////////////////////////////TextField Checks//////////////////////////////////////////
 	public Boolean bookFieldsAreEmpty(TextField a, TextField b, TextField c, TextField d, TextField e) {
 		Boolean x = false;
 		if (a.getText().isEmpty() || b.getText().isEmpty() || c.getText().isEmpty() || d.getText().isEmpty()
@@ -709,9 +825,9 @@ public class LibraryController implements Initializable {
 		return x;
 	}
 
-	public Boolean cstFieldsAreEmpty(TextField a, TextField b, TextField c, TextField d) {
-		Boolean x = false;
-		if (a.getText().isEmpty() || b.getText().isEmpty() || c.getText().isEmpty() || d.getText().isEmpty()) {
+	public Boolean cstFieldsAreEmpty(TextField a, TextField b, TextField c) {
+		Boolean x = false; //wtf 
+		if (a.getText().isEmpty() || b.getText().isEmpty() || c.getText().isEmpty()) {
 			x = true;
 		System.out.println("There's at least an empty field!");
 		} else {
@@ -750,7 +866,7 @@ public class LibraryController implements Initializable {
 	private SortedList<Book> getSortedBooks(){
 		return this.sortedBooks;
 	}
-	private void refreshBookTable() {
+	private void refreshTable() {
 		custNameFilter.bind(Bindings.createObjectBinding(
 				() -> customer -> customer.getName().toLowerCase().contains(custNameField.getText().toLowerCase()),
 				custNameField.textProperty()));
