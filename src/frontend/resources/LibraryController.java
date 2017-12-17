@@ -7,6 +7,8 @@ import java.util.ResourceBundle;
 import java.util.concurrent.FutureTask;
 import java.util.function.Predicate;
 
+import javax.sound.midi.ControllerEventListener;
+
 import com.sun.javafx.scene.control.skin.IntegerFieldSkin;
 
 import backend.*;
@@ -139,8 +141,8 @@ public class LibraryController implements Initializable {
 	@FXML private Label cstPhoneLabel;
 	@FXML private Label cstAddressLabel;
 
-	private LibraryMenu libraryMenu;
-	private Library library;
+	protected LibraryMenu libraryMenu;
+	protected Library library;
 	
 	private FilteredList<Book> filteredBooks;
 	private FilteredList<Customer> filteredCustomers;
@@ -148,9 +150,12 @@ public class LibraryController implements Initializable {
 	private SortedList<Book> sortedBooks;
 	private SortedList<Customer> sortedCustomers;
 	private SortedList<Book> customerHistory;
+	SortedList<Book> sortedPopularBooks;
+	SortedList<Book> sortedAllBorrowed;
 	
-	private Book tempBook;
-	private Customer tempCst;
+	
+	protected Book tempBook;
+	protected Customer tempCst;
 	
 	ObjectProperty<Predicate<Book>> IDFilter;
 	ObjectProperty<Predicate<Book>> titleFilter;
@@ -319,8 +324,7 @@ public class LibraryController implements Initializable {
 				return convertedId;
 			}
 		});
-////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////
+
 		allBorrowTitleCol.setCellValueFactory (new Callback<TableColumn.CellDataFeatures<Book, String>, ObservableValue<String>>() {
 			@Override
 			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
@@ -329,8 +333,7 @@ public class LibraryController implements Initializable {
 				return convertedTitle;
 			}
 		});
-////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////
+
 		allBorrowAuthorCol.setCellValueFactory (new Callback<TableColumn.CellDataFeatures<Book, String>, ObservableValue<String>>() {
 			@Override
 			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
@@ -375,6 +378,7 @@ public class LibraryController implements Initializable {
 			}
 		});
 */
+		//////////////////////Popular Books////////////////////////
 		popIsbnCol.setCellValueFactory (new Callback<TableColumn.CellDataFeatures<Book, String>, ObservableValue<String>>() {
 			@Override
 			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
@@ -467,8 +471,8 @@ public class LibraryController implements Initializable {
 		// 3. Wrap the FilteredList in a SortedList.
 		sortedBooks = new SortedList<>(filteredBooks);
 		sortedCustomers = new SortedList<>(filteredCustomers);
-		SortedList<Book> sortedPopularBooks = new SortedList<>(getObsBooks(library.getPopularBooksArray()));
-//		SortedList<Book> sortedAllBorrowed = new SortedList<>(getObsBooks(library.get));
+		sortedPopularBooks = new SortedList<>(getObsBooks(library.getPopularBooksArray()));
+		sortedAllBorrowed = new SortedList<>(getObsBooks(library.getListLentBooks()));
 //		SortedList<Book> sortedCstBorrowed = new SortedList<>(getObsBooks(library.getBorrowedBooks(tempCst)));
 		
 		// 4. Bind the SortedList comparator to the TableView comparator.
@@ -482,9 +486,9 @@ public class LibraryController implements Initializable {
 //		cstHistoryTable.setItems(value);
 //		cstCurrentBorrowedTable.setItems(sortedCstBorrowed);
 		
-		
+		allBorrowedBooksTable.setItems(sortedAllBorrowed);
 		popularBooksTable.setItems(sortedPopularBooks);
-//	
+	
 
 		// ObservableList(Arraylist) >> FilteredList >> Sortedlist(comparator bind) >>
 		// into table
@@ -533,7 +537,7 @@ public class LibraryController implements Initializable {
 					cstAddressLabel.setText(newValue.getAddress());
 					
 					//show individual customer history
-					cstHistoryTable.setItems(getObsBooks(tempCst.getCustomerHistory()));
+				//	cstHistoryTable.setItems(getObsBooks(tempCst.getCustomerHistory()));
 					
 				}
 
@@ -929,6 +933,26 @@ public class LibraryController implements Initializable {
 		}
 	}
 	@FXML
+	public void lendBookEvent(ActionEvent event) throws IOException{
+		if (event.getSource() == lendBookBtn) {
+			Stage window = new Stage();
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/frontend/resources/LendBook.fxml"));
+			Parent root = loader.load();
+			LendBookController lendBookController = loader.getController();
+			
+			lendBookController.setChosenBook(tempBook);
+//			lendBookController.setLibraryMenu(libraryMenu);
+//			lendBookController.setLibraryController(this);
+	
+			
+			Scene newScene = new Scene(root);
+			window.setTitle("Choose Customer");
+			window.setScene(newScene);
+			window.show();
+		}
+		refreshTable();
+	}
+	@FXML
 	public void returnBookEvent() {
 		
 	}
@@ -958,24 +982,24 @@ public class LibraryController implements Initializable {
 
 	/////////////////////////////////////// CONVERSION/////////////////////////////////////////////
 	/////////////////////////////////////// METHODS/////////////////////////////////////////////////
-	private ObservableList<Book> getObsBooks(ArrayList<Book> arrayToConvert) {
+	protected ObservableList<Book> getObsBooks(ArrayList<Book> arrayToConvert) {
 		return FXCollections.observableArrayList(arrayToConvert);
 	}
 
-	private ObservableList<Customer> getObsCustomers(ArrayList<Customer> arrayToConvert) {
+	protected ObservableList<Customer> getObsCustomers(ArrayList<Customer> arrayToConvert) {
 		return FXCollections.observableArrayList(arrayToConvert);
 	}
 
-	private ObservableList<Record> getObsRecords(ArrayList<Record> arrayToConvert) {
+	protected ObservableList<Record> getObsRecords(ArrayList<Record> arrayToConvert) {
 		return FXCollections.observableArrayList(arrayToConvert);
 	}
 
-	private SimpleStringProperty getStringProperty(String string) {
+	protected SimpleStringProperty getStringProperty(String string) {
 		SimpleStringProperty convertedString = new SimpleStringProperty(string);
 		return convertedString;
 	}
 
-	private SimpleIntegerProperty getIntegerProperty(int number) {
+	protected SimpleIntegerProperty getIntegerProperty(int number) {
 		SimpleIntegerProperty convertedInt = new SimpleIntegerProperty(number);
 		return convertedInt;
 	}
@@ -986,6 +1010,7 @@ public class LibraryController implements Initializable {
 	private SortedList<Book> getSortedBooks(){
 		return this.sortedBooks;
 	}
+	
 	private void refreshTable() {
 		custNameFilter.bind(Bindings.createObjectBinding(
 				() -> customer -> customer.getName().toLowerCase().contains(custNameField.getText().toLowerCase()),
@@ -1040,14 +1065,24 @@ public class LibraryController implements Initializable {
 				// 3. Wrap the FilteredList in a SortedList.
 				sortedBooks = new SortedList<>(filteredBooks);
 				sortedCustomers = new SortedList<>(filteredCustomers);
+				sortedPopularBooks = new SortedList<>(getObsBooks(library.getPopularBooksArray()));
+				sortedAllBorrowed = new SortedList<>(getObsBooks(library.getListLentBooks()));
 
 				// 4. Bind the SortedList comparator to the TableView comparator.
 				sortedBooks.comparatorProperty().bind(bookTable.comparatorProperty());
 				sortedCustomers.comparatorProperty().bind(customerTable.comparatorProperty());
+				
+				sortedPopularBooks.comparatorProperty().bind(popularBooksTable.comparatorProperty());
+				sortedAllBorrowed.comparatorProperty().bind(allBorrowedBooksTable.comparatorProperty());
 
 				// 5. Add sorted (and filtered) data to the table.
 				bookTable.setItems(sortedBooks);
 				customerTable.setItems(sortedCustomers);
+				
+//				allBorrowedBooksTable.getItems().clear();
+				allBorrowedBooksTable.setItems(sortedAllBorrowed);
+//				popularBooksTable.getItems().clear();
+				popularBooksTable.setItems(sortedPopularBooks);
 
 	}
 	

@@ -256,9 +256,9 @@ public class LibraryMenu extends Application{
 		System.out.print(foundCustomer);
 	}
 
-	private Customer findCustomer() {
-		System.out.print("Please show your library card: ");
-		String libraryID = sc.nextLine();
+	public Customer findCustomer(String libraryID) {
+//		System.out.print("Please show your library card: ");
+//		String libraryID = sc.nextLine();
 		Customer foundCustomer = library.findCustomer(libraryID);
 		if (foundCustomer != null) {
 			System.out.print("");
@@ -335,9 +335,9 @@ public class LibraryMenu extends Application{
 			System.out.println("You are not registered in the system.");
 	}
 
-	private Book printBook() {
-		System.out.print("Please choose the book that you want to borrow and enter the book's ISBN-13: ");
-		String ISBN = sc.nextLine();
+	public Book printBook(String ISBN) {
+//		System.out.print("Please choose the book that you want to borrow and enter the book's ISBN-13: ");
+//		String ISBN = sc.nextLine();
 		Book foundBook = this.library.findBook(ISBN);
 		if (foundBook != null) {
 			System.out.print("");
@@ -355,12 +355,12 @@ public class LibraryMenu extends Application{
 		library.printCustomerHistory(customer.getCustomerId());
 	}
 
-	private void lendBook() {
-		Customer foundCustomer = findCustomer();
+	public void lendBook(String libraryID, Book foundBook) {
+		Customer foundCustomer = findCustomer(libraryID);
 		System.out.println("");
 		if (foundCustomer != null) {
-			searchBook();
-			Book foundBook = printBook();
+//			searchBook();
+//			Book foundBook = printBook();
 			System.out.println("");
 			System.out.println("Today's date is " + library.getDate() + ".");
 			System.out.println("");
@@ -370,8 +370,8 @@ public class LibraryMenu extends Application{
 		}
 	}
 
-	private void returnBook() {
-		Customer foundCustomer = findCustomer();
+	public void returnBook(String libraryID) {
+		Customer foundCustomer = findCustomer(libraryID);
 		System.out.println("");
 		if (foundCustomer != null) {
 			Book foundLentBook = findLentBook(foundCustomer);
@@ -398,9 +398,9 @@ public class LibraryMenu extends Application{
 		return null;
 	}
 
-	private int searchBook() {
-		System.out.print("Please enter author's name: ");
-		String authorName = sc.nextLine();
+	private int searchBook(String authorName) {
+//		System.out.print("Please enter author's name: ");
+//		String authorName = sc.nextLine();
 		int counter = 0;
 		for (Book s : library.getAvailableBooks()) {
 			if (s != null && s.getAuthor().contains(authorName)) {
@@ -431,9 +431,9 @@ public class LibraryMenu extends Application{
 		this.library.addBook(isbn, title, genre, author, publisher, shelf);
 	}
 	
-	private Book findBook() {
-		System.out.print("Please enter book's library ID: ");
-		int libraryID = sc.nextInt();
+	private Book findBook(String libraryID) {
+//		System.out.print("Please enter book's library ID: ");
+//		int libraryID = sc.nextInt();
 		Book foundBook = library.findBook(libraryID);
 		if (foundBook != null) {
 			System.out.print("");
