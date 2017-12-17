@@ -93,11 +93,28 @@ public class LibraryController implements Initializable {
 	@FXML private TableColumn<Book, String> cstHistBookAuthorCol;
 	@FXML private TableColumn<Book, String> cstHistBookGenreCol;
 	
+	// customer currently borrowed
+	@FXML private TableView<Book> cstCurrentBorrowedTable;
+	@FXML private TableColumn<Book, String> borrowLateCol;
+	@FXML private TableColumn<Book, String> borrowIDCol;
+	@FXML private TableColumn<Book, String> borrowNameCol;
 	
-	@FXML private TableColumn<Customer, String> borrowLateCol;
-	@FXML private TableColumn<Customer, String> borrowIDCol;
-	@FXML private TableColumn<Customer, String> borrowNameCol;
-
+	//popular books
+	@FXML private TableView<Book> popularBooksTable;
+	@FXML private TableColumn<Book, String> popIsbnCol;
+	@FXML private TableColumn<Book, String> popTitleCol;
+	@FXML private TableColumn<Book, Integer> popTimesBorrowedCol;
+	
+	//all borrowed books
+	@FXML private TableView<Book> allBorrowedBooksTable;
+	@FXML private TableColumn<Book, String> allBorrowIdCol;
+	@FXML private TableColumn<Book, String> allBorrowTitleCol;
+	@FXML private TableColumn<Book, String> allBorrowAuthorCol;
+	@FXML private TableColumn<Book, String> allBorrowPublisherCol;
+	@FXML private TableColumn<Book, String> allBorrowGenreCol;
+	@FXML private TableColumn<Book, String> allBorrowDelayCol;
+	@FXML private TableColumn<Book, String> allBorrowDelayFeeCol;
+	
 	// search filter fields
 	@FXML private TextField IDFilterField;
 	@FXML private TextField titleFilterField;
@@ -164,6 +181,7 @@ public class LibraryController implements Initializable {
 		this.libraryMenu = new LibraryMenu();
 		this.library = new Library();
 		
+		////////////////////////////////////////////////////////////////////////////
 		bookIDCol.setCellValueFactory (new Callback<TableColumn.CellDataFeatures<Book, Integer>, ObservableValue<Integer>>() {
 					@Override
 					public ObservableValue<Integer> call(CellDataFeatures<Book, Integer> param) {
@@ -211,7 +229,8 @@ public class LibraryController implements Initializable {
 						return convertedGenre;
 					}
 				});
-		
+////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
 		customerIDCol.setCellValueFactory( new Callback<TableColumn.CellDataFeatures<Customer, String>, ObservableValue<String>>() {
 					@Override
 					public ObservableValue<String> call(CellDataFeatures<Customer, String> param) {
@@ -228,21 +247,22 @@ public class LibraryController implements Initializable {
 						return convertedCstName;
 					}
 				});
-
-		borrowIDCol.setCellValueFactory( new Callback<TableColumn.CellDataFeatures<Customer,String>, ObservableValue<String>>() {
+////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+		borrowIDCol.setCellValueFactory( new Callback<TableColumn.CellDataFeatures<Book,String>, ObservableValue<String>>() {
 			@Override
-			public ObservableValue<String> call(CellDataFeatures<Customer, String> param) {
-				Customer customer = param.getValue();
-				SimpleStringProperty convertedCstId = getStringProperty(customer.getCustomerId());
-				return convertedCstId;
+			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
+				Book book = param.getValue();
+				SimpleStringProperty convertedId = getStringProperty(Integer.toString(book.getLid()));
+				return convertedId;
 			}
 		});
-		borrowNameCol.setCellValueFactory( new Callback<TableColumn.CellDataFeatures<Customer,String>, ObservableValue<String>>() {
+		borrowNameCol.setCellValueFactory( new Callback<TableColumn.CellDataFeatures<Book,String>, ObservableValue<String>>() {
 			@Override
-			public ObservableValue<String> call(CellDataFeatures<Customer, String> param) {
-				Customer customer = param.getValue();
-				SimpleStringProperty convertedCstName = getStringProperty(customer.getName());
-				return convertedCstName;
+			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
+				Book book = param.getValue();
+				SimpleStringProperty convertedTitle = getStringProperty(book.getTitle());
+				return convertedTitle;
 			}
 		});
 /*		borrowLateCol.setCellValueFactory( new Callback<TableColumn.CellDataFeatures<Customer,String>, ObservableValue<String>>() {
@@ -262,7 +282,8 @@ public class LibraryController implements Initializable {
 				return convertedBookId;
 			}
 		});
-		
+////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
 		cstHistBookTitleCol.setCellValueFactory (new Callback<TableColumn.CellDataFeatures<Book, String>, ObservableValue<String>>() {
 			@Override
 			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
@@ -288,6 +309,96 @@ public class LibraryController implements Initializable {
 			}
 		});
 		
+////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+		allBorrowIdCol.setCellValueFactory (new Callback<TableColumn.CellDataFeatures<Book, String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
+				Book book = param.getValue();
+				SimpleStringProperty convertedId = getStringProperty(Integer.toString(book.getLid()));
+				return convertedId;
+			}
+		});
+////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+		allBorrowTitleCol.setCellValueFactory (new Callback<TableColumn.CellDataFeatures<Book, String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
+				Book book = param.getValue();
+				SimpleStringProperty convertedTitle = getStringProperty(book.getTitle());
+				return convertedTitle;
+			}
+		});
+////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+		allBorrowAuthorCol.setCellValueFactory (new Callback<TableColumn.CellDataFeatures<Book, String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
+				Book book = param.getValue();
+				SimpleStringProperty convertedAuthor = getStringProperty(book.getAuthor());
+				return convertedAuthor;
+			}
+		});
+		
+		allBorrowPublisherCol.setCellValueFactory (new Callback<TableColumn.CellDataFeatures<Book, String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
+				Book book = param.getValue();
+				SimpleStringProperty convertedPublisher = getStringProperty(book.getPublisher());
+				return convertedPublisher;
+			}
+		});
+		
+		allBorrowGenreCol.setCellValueFactory (new Callback<TableColumn.CellDataFeatures<Book, String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
+				Book book = param.getValue();
+				SimpleStringProperty convertedGenre = getStringProperty(book.getGenre());
+				return convertedGenre;
+			}
+		});
+/*		allBorrowDelayCol.setCellValueFactory (new Callback<TableColumn.CellDataFeatures<Book, String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
+				Book book = param.getValue();
+				SimpleStringProperty convertedDelayCol = getStringProperty(book.getD());
+				return convertedTitle;
+			}
+		});
+
+		allBorrowDelayFeeCol.setCellValueFactory (new Callback<TableColumn.CellDataFeatures<Book, String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
+				Book book = param.getValue();
+				SimpleStringProperty convertedTitle = getStringProperty();
+				return convertedTitle;
+			}
+		});
+*/
+		popIsbnCol.setCellValueFactory (new Callback<TableColumn.CellDataFeatures<Book, String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
+				Book book = param.getValue();
+				SimpleStringProperty convertedIsbn = getStringProperty(book.getIsbn());
+				return convertedIsbn;
+			}
+		});
+		popTitleCol.setCellValueFactory (new Callback<TableColumn.CellDataFeatures<Book, String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
+				Book book = param.getValue();
+				SimpleStringProperty convertedTitle = getStringProperty(book.getTitle());
+				return convertedTitle;
+			}
+		});
+		popTimesBorrowedCol.setCellValueFactory (new Callback<TableColumn.CellDataFeatures<Book, Integer>, ObservableValue<Integer>>() {
+			@Override
+			public ObservableValue<Integer> call(CellDataFeatures<Book, Integer> param) {
+				Book book = param.getValue();
+				SimpleIntegerProperty convertedLentTimes = getIntegerProperty(book.getLentTimes());
+				return convertedLentTimes.asObject();
+			}
+		});
 		//////////////////////////////// SEARCH FUNCTION BOOK TABLE///////////////////////////
 		IDFilter = new SimpleObjectProperty<>();
 		titleFilter = new SimpleObjectProperty<>();
@@ -356,7 +467,10 @@ public class LibraryController implements Initializable {
 		// 3. Wrap the FilteredList in a SortedList.
 		sortedBooks = new SortedList<>(filteredBooks);
 		sortedCustomers = new SortedList<>(filteredCustomers);
-
+		SortedList<Book> sortedPopularBooks = new SortedList<>(getObsBooks(library.getPopularBooksArray()));
+//		SortedList<Book> sortedAllBorrowed = new SortedList<>(getObsBooks(library.get));
+//		SortedList<Book> sortedCstBorrowed = new SortedList<>(getObsBooks(library.getBorrowedBooks(tempCst)));
+		
 		// 4. Bind the SortedList comparator to the TableView comparator.
 		sortedBooks.comparatorProperty().bind(bookTable.comparatorProperty());
 		sortedCustomers.comparatorProperty().bind(customerTable.comparatorProperty());
@@ -364,7 +478,13 @@ public class LibraryController implements Initializable {
 		// 5. Add sorted (and filtered) data to the table.
 		bookTable.setItems(sortedBooks);
 		customerTable.setItems(sortedCustomers);
+
+//		cstHistoryTable.setItems(value);
+//		cstCurrentBorrowedTable.setItems(sortedCstBorrowed);
 		
+		
+		popularBooksTable.setItems(sortedPopularBooks);
+//	
 
 		// ObservableList(Arraylist) >> FilteredList >> Sortedlist(comparator bind) >>
 		// into table

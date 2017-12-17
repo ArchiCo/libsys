@@ -228,6 +228,9 @@ public class Library {
 		sortPopularBooksBy(Order.Popularity);*/
 		System.out.println(database.books().fetchPopularity());
 	}
+	public ArrayList<Book> getPopularBooksArray() {
+		return database.books().fetchPopularity();
+	}
 
 	public void sortPopularBooksBy(FlexibleBookComparator.Order sortingBy) {
 		FlexibleBookComparator comparator = new FlexibleBookComparator();
