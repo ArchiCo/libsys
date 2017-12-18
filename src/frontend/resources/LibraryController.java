@@ -57,6 +57,9 @@ import javafx.scene.layout.GridPane;
 
 public class LibraryController implements Initializable {
 
+	//reset search fields button
+	@FXML private Button resetBtn;
+	
 	// Book buttons
 	@FXML private Button logoutBtn;
 	@FXML private Button lendBookBtn;
@@ -78,6 +81,7 @@ public class LibraryController implements Initializable {
 	@FXML private TableColumn<Book, String> bookShelfCol;
 	@FXML private TableColumn<Book, String> bookPublisherCol;
 	@FXML private TableColumn<Book, String> bookGenreCol;
+	@FXML private TableColumn<Book,String> bookISBNCol;
 	// customer directory table
 	@FXML private TableView<Customer> customerTable;
 	@FXML private TableColumn<Customer, String> customerIDCol;
@@ -127,6 +131,7 @@ public class LibraryController implements Initializable {
 	@FXML private TextField custNameField;
 
 	// Book details
+	@FXML private Label isbnLabel;
 	@FXML private Label LIDLabel;
 	@FXML private Label ISBNLabel;
 	@FXML private Label titleLabel;
@@ -177,7 +182,7 @@ public class LibraryController implements Initializable {
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-
+		bookIDCol.setSortType(TableColumn.SortType.ASCENDING);
 		// 0. Initialize the columns
 		// The setCellValueFactory(...) that we set on the table columns are used to
 		// determine which field
@@ -234,6 +239,14 @@ public class LibraryController implements Initializable {
 						return convertedGenre;
 					}
 				});
+		bookISBNCol.setCellValueFactory( new Callback<TableColumn.CellDataFeatures<Book, String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
+				Book book = param.getValue();
+				SimpleStringProperty convertedIsbn = getStringProperty(book.getIsbn());
+				return convertedIsbn;
+			}
+		});
 ////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////
 		customerIDCol.setCellValueFactory( new Callback<TableColumn.CellDataFeatures<Customer, String>, ObservableValue<String>>() {
@@ -511,13 +524,17 @@ public class LibraryController implements Initializable {
 					authorLabel.setText(newValue.getAuthor());
 					genreLabel.setText(newValue.getGenre());
 					publisherLabel.setText(newValue.getPublisher());
+					ISBNLabel.setText(newValue.getIsbn());
+					
 				} else {
 					LIDLabel.setText("");
 					titleLabel.setText("");
 					authorLabel.setText("");
 					genreLabel.setText("");
 					publisherLabel.setText("");
+					ISBNLabel.setText("");
 				}
+				
 			}
 		});
 		/////////////////////////////////////////////////////////////////////////////////
@@ -645,9 +662,9 @@ public class LibraryController implements Initializable {
 	private void addCustomerEvent(ActionEvent event) throws IOException {
 
 		TextInputDialog dialog = new TextInputDialog("");
-		dialog.setTitle("Join the Gang");
-		dialog.setHeaderText("Participate in the rough handling of Books");
-		dialog.setContentText("What String shall we use to summon Your Gracious?");
+		dialog.setTitle("Add a customer");
+		dialog.setHeaderText("bla bla");
+		dialog.setContentText("add new customer information");
 
 		GridPane grid = new GridPane();
 		grid.setHgap(10);
@@ -752,74 +769,68 @@ public class LibraryController implements Initializable {
 
 		if (event.getSource().equals(addBookBtn)) {
 
-			TextInputDialog dialog = new TextInputDialog("walter");
+			TextInputDialog dialog = new TextInputDialog("Add Book");
 			dialog.setTitle("Text Input Dialog");
-			dialog.setHeaderText("Look, a Text Input Dialog");
-			dialog.setContentText("Please enter your name:");
+			dialog.setHeaderText("Add a new book.");
 
 			GridPane grid = new GridPane();
 			grid.setHgap(10);
 			grid.setVgap(10);
 			grid.setPadding(new Insets(20, 150, 10, 10));
 
-			TextField ID = new TextField();
-			ID.setPromptText("ID");
+
+			TextField ISBN = new TextField();
+			ISBN.setPromptText("");
 
 			TextField Title = new TextField();
-			Title.setPromptText("Title");
-
-			TextField Author = new TextField();
-			Author.setPromptText("Surname");
-
-			TextField Shelf = new TextField();
-			Shelf.setPromptText("Shelf");
-
-			TextField Publisher = new TextField();
-			Publisher.setPromptText("Publisher");
+			Title.setPromptText("");
 
 			TextField Genre = new TextField();
-			Genre.setPromptText("Genre");
+			Genre.setPromptText("");
 
-			grid.add(new Label("ID:"), 0, 0);
-			grid.add(ID, 1, 0);
+			TextField Author = new TextField();
+			Author.setPromptText("");
+
+			TextField Publisher = new TextField();
+			Publisher.setPromptText("");
+			
+			TextField Shelf = new TextField();
+			Shelf.setPromptText("");
+
+			grid.add(new Label("ISBN:"), 0, 0);
+			grid.add(ISBN, 1, 0);
 
 			grid.add(new Label("Title:"), 0, 1);
 			grid.add(Title, 1, 1);
 
-			grid.add(new Label("Author:"), 0, 2);
-			grid.add(Author, 1, 2);
+			grid.add(new Label("Genre:"), 0, 2);
+			grid.add(Genre, 1, 2);
 
-			grid.add(new Label("Shelf:"), 0, 3);
-			grid.add(Shelf, 1, 3);
+			grid.add(new Label("Author:"), 0, 3);
+			grid.add(Author, 1, 3);
 
 			grid.add(new Label("Publisher:"), 0, 4);
 			grid.add(Publisher, 1, 4);
-
-			grid.add(new Label("Genre:"), 0, 5);
-			grid.add(Genre, 1, 5);
+			
+			grid.add(new Label("Shelf:"), 0, 5);
+			grid.add(Shelf, 1, 5);
 
 			dialog.getDialogPane().setContent(grid);
 			// Traditional way to get the response value.
 			Optional<String> result = dialog.showAndWait();
 			if (result.isPresent()) {
 				Boolean existing = false;
-				Book newBook = new Book(ID.getText(), Title.getText(), Author.getText(), Shelf.getText(),
+				Book newBook = new Book("", Title.getText(), Author.getText(), Shelf.getText(),
 						Publisher.getText(), Genre.getText());
 
-				/////// CHECK IF THE BOOK ID ALREADY EXISTS AND IF FIELDS ARE NOT EMPTY
-				for (int i = 0; i < getObsBooks(library.getListBooks()).size(); i++) {
-					if (ID.getText().equals(getObsBooks(library.getListBooks()).get(i).getLid()))
-						existing = true;
-				}
-				/////// IF IT DOES NOT, ADD THE BOOK
-				if (existing == false && !bookFieldsAreEmpty( Title, Author, Shelf, Publisher, Genre)) {
+				if (!bookFieldsAreEmpty( Title, Author, Shelf, Publisher, Genre)) {
 					Alert alert = new Alert(AlertType.INFORMATION);
 					alert.setTitle("Information");
 					alert.setHeaderText(null);
 					alert.setContentText("Book correctly added.");
 
 					alert.showAndWait();
-					libraryMenu.addBook(ID.getText(), Title.getText(), Author.getText(), Genre.getText(),
+					libraryMenu.addBook("", Title.getText(), Author.getText(), Genre.getText(),
 							Publisher.getText(), Shelf.getText());
 					refreshTable();
 				}
@@ -837,75 +848,87 @@ public class LibraryController implements Initializable {
 		}
 	}
 	
-
 	@FXML
 	private void editBookEvent(ActionEvent event) throws IOException {
+		 
+		if(event.getSource().equals(editBookBtn)) {		 
+				TextInputDialog dialog = new TextInputDialog("Edit Book");
+//				dialog.setTitle("Text Input Dialog");
+//				dialog.setHeaderText("Look, a Text Input Dialog");
+//				dialog.setContentText("Please enter your name:");
 
-		if (event.getSource().equals(editBookBtn)) {
-			TextInputDialog dialog = new TextInputDialog("Edit Book");
-			// dialog.setTitle("Text Input Dialog");
-			// dialog.setHeaderText("Look, a Text Input Dialog");
-			// dialog.setContentText("Please enter your name:");
+				GridPane grid = new GridPane();
+				grid.setHgap(10);
+				grid.setVgap(10);
+				grid.setPadding(new Insets(20, 150, 10, 10));
+				// tostring = int >> string
+				// parseint = string >> int
+				
+				TextField ISBN = new TextField();
+				ISBN.setPromptText(tempBook.getIsbn());
 
-			GridPane grid = new GridPane();
-			grid.setHgap(10);
-			grid.setVgap(10);
-			grid.setPadding(new Insets(20, 150, 10, 10));
-			// tostring = int >> string
-			// parseint = string >> int
-			TextField ID = new TextField();
-			ID.setPromptText(Integer.toString(tempBook.getLid()));
+				TextField Title = new TextField();
+				Title.setPromptText(tempBook.getTitle());
 
-			TextField Title = new TextField();
-			Title.setPromptText(tempBook.getTitle());
+				TextField Genre = new TextField();
+				Genre.setPromptText(tempBook.getGenre());
 
-			TextField Author = new TextField();
-			Author.setPromptText(tempBook.getAuthor());
+				TextField Author = new TextField();
+				Author.setPromptText(tempBook.getAuthor());
 
-			TextField Shelf = new TextField();
-			Shelf.setPromptText(tempBook.getShelf());
+				TextField Publisher = new TextField();
+				Publisher.setPromptText(tempBook.getPublisher());
+				
+				TextField Shelf = new TextField();
+				Shelf.setPromptText(tempBook.getShelf());
 
-			TextField Publisher = new TextField();
-			Publisher.setPromptText(tempBook.getPublisher());
+				grid.add(new Label("ISBN:"), 0, 0);
+				grid.add(ISBN, 1, 0);
 
-			TextField Genre = new TextField();
-			Genre.setPromptText(tempBook.getGenre());
+				grid.add(new Label("Title:"), 0, 1);
+				grid.add(Title, 1, 1);
 
-			grid.add(new Label("ID:"), 0, 0);
-			grid.add(ID, 1, 0);
+				grid.add(new Label("Genre:"), 0, 2);
+				grid.add(Genre, 1, 2);
 
-			grid.add(new Label("Title:"), 0, 1);
-			grid.add(Title, 1, 1);
+				grid.add(new Label("Author:"), 0, 3);
+				grid.add(Author, 1, 3);
 
-			grid.add(new Label("Author:"), 0, 2);
-			grid.add(Author, 1, 2);
+				grid.add(new Label("Publisher:"), 0, 4);
+				grid.add(Publisher, 1, 4);
+				
+				grid.add(new Label("Shelf:"), 0, 5);
+				grid.add(Shelf, 1, 5);
 
-			grid.add(new Label("Shelf:"), 0, 3);
-			grid.add(Shelf, 1, 3);
 
-			grid.add(new Label("Publisher:"), 0, 4);
-			grid.add(Publisher, 1, 4);
-
-			grid.add(new Label("Genre:"), 0, 5);
-			grid.add(Genre, 1, 5);
-
-			dialog.getDialogPane().setContent(grid);
-			// Traditional way to get the response value.
-			Optional<String> result = dialog.showAndWait();
-			if (result.isPresent()) {
-				for (int i = 0; i < getObsBooks(library.getListBooks()).size(); i++) {
-					if (getObsBooks(library.getListBooks()).get(i).equals(tempBook)) {
-						getObsBooks(library.getListBooks()).get(i).setLid((Integer.parseInt(ID.getText())));
-						getObsBooks(library.getListBooks()).get(i).setTitle(Title.getText());
-						getObsBooks(library.getListBooks()).get(i).setAuthor(Author.getText());
-						getObsBooks(library.getListBooks()).get(i).setShelf(Shelf.getText());
-						getObsBooks(library.getListBooks()).get(i).setPublisher(Publisher.getText());
-						getObsBooks(library.getListBooks()).get(i).setGenre((Genre.getText()));
-
-					}
+				dialog.getDialogPane().setContent(grid);
+				// Traditional way to get the response value.
+				Optional<String> result = dialog.showAndWait();
+				if (result.isPresent()){
+					Book modifyIntoThis= tempBook;
+					if(!ISBN.getText().isEmpty())
+						modifyIntoThis.setIsbn(ISBN.getText());
+					if(!Title.getText().isEmpty())
+						modifyIntoThis.setTitle(Title.getText());
+					if (!Author.getText().isEmpty())
+						modifyIntoThis.setAuthor(Author.getText());
+					if (!Shelf.getText().isEmpty())
+						modifyIntoThis.setShelf(Shelf.getText());
+					if (!Publisher.getText().isEmpty())
+						modifyIntoThis.setPublisher(Publisher.getText());
+					if (!Genre.getText().isEmpty())
+						modifyIntoThis.setGenre(Genre.getText());
+					
+					//tempBook=bookTable.getSelectionModel().getSelectedItem();
+//					library.findBook(tempBook.getLid()).setTitle(Title.getText());
+//					library.findBook(tempBook.getLid()).setAuthor(Author.getText());
+//					library.findBook(tempBook.getLid()).setShelf(Shelf.getText());
+//					library.findBook(tempBook.getLid()).setPublisher(Publisher.getText());
+//					library.findBook(tempBook.getLid()).setGenre(Genre.getText());
+					library.changeBookInformation(modifyIntoThis);
+					refreshTable();
 				}
 			}
-		}
 	}
 
 	@FXML
@@ -1087,4 +1110,17 @@ public class LibraryController implements Initializable {
 	}
 	
 
+	@FXML
+	private void resetSearchEvent(ActionEvent event) throws IOException {
+		 
+		if(event.getSource().equals(resetBtn)) {	
+			IDFilterField.setText("");
+			shelfFilterField.setText("");
+			titleFilterField.setText("");
+			publisherFilterField.setText("");
+			authorFilterField.setText("");
+			genreFilterField.setText("");
+		}
+
+	}
 }
