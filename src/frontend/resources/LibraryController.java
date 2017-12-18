@@ -9,6 +9,7 @@ import java.util.function.Predicate;
 
 import javax.sound.midi.ControllerEventListener;
 
+import com.sun.glass.ui.TouchInputSupport;
 import com.sun.javafx.scene.control.skin.IntegerFieldSkin;
 
 import backend.*;
@@ -150,8 +151,9 @@ public class LibraryController implements Initializable {
 	private SortedList<Book> sortedBooks;
 	private SortedList<Customer> sortedCustomers;
 	private SortedList<Book> customerHistory;
-	SortedList<Book> sortedPopularBooks;
-	SortedList<Book> sortedAllBorrowed;
+	private SortedList<Book> sortedPopularBooks;
+	private SortedList<Book> sortedAllBorrowed;
+	private SortedList<Book> sortedCstCurrentBorrowed;
 	
 	
 	protected Book tempBook;
@@ -473,7 +475,7 @@ public class LibraryController implements Initializable {
 		sortedCustomers = new SortedList<>(filteredCustomers);
 		sortedPopularBooks = new SortedList<>(getObsBooks(library.getPopularBooksArray()));
 		sortedAllBorrowed = new SortedList<>(getObsBooks(library.getListLentBooks()));
-//		SortedList<Book> sortedCstBorrowed = new SortedList<>(getObsBooks(library.getBorrowedBooks(tempCst)));
+	
 		
 		// 4. Bind the SortedList comparator to the TableView comparator.
 		sortedBooks.comparatorProperty().bind(bookTable.comparatorProperty());
@@ -484,7 +486,7 @@ public class LibraryController implements Initializable {
 		customerTable.setItems(sortedCustomers);
 
 //		cstHistoryTable.setItems(value);
-//		cstCurrentBorrowedTable.setItems(sortedCstBorrowed);
+//		cstCurrentBorrowedTable.setItems(sortedCstCurrentBorrowed);
 		
 		allBorrowedBooksTable.setItems(sortedAllBorrowed);
 		popularBooksTable.setItems(sortedPopularBooks);
@@ -526,8 +528,11 @@ public class LibraryController implements Initializable {
 
 		customerTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Customer>() {
 
+		
 			@Override
 			public void changed(ObservableValue<? extends Customer> observable, Customer oldValue, Customer newValue) {
+				
+	//			sortedCstCurrentBorrowed = new SortedList<>(getObsBooks(library.getBorrowedBooks(tempCst)));
 				tempCst = customerTable.getSelectionModel().getSelectedItem();
 				System.out.println("customer row " + customerTable.getSelectionModel().getSelectedIndex());
 				if (newValue != null) {
@@ -537,7 +542,7 @@ public class LibraryController implements Initializable {
 					cstAddressLabel.setText(newValue.getAddress());
 					
 					//show individual customer history
-				//	cstHistoryTable.setItems(getObsBooks(tempCst.getCustomerHistory()));
+					cstCurrentBorrowedTable.setItems(getObsBooks(library.getBorrowedBooks(tempCst)));
 					
 				}
 
