@@ -9,6 +9,7 @@ import java.util.function.Consumer;
 import backend.FlexibleBookComparator.Order;
 import database.Credentials;
 import database.DataController;
+import javafx.collections.ObservableList;
 
 public class Library {
 	private ArrayList<Book> listBooks;
@@ -339,5 +340,19 @@ public class Library {
 	}
 	public void setBookUnregisterCallback(Consumer<Book> unregisterBookCallback) {
 		this.unregisterBookCallback = unregisterBookCallback;
+	}
+	public ArrayList<Book> getCustomerHistoryArray(Customer customer) {
+		ArrayList<Book> customerHistoryBook = new ArrayList<Book>();
+	if (getCustomerHistory(customer.getCustomerId()) != null) {
+		for (History s : getCustomerHistory(customer.getCustomerId())) {
+			if (s != null)
+				customerHistoryBook.add(s.getBook());
+			}
+		return customerHistoryBook;
+	}
+	else {
+		customerHistoryBook.add(new Book("", "", "", "", "", ""));
+		return customerHistoryBook;
+	}
 	}
 }

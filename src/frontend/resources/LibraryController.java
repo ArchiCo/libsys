@@ -6,10 +6,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.concurrent.FutureTask;
 import java.util.function.Predicate;
-
-import javax.sound.midi.ControllerEventListener;
-
-import com.sun.glass.ui.TouchInputSupport;
 import com.sun.javafx.scene.control.skin.IntegerFieldSkin;
 
 import backend.*;
@@ -532,6 +528,9 @@ public class LibraryController implements Initializable {
 			@Override
 			public void changed(ObservableValue<? extends Customer> observable, Customer oldValue, Customer newValue) {
 				
+//				ObservableList<Book> customerHistoryArray = FXCollections.observableArrayList();
+			
+			
 	//			sortedCstCurrentBorrowed = new SortedList<>(getObsBooks(library.getBorrowedBooks(tempCst)));
 				tempCst = customerTable.getSelectionModel().getSelectedItem();
 				System.out.println("customer row " + customerTable.getSelectionModel().getSelectedIndex());
@@ -542,8 +541,14 @@ public class LibraryController implements Initializable {
 					cstAddressLabel.setText(newValue.getAddress());
 					
 					//show individual customer history
+					ObservableList<Book> borrowCheck = getObsBooks(library.getBorrowedBooks(tempCst));
+				if(borrowCheck != null) {
 					cstCurrentBorrowedTable.setItems(getObsBooks(library.getBorrowedBooks(tempCst)));
-					
+				}
+				ObservableList<Book> historyCheck = getObsBooks(library.getCustomerHistoryArray(tempCst));
+				if(historyCheck != null) {
+					cstHistoryTable.setItems(getObsBooks(library.getCustomerHistoryArray(tempCst)));
+				}
 				}
 
 				else {
@@ -996,6 +1001,9 @@ public class LibraryController implements Initializable {
 	}
 
 	protected ObservableList<Record> getObsRecords(ArrayList<Record> arrayToConvert) {
+		return FXCollections.observableArrayList(arrayToConvert);
+	}
+	protected ObservableList<History> getObsHistory(ArrayList<History> arrayToConvert) {
 		return FXCollections.observableArrayList(arrayToConvert);
 	}
 
