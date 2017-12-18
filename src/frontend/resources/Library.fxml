@@ -45,6 +45,7 @@
                                                                   <TableView fx:id="bookTable" prefHeight="425.0" prefWidth="616.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                                     <columns>
                                                                       <TableColumn fx:id="bookIDCol" prefWidth="95.00000154972076" text="ID" />
+                                                                        <TableColumn fx:id="bookISBNCol" prefWidth="75.0" text="ISBN" />
                                                                       <TableColumn fx:id="bookTitleCol" prefWidth="109.99996185302734" text="Title" />
                                                                         <TableColumn fx:id="bookAuthorCol" prefWidth="82.0" text="Author" />
                                                                         <TableColumn fx:id="bookShelfCol" prefWidth="125.0" text="Shelf" />
@@ -72,7 +73,7 @@
                                                                   <Text layoutX="318.0" layoutY="31.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Shelf" />
                                                                   <Text layoutX="318.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Publisher" />
                                                                   <Text layoutX="320.0" layoutY="116.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Genre" />
-                                                                  <Button layoutX="550.0" layoutY="57.0" mnemonicParsing="false" text="Reset" />
+                                                                  <Button fx:id="resetBtn" layoutX="550.0" layoutY="57.0" mnemonicParsing="false" onAction="#resetSearchEvent" text="Reset" />
                                                                </children>
                                                             </AnchorPane>
                                                         </items>

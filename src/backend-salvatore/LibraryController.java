@@ -6,6 +6,9 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.concurrent.FutureTask;
 import java.util.function.Predicate;
+
+import javax.sound.midi.ControllerEventListener;
+
 import com.sun.javafx.scene.control.skin.IntegerFieldSkin;
 
 import backend.*;
@@ -54,6 +57,9 @@ import javafx.scene.layout.GridPane;
 
 public class LibraryController implements Initializable {
 
+	//reset search fields button
+	@FXML private Button resetBtn;
+	
 	// Book buttons
 	@FXML private Button logoutBtn;
 	@FXML private Button lendBookBtn;
@@ -61,7 +67,6 @@ public class LibraryController implements Initializable {
 	@FXML private Button addBookBtn;
 	@FXML private Button removeBookBtn;
 	@FXML private Button editBookBtn;
-	@FXML private Button resetBtn;
 	
 	// Customer buttons
 	@FXML private Button editCustomerBtn;
@@ -76,7 +81,7 @@ public class LibraryController implements Initializable {
 	@FXML private TableColumn<Book, String> bookShelfCol;
 	@FXML private TableColumn<Book, String> bookPublisherCol;
 	@FXML private TableColumn<Book, String> bookGenreCol;
-	@FXML private TableColumn<Book, String> bookISBNCol;
+	@FXML private TableColumn<Book,String> bookISBNCol;
 	// customer directory table
 	@FXML private TableView<Customer> customerTable;
 	@FXML private TableColumn<Customer, String> customerIDCol;
@@ -126,6 +131,7 @@ public class LibraryController implements Initializable {
 	@FXML private TextField custNameField;
 
 	// Book details
+	@FXML private Label isbnLabel;
 	@FXML private Label LIDLabel;
 	@FXML private Label ISBNLabel;
 	@FXML private Label titleLabel;
@@ -149,9 +155,8 @@ public class LibraryController implements Initializable {
 	private SortedList<Book> sortedBooks;
 	private SortedList<Customer> sortedCustomers;
 	private SortedList<Book> customerHistory;
-	private SortedList<Book> sortedPopularBooks;
-	private SortedList<Book> sortedAllBorrowed;
-	private SortedList<Book> sortedCstCurrentBorrowed;
+	SortedList<Book> sortedPopularBooks;
+	SortedList<Book> sortedAllBorrowed;
 	
 	
 	protected Book tempBook;
@@ -177,7 +182,7 @@ public class LibraryController implements Initializable {
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-
+		bookIDCol.setSortType(TableColumn.SortType.ASCENDING);
 		// 0. Initialize the columns
 		// The setCellValueFactory(...) that we set on the table columns are used to
 		// determine which field
@@ -481,7 +486,7 @@ public class LibraryController implements Initializable {
 		sortedCustomers = new SortedList<>(filteredCustomers);
 		sortedPopularBooks = new SortedList<>(getObsBooks(library.getPopularBooksArray()));
 		sortedAllBorrowed = new SortedList<>(getObsBooks(library.getListLentBooks()));
-	
+//		SortedList<Book> sortedCstBorrowed = new SortedList<>(getObsBooks(library.getBorrowedBooks(tempCst)));
 		
 		// 4. Bind the SortedList comparator to the TableView comparator.
 		sortedBooks.comparatorProperty().bind(bookTable.comparatorProperty());
@@ -492,7 +497,7 @@ public class LibraryController implements Initializable {
 		customerTable.setItems(sortedCustomers);
 
 //		cstHistoryTable.setItems(value);
-//		cstCurrentBorrowedTable.setItems(sortedCstCurrentBorrowed);
+//		cstCurrentBorrowedTable.setItems(sortedCstBorrowed);
 		
 		allBorrowedBooksTable.setItems(sortedAllBorrowed);
 		popularBooksTable.setItems(sortedPopularBooks);
@@ -519,13 +524,17 @@ public class LibraryController implements Initializable {
 					authorLabel.setText(newValue.getAuthor());
 					genreLabel.setText(newValue.getGenre());
 					publisherLabel.setText(newValue.getPublisher());
+					ISBNLabel.setText(newValue.getIsbn());
+					
 				} else {
 					LIDLabel.setText("");
 					titleLabel.setText("");
 					authorLabel.setText("");
 					genreLabel.setText("");
 					publisherLabel.setText("");
+					ISBNLabel.setText("");
 				}
+				
 			}
 		});
 		/////////////////////////////////////////////////////////////////////////////////
@@ -534,14 +543,8 @@ public class LibraryController implements Initializable {
 
 		customerTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Customer>() {
 
-		
 			@Override
 			public void changed(ObservableValue<? extends Customer> observable, Customer oldValue, Customer newValue) {
-				
-//				ObservableList<Book> customerHistoryArray = FXCollections.observableArrayList();
-			
-			
-	//			sortedCstCurrentBorrowed = new SortedList<>(getObsBooks(library.getBorrowedBooks(tempCst)));
 				tempCst = customerTable.getSelectionModel().getSelectedItem();
 				System.out.println("customer row " + customerTable.getSelectionModel().getSelectedIndex());
 				if (newValue != null) {
@@ -551,26 +554,19 @@ public class LibraryController implements Initializable {
 					cstAddressLabel.setText(newValue.getAddress());
 					
 					//show individual customer history
-					ObservableList<Book> borrowCheck = getObsBooks(library.getBorrowedBooks(tempCst));
-				if(borrowCheck != null) {
-					cstCurrentBorrowedTable.setItems(getObsBooks(library.getBorrowedBooks(tempCst)));
+				//	cstHistoryTable.setItems(getObsBooks(tempCst.getCustomerHistory()));
+					
 				}
-				
-				ArrayList<Book> fetchedBook = library.getCustomerHistoryArray(tempCst);
-				if (!fetchedBook.isEmpty()) {
-					cstHistoryTable.setItems(getObsBooks(library.getCustomerHistoryArray(tempCst)));
-				}
+
 				else {
 					LIDLabel.setText("");
 					titleLabel.setText("");
 					authorLabel.setText("");
 					genreLabel.setText("");
 					publisherLabel.setText("");
-					cstHistoryTable.getItems().clear();
 				}
 			}
-			}
-			});
+		});
 		
 
 
@@ -666,9 +662,9 @@ public class LibraryController implements Initializable {
 	private void addCustomerEvent(ActionEvent event) throws IOException {
 
 		TextInputDialog dialog = new TextInputDialog("");
-		dialog.setTitle("Join the Gang");
-		dialog.setHeaderText("Participate in the rough handling of Books");
-		dialog.setContentText("What String shall we use to summon Your Gracious?");
+		dialog.setTitle("Add a customer");
+		dialog.setHeaderText("bla bla");
+		dialog.setContentText("add new customer information");
 
 		GridPane grid = new GridPane();
 		grid.setHgap(10);
@@ -935,7 +931,6 @@ public class LibraryController implements Initializable {
 			}
 	}
 
-
 	@FXML
 	public void removeBookEvent(ActionEvent event) {
 		if (event.getSource().equals(removeBookBtn)) {
@@ -1019,9 +1014,6 @@ public class LibraryController implements Initializable {
 	}
 
 	protected ObservableList<Record> getObsRecords(ArrayList<Record> arrayToConvert) {
-		return FXCollections.observableArrayList(arrayToConvert);
-	}
-	protected ObservableList<History> getObsHistory(ArrayList<History> arrayToConvert) {
 		return FXCollections.observableArrayList(arrayToConvert);
 	}
 
@@ -1116,6 +1108,8 @@ public class LibraryController implements Initializable {
 				popularBooksTable.setItems(sortedPopularBooks);
 
 	}
+	
+
 	@FXML
 	private void resetSearchEvent(ActionEvent event) throws IOException {
 		 
@@ -1129,6 +1123,4 @@ public class LibraryController implements Initializable {
 		}
 
 	}
-	
-
 }

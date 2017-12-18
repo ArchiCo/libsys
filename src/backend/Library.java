@@ -351,7 +351,9 @@ public class Library {
 		return customerHistoryBook;
 	}
 	else {
-		customerHistoryBook.add(new Book("", "", "", "", "", ""));
+		//create empty book
+	
+		//customerHistoryBook.add(new Book("", "", "", "", "", ""));
 		return customerHistoryBook;
 	}
 	}
