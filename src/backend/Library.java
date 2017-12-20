@@ -1,6 +1,7 @@
 package backend;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,8 +10,11 @@ import java.util.function.Consumer;
 import backend.FlexibleBookComparator.Order;
 import database.Credentials;
 import database.DataController;
+import javafx.collections.ObservableList;
+import javafx.scene.image.ImageView;
 
 public class Library {
+    ImageView img = new ImageView("http://i.stack.imgur.com/oURrw.png");
 	private ArrayList<Book> listBooks;
 	private ArrayList<Book> listLentBooks;
 	private ArrayList<Book> popularBooks;
@@ -252,7 +256,11 @@ public class Library {
 	}
 
 	public long exceededDays(Record record) {
-		return record.getDateDue().until(today, ChronoUnit.DAYS);
+		long daysLate=0;
+		long daysBetween = ChronoUnit.DAYS.between(record.getDateTaken(), record.getDateReturned());
+		if (daysBetween>14)
+			daysLate= record.getDateDue().until(today, ChronoUnit.DAYS);
+		return daysLate;
 	}
 
 	public long lateReturnCharge(Record record) {
@@ -339,5 +347,21 @@ public class Library {
 	}
 	public void setBookUnregisterCallback(Consumer<Book> unregisterBookCallback) {
 		this.unregisterBookCallback = unregisterBookCallback;
+	}
+	public ArrayList<Book> getCustomerHistoryArray(Customer customer) {
+		ArrayList<Book> customerHistoryBook = new ArrayList<Book>();
+	if (getCustomerHistory(customer.getCustomerId()) != null) {
+		for (History s : getCustomerHistory(customer.getCustomerId())) {
+			if (s != null)
+				customerHistoryBook.add(s.getBook());
+			}
+		return customerHistoryBook;
+	}
+	else {
+		//create empty book
+	
+		//customerHistoryBook.add(new Book("", "", "", "", "", ""));
+		return customerHistoryBook;
+	}
 	}
 }
