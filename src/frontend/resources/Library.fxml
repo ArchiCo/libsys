@@ -62,7 +62,7 @@
                                                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" SplitPane.resizableWithParent="false">
                                                                <children>
                                                                   <TextField fx:id="publisherFilterField" layoutX="381.0" layoutY="57.0" onAction="#undoBookSelection" onKeyTyped="#undoBookSelection" />
-                                                                  <TextField fx:id="IDFilterField" layoutX="126.0" layoutY="14.0" onAction="#undoBookSelection" onKeyTyped="#undoBookSelection" />
+                                                                  <TextField fx:id="IDFilterField" layoutX="126.0" layoutY="14.0" onAction="#undoBookSelection" onKeyPressed="#undoBookSelection" onKeyTyped="#undoBookSelection" />
                                                                   <TextField layoutX="35.0" layoutY="435.0" text="Author" />
                                                                   <TextField fx:id="titleFilterField" layoutX="126.0" layoutY="57.0" onAction="#undoBookSelection" onKeyTyped="#undoBookSelection" />
                                                                   <TextField fx:id="authorFilterField" layoutX="126.0" layoutY="99.0" onAction="#undoBookSelection" onKeyTyped="#undoBookSelection" />

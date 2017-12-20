@@ -521,7 +521,7 @@ public class LibraryController implements Initializable {
 			public void changed(ObservableValue<? extends Book> observable, Book oldValue, Book newValue) {
 				tempBook = bookTable.getSelectionModel().getSelectedItem();
 				
-				if (!bookTable.getSelectionModel().getSelectedItem().equals(null)) {
+				if (bookTable.getSelectionModel().getSelectedItem()!=null) {
 					editBookBtn.setDisable(false);
 					removeBookBtn.setDisable(false);
 					lendBookBtn.setDisable(false);
