@@ -3,7 +3,9 @@ package frontend.resources;
 import frontend.*;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
+import java.util.concurrent.Delayed;
 import java.util.concurrent.FutureTask;
 import java.util.function.Predicate;
 import com.sun.javafx.scene.control.skin.IntegerFieldSkin;
@@ -113,8 +115,8 @@ public class LibraryController implements Initializable {
 	@FXML private TableColumn<Book, String> allBorrowAuthorCol;
 	@FXML private TableColumn<Book, String> allBorrowPublisherCol;
 	@FXML private TableColumn<Book, String> allBorrowGenreCol;
-	@FXML private TableColumn<Book, String> allBorrowDelayCol;
-	@FXML private TableColumn<Book, String> allBorrowDelayFeeCol;
+	@FXML private TableColumn<Record, String> allBorrowDelayCol;
+	@FXML private TableColumn<Record, String> allBorrowDelayFeeCol;
 	
 	// search filter fields
 	@FXML private TextField IDFilterField;
@@ -368,21 +370,22 @@ public class LibraryController implements Initializable {
 				return convertedGenre;
 			}
 		});
-/*		allBorrowDelayCol.setCellValueFactory (new Callback<TableColumn.CellDataFeatures<Book, String>, ObservableValue<String>>() {
+/*		allBorrowDelayCol.setCellValueFactory (new Callback<TableColumn.CellDataFeatures<Record, String>, ObservableValue<String>>() {
 			@Override
-			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
-				Book book = param.getValue();
-				SimpleStringProperty convertedDelayCol = getStringProperty(book.getD());
-				return convertedTitle;
+			public ObservableValue<String> call(CellDataFeatures<Record, String> param) {
+				Record record = param.getValue();
+				LocalDate delayed =
+				SimpleStringProperty convertedDelayCol = getStringProperty(record.getDateTaken());
+				return convertedDelayCol;
 			}
 		});
 
-		allBorrowDelayFeeCol.setCellValueFactory (new Callback<TableColumn.CellDataFeatures<Book, String>, ObservableValue<String>>() {
+		allBorrowDelayFeeCol.setCellValueFactory (new Callback<TableColumn.CellDataFeatures<Record, String>, ObservableValue<String>>() {
 			@Override
-			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
-				Book book = param.getValue();
-				SimpleStringProperty convertedTitle = getStringProperty();
-				return convertedTitle;
+			public ObservableValue<String> call(CellDataFeatures<Record, String> param) {
+				Record record = param.getValue();
+				SimpleStringProperty convertedFee = getStringProperty();
+				return convertedFee;
 			}
 		});
 */
@@ -451,7 +454,7 @@ public class LibraryController implements Initializable {
 
 		// 1. Wrap the ObservableList in a FilteredList (initially display all data)
 
-		filteredBooks = new FilteredList<>(getObsBooks(library.getListBooks()), p -> true);
+		filteredBooks = new FilteredList<>(getObsBooks(library.getAvailableBooks()), p -> true);
 		filteredCustomers = new FilteredList<>(getObsCustomers(library.getCustomersList()), p -> true);
 
 		// 2. Set the filter Predicate whenever the filter changes.
@@ -486,6 +489,8 @@ public class LibraryController implements Initializable {
 		// 4. Bind the SortedList comparator to the TableView comparator.
 		sortedBooks.comparatorProperty().bind(bookTable.comparatorProperty());
 		sortedCustomers.comparatorProperty().bind(customerTable.comparatorProperty());
+		sortedAllBorrowed.comparatorProperty().bind(allBorrowedBooksTable.comparatorProperty());
+		sortedPopularBooks.comparatorProperty().bind(popularBooksTable.comparatorProperty());
 
 		// 5. Add sorted (and filtered) data to the table.
 		bookTable.setItems(sortedBooks);
@@ -519,12 +524,14 @@ public class LibraryController implements Initializable {
 					authorLabel.setText(newValue.getAuthor());
 					genreLabel.setText(newValue.getGenre());
 					publisherLabel.setText(newValue.getPublisher());
+					ISBNLabel.setText(newValue.getIsbn());
 				} else {
 					LIDLabel.setText("");
 					titleLabel.setText("");
 					authorLabel.setText("");
 					genreLabel.setText("");
 					publisherLabel.setText("");
+					ISBNLabel.setText("");
 				}
 			}
 		});
@@ -1070,7 +1077,7 @@ public class LibraryController implements Initializable {
 				genreFilterField.textProperty()));
 		// 1. Wrap the ObservableList in a FilteredList (initially display all data)
 
-		filteredBooks = new FilteredList<>(getObsBooks(library.getListBooks()), p -> true);
+		filteredBooks = new FilteredList<>(getObsBooks(library.getAvailableBooks()), p -> true);
 		filteredCustomers = new FilteredList<>(getObsCustomers(library.getCustomersList()), p -> true);
 
 		filteredBooks.predicateProperty().bind(Bindings.createObjectBinding(
@@ -1107,12 +1114,13 @@ public class LibraryController implements Initializable {
 				sortedAllBorrowed.comparatorProperty().bind(allBorrowedBooksTable.comparatorProperty());
 
 				// 5. Add sorted (and filtered) data to the table.
+
 				bookTable.setItems(sortedBooks);
 				customerTable.setItems(sortedCustomers);
 				
-//				allBorrowedBooksTable.getItems().clear();
+
 				allBorrowedBooksTable.setItems(sortedAllBorrowed);
-//				popularBooksTable.getItems().clear();
+
 				popularBooksTable.setItems(sortedPopularBooks);
 
 	}

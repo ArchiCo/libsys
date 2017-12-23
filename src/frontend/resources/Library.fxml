@@ -19,9 +19,8 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane style="-fx-background-color: #;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frontend.resources.LibraryController">
+<AnchorPane xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="frontend.resources.LibraryController">
    <children>
-      <TitledPane animated="false" layoutX="14.0" layoutY="-89.0" text="untitled" />
       <AnchorPane layoutX="88.0" layoutY="55.0" prefHeight="600.0" prefWidth="1200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <TabPane layoutY="25.0" prefHeight="600.0" prefWidth="1200.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -34,15 +33,15 @@
                                 <items>
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                                        <children>
-                                          <TitledPane animated="false" layoutY="7.0" prefHeight="542.0" prefWidth="450.0" text="Books directory" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                          <TitledPane animated="false" layoutY="7.0" prefHeight="542.0" prefWidth="450.0" style="-fx-background-color: #404040;" text="Books directory" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <content>
-                                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="485.0" prefWidth="448.0">
+                                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="485.0" prefWidth="448.0" style="-fx-background-color: #404040;">
                                                    <children>
                                                       <SplitPane dividerPositions="0.7301648141050211" layoutX="134.0" layoutY="329.0" orientation="VERTICAL" prefHeight="543.0" prefWidth="637.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                         <items>
-                                                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="301.0" prefWidth="616.0">
+                                                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="301.0" prefWidth="616.0" style="-fx-background-color: CC33FF;">
                                                                <children>
-                                                                  <TableView fx:id="bookTable" prefHeight="425.0" prefWidth="616.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                  <TableView fx:id="bookTable" prefHeight="425.0" prefWidth="616.0" style="-fx-background-color: #84e1e1;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                                     <columns>
                                                                       <TableColumn fx:id="bookIDCol" prefWidth="95.00000154972076" text="ID" />
                                                                         <TableColumn fx:id="bookISBNCol" prefWidth="75.0" text="ISBN" />
@@ -58,7 +57,7 @@
                                                                   </TableView>
                                                                </children>
                                                             </AnchorPane>
-                                                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                                                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" style="-fx-background-color: #9933ff;">
                                                                <children>
                                                                   <TextField fx:id="publisherFilterField" layoutX="381.0" layoutY="57.0" />
                                                                   <TextField fx:id="IDFilterField" layoutX="126.0" layoutY="14.0" />
@@ -88,13 +87,13 @@
                                        <children>
                                           <SplitPane dividerPositions="0.800705467372134" layoutX="176.0" layoutY="115.0" orientation="VERTICAL" prefHeight="569.0" prefWidth="553.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <items>
-                                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" style="-fx-background-color: #ffcc99;">
                                                    <children>
                                                       <TitledPane animated="false" layoutY="221.0" prefHeight="230.0" prefWidth="551.0" text="Lending records" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="221.0">
                                                         <content>
                                                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="209.0" prefWidth="549.0">
                                                                <children>
-                                                                  <TableView fx:id="lentTable" layoutX="25.0" layoutY="-16.0" prefHeight="168.0" prefWidth="551.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                  <TableView fx:id="lentTable" layoutX="25.0" layoutY="-16.0" prefHeight="168.0" prefWidth="551.0" style="-fx-background-color: #b30000;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                                     <columns>
                                                                       <TableColumn fx:id="lentBookIDCol" prefWidth="263.99999392032623" text="ID" />
                                                                       <TableColumn fx:id="lentBookNameCol" prefWidth="244.0" text="Name" />
@@ -227,7 +226,7 @@
                                                    <children>
                                                       <Button fx:id="logoutBtn" mnemonicParsing="false" onAction="#logoutEvent" prefHeight="111.0" prefWidth="103.0" text="Log out" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="448.0" AnchorPane.topAnchor="0.0" />
                                                       <Button fx:id="addBookBtn" layoutX="103.0" mnemonicParsing="false" onAction="#addBookEvent" prefHeight="61.0" prefWidth="175.0" text="Add book" AnchorPane.bottomAnchor="49.0" AnchorPane.leftAnchor="103.0" AnchorPane.rightAnchor="273.0" AnchorPane.topAnchor="0.0" />
-                                                      <Button fx:id="lendBookBtn" layoutX="390.0" layoutY="1.0" mnemonicParsing="false" onAction="#lendBookEvent" prefHeight="110.0" prefWidth="161.0" text="Lend Book" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="390.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                      <Button fx:id="lendBookBtn" layoutX="390.0" layoutY="1.0" mnemonicParsing="false" onAction="#lendBookEvent" prefHeight="110.0" prefWidth="161.0" style="-fx-background-color: #ffff00;" text="Lend Book" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="390.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                                       <Button fx:id="editBookBtn" layoutX="277.0" layoutY="-1.0" mnemonicParsing="false" onAction="#editBookEvent" prefHeight="111.0" prefWidth="112.0" text="Edit book" />
                                                       <Button fx:id="removeBookBtn" layoutX="103.0" layoutY="59.0" mnemonicParsing="false" onAction="#removeBookEvent" prefHeight="51.0" prefWidth="174.0" text="Delete Book" />
                                                    </children>
@@ -249,7 +248,7 @@
                                 <items>
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="542.0" prefWidth="436.0">
                                        <children>
-                                          <TableView fx:id="customerTable" layoutX="-3.0" layoutY="15.0" prefHeight="554.0" prefWidth="279.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="15.0">
+                                          <TableView fx:id="customerTable" layoutX="-3.0" layoutY="15.0" prefHeight="554.0" prefWidth="279.0" style="-fx-background-color: #9933ff;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="15.0">
                                             <columns>
                                               <TableColumn fx:id="customerIDCol" prefWidth="70.0" text="ID" />
                                               <TableColumn fx:id="customerNameCol" prefWidth="161.3333282470703" text="Name" />
