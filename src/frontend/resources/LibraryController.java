@@ -1118,13 +1118,20 @@ public class LibraryController implements Initializable {
 	}
 	
 
-	public void refreshBorrowingTable() {
+	public void refreshSecondaryTables() {
 		
 		
 		ObservableList<Book> borrowCheck = getObsBooks(library.getBorrowedBooks(tempCst));
+		ArrayList<Book> fetchedBook = library.getCustomerHistoryArray(tempCst);
+		if (!fetchedBook.isEmpty()) {
+			cstHistoryTable.getItems().clear();
+			cstHistoryTable.setItems(getObsBooks(library.getCustomerHistoryArray(tempCst)));
+		}
 		if(borrowCheck != null) {
+			cstCurrentBorrowedTable.getItems().clear();
 			cstCurrentBorrowedTable.setItems(getObsBooks(library.getBorrowedBooks(tempCst)));
 		}
+		
 	}
 	@FXML
 	private void resetSearchEvent(ActionEvent event) throws IOException {
@@ -1156,15 +1163,16 @@ public class LibraryController implements Initializable {
 
 				
 				Record hey=findRecord();
-				library.returnBook(cstCurrentBorrowedTable.getSelectionModel().getSelectedItem(),hey);
+				
 				
 				grid.add(new Label("customer: " + tempCst.getName()), 0, 0);
 				grid.add(new Label("book: " + cstCurrentBorrowedTable.getSelectionModel().getSelectedItem().getTitle()), 0, 1);
 				grid.add(new Label("date borrowed: " + hey.getDateTaken()), 0,2);
 				grid.add(new Label("date returned: " + hey.getDateReturned()), 0, 3);
 				grid.add(new Label("fee: " + library.lateReturnCharge(hey)), 0, 4);
-				//refreshBorrowingTable();
-				cstCurrentBorrowedTable.refresh();
+				
+		
+				
 
 
 
@@ -1172,6 +1180,8 @@ public class LibraryController implements Initializable {
 				// Traditional way to get the response value.
 				Optional<String> result = dialog.showAndWait();
 				if (result.isPresent()){
+					libraryMenu.returnBook(tempCst,cstCurrentBorrowedTable.getSelectionModel().getSelectedItem());
+					refreshSecondaryTables();
 
 				}
 			}
