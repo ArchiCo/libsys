@@ -370,14 +370,15 @@ public class LibraryMenu extends Application{
 		}
 	}
 
-	public void returnBook(String libraryID) {
-		Customer foundCustomer = findCustomer(libraryID);
+	public void returnBook(Customer foundCustomer, Book foundLentBook) {
+	//	Customer foundCustomer = findCustomer(libraryID);
 		System.out.println("");
 		if (foundCustomer != null) {
-			Book foundLentBook = findLentBook(foundCustomer);
+	//		Book foundLentBook = findLentBook(foundCustomer);
 			if (foundLentBook != null) {
 				Record foundRecord = library.findRecord(foundCustomer, foundLentBook);
 				library.returnBook(foundLentBook, foundRecord);
+				System.out.println("book returned");
 				long exceededDays = library.exceededDays(foundRecord);
 				if (exceededDays > 0) {
 					System.out.println("You have exceeded borrowing duration by " + exceededDays + " days.");

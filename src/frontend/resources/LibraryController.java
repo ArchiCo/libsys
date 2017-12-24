@@ -55,6 +55,7 @@ import javafx.util.Callback;
 import javafx.util.Pair;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.TableColumn.CellDataFeatures;
+import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
@@ -500,8 +501,8 @@ public class LibraryController implements Initializable {
 		genreFilter.bind(Bindings.createObjectBinding(
 				() -> book -> book.getGenre().toLowerCase().contains(genreFilterField.getText().toLowerCase()),
 				genreFilterField.textProperty()));
-		
-		bookTable.setRowFactory( tv -> {
+		//adding books to basket//
+		bookTable.setRowFactory( rawr -> {
 		    TableRow<Book> row = new TableRow<>();
 		    row.setOnMouseClicked(event -> {
 		        if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
@@ -559,9 +560,7 @@ public class LibraryController implements Initializable {
 
 		// 5. Add sorted (and filtered) data to the table.
 		bookTable.setItems(sortedBooks);
-		
 		basketTable.setItems(basket);
-		
 		customerTable.setItems(sortedCustomers);
 
 //		cstHistoryTable.setItems(value);
@@ -626,7 +625,7 @@ public class LibraryController implements Initializable {
 					cstAddressLabel.setText(newValue.getAddress());
 					
 					//show individual customer history
-					ObservableList<Book> borrowCheck = getObsBooks(library.getBorrowedBooks(tempCst));
+				ArrayList<Book> borrowCheck = library.getBorrowedBooks(tempCst);
 				if(borrowCheck != null) {
 					cstCurrentBorrowedTable.setItems(getObsBooks(library.getBorrowedBooks(tempCst)));
 				}
@@ -841,10 +840,7 @@ public class LibraryController implements Initializable {
 			}
 		}
 	}
-	@FXML
-	private void addToBasket(ActionEvent event) {
-		basket.add(tempBook);
-	}
+
 /*
 	 * Alert alert = new Alert(AlertType.ERROR); alert.setTitle("ERROR");
 	 * alert.setHeaderText("Error during adding a customer");
@@ -1061,12 +1057,31 @@ public class LibraryController implements Initializable {
 			Scene newScene = new Scene(root);
 			window.setTitle("Choose Customer");
 			window.setScene(newScene);
-			window.show();
+			window.showAndWait();
+			this.basket.clear();
 		}
+		cstCurrentBorrowedTable.getItems().clear();
+		cstHistoryTable.getItems().clear();
 		refreshTable();
 	}
 	@FXML
 	public void returnBookEvent() {
+		Alert confirmedReturn = new Alert(AlertType.CONFIRMATION);
+		confirmedReturn.setTitle("Confirm Return");
+		confirmedReturn.setHeaderText("Gotta give bakk em buhkz");
+		confirmedReturn.setContentText("Return?");
+		Optional <ButtonType> result = confirmedReturn.showAndWait();
+		if (result.get() == ButtonType.OK ) {
+			Alert confirmation = new Alert(AlertType.INFORMATION);
+			confirmation.setTitle("Book(s) returned");
+			confirmation.setHeaderText(null);
+			confirmation.setContentText("Book(s) Returned");
+			for (Book book : cstCurrentBorrowedTable.getSelectionModel().getSelectedItems()) {
+				libraryMenu.returnBook(tempCst, book);
+			}
+			confirmation.showAndWait();
+		}
+		refreshTable();
 		
 	}
 ////////////////////////////////////////TextField Checks//////////////////////////////////////////
@@ -1194,8 +1209,26 @@ public class LibraryController implements Initializable {
 				// 5. Add sorted (and filtered) data to the table.
 
 				bookTable.setItems(sortedBooks);
-
 				customerTable.setItems(sortedCustomers);
+				
+				cstCurrentBorrowedTable.getItems().clear();
+				
+				ArrayList<Book> borrowCheck;
+				if(tempCst != null) {
+				borrowCheck = library.getBorrowedBooks(tempCst);
+					if(borrowCheck != null) {
+						cstCurrentBorrowedTable.setItems(getObsBooks(library.getBorrowedBooks(tempCst)));
+					}
+				}
+				
+				cstHistoryTable.getItems().clear();
+				
+				if(tempCst != null) {
+				ArrayList<Book> fetchedBook = library.getCustomerHistoryArray(tempCst);
+				if (!fetchedBook.isEmpty()) {
+					cstHistoryTable.setItems(getObsBooks(library.getCustomerHistoryArray(tempCst)));
+					}
+				}
 				
 				allBorrowedBooksTable.setItems(sortedAllBorrowed);
 				popularBooksTable.setItems(sortedPopularBooks);

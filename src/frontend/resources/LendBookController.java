@@ -104,12 +104,14 @@ public class LendBookController implements Initializable{
 			confirmation.setHeaderText(null);
 			confirmation.setContentText("Book Lent");
 			confirmation.showAndWait();
-			for(int i = 0; i < basket.size(); i++) {
-				libraryMenu.lendBook(chosenCustomer.getCustomerId(), basket.get(i));
-				System.out.println(basket.get(i) + "\n " + chosenCustomer);
-				basket.clear();
+			for(Book book : basket) {
+				libraryMenu.lendBook(chosenCustomer.getCustomerId(), book);
+				System.out.println(book);
+				
 			}
+			System.out.println(chosenCustomer);
 			Stage window = 	(Stage) lendBtn.getScene().getWindow();
+			basket.clear();
 			window.close();
 		}
 
