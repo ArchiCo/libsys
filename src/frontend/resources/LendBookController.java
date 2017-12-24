@@ -11,6 +11,8 @@ import backend.LibraryMenu;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -43,12 +45,14 @@ public class LendBookController implements Initializable{
 	private LibraryController librarycontroller;
 	private Library	library;
 	private LibraryMenu libraryMenu;
+	
+	private ObservableList<Book> basket;
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		this.library = new Library();
 		this.libraryMenu = new LibraryMenu();
 		this.librarycontroller = new LibraryController();
-		
+		this.basket = FXCollections.observableArrayList();
 		
 		SortedList<Customer> sortedCustomers = new SortedList<>(librarycontroller.getObsCustomers(library.getCustomersList()));
 	
@@ -100,8 +104,11 @@ public class LendBookController implements Initializable{
 			confirmation.setHeaderText(null);
 			confirmation.setContentText("Book Lent");
 			confirmation.showAndWait();
-			System.out.println(chosenBook + " " + chosenCustomer);
-			libraryMenu.lendBook(chosenCustomer.getCustomerId(), chosenBook);
+			for(int i = 0; i < basket.size(); i++) {
+				libraryMenu.lendBook(chosenCustomer.getCustomerId(), basket.get(i));
+				System.out.println(basket.get(i) + "\n " + chosenCustomer);
+				basket.clear();
+			}
 			Stage window = 	(Stage) lendBtn.getScene().getWindow();
 			window.close();
 		}
@@ -121,6 +128,9 @@ public class LendBookController implements Initializable{
 	}
 	public void setLibrary(Library library) {
 		this.library = library;
+	}
+	public void setBasket(ObservableList<Book> basket) {
+		this.basket = basket;
 	}
 
 

@@ -8,6 +8,9 @@ import java.util.ResourceBundle;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.FutureTask;
 import java.util.function.Predicate;
+
+import javax.swing.event.TableColumnModelListener;
+
 import com.sun.javafx.scene.control.skin.IntegerFieldSkin;
 
 import backend.*;
@@ -25,6 +28,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -34,6 +38,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -50,6 +55,7 @@ import javafx.util.Callback;
 import javafx.util.Pair;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.TableColumn.CellDataFeatures;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.layout.GridPane;
@@ -118,6 +124,13 @@ public class LibraryController implements Initializable {
 	@FXML private TableColumn<Record, String> allBorrowDelayCol;
 	@FXML private TableColumn<Record, String> allBorrowDelayFeeCol;
 	
+	//basket table
+	@FXML private TableView<Book> basketTable;
+	@FXML private TableColumn<Book, Integer> basketIDCol;
+	@FXML private TableColumn<Book, String> basketTitleCol;
+	@FXML private TableColumn<Book, String> basketAuthorCol;
+	@FXML private TableColumn<Book, String> basketIsbnCol;
+	
 	// search filter fields
 	@FXML private TextField IDFilterField;
 	@FXML private TextField titleFilterField;
@@ -159,7 +172,7 @@ public class LibraryController implements Initializable {
 	protected Book tempBook;
 	protected Customer tempCst;
 	
-	ObjectProperty<Predicate<Book>> IDFilter;
+	private ObjectProperty<Predicate<Book>> IDFilter;
 	ObjectProperty<Predicate<Book>> titleFilter;
 	ObjectProperty<Predicate<Book>> authorFilter;
 	ObjectProperty<Predicate<Book>> shelfFilter;
@@ -168,7 +181,7 @@ public class LibraryController implements Initializable {
 
 	ObjectProperty<Predicate<Customer>> custNameFilter;
 	
-	
+	ObservableList<Book> basket;
 	public LibraryController(LibraryMenu libraryMenu, Library library) {
 		this.libraryMenu = libraryMenu;
 		this.library = library;
@@ -187,6 +200,7 @@ public class LibraryController implements Initializable {
 		// if using ints and stuff, asObject() needs to be added after getproperty()
 		this.libraryMenu = new LibraryMenu();
 		this.library = new Library();
+		this.basket = FXCollections.observableArrayList();
 		
 		////////////////////////////////////////////////////////////////////////////
 		bookIDCol.setCellValueFactory (new Callback<TableColumn.CellDataFeatures<Book, Integer>, ObservableValue<Integer>>() {
@@ -414,6 +428,41 @@ public class LibraryController implements Initializable {
 				return convertedLentTimes.asObject();
 			}
 		});
+		/////////////////////Basket///////////////////////////
+		
+		basketIDCol.setCellValueFactory (new Callback<TableColumn.CellDataFeatures<Book, Integer>, ObservableValue<Integer>>() {
+			@Override
+			public ObservableValue<Integer> call(CellDataFeatures<Book, Integer> param) {
+				Book book = param.getValue();
+				SimpleIntegerProperty convertedLid = getIntegerProperty(book.getLid());
+				return convertedLid.asObject();
+			}});
+		basketTitleCol.setCellValueFactory (new Callback<TableColumn.CellDataFeatures<Book, String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
+				Book book = param.getValue();
+				SimpleStringProperty convertedTitle = getStringProperty(book.getTitle());
+				return convertedTitle;
+			}
+		});
+		basketAuthorCol.setCellValueFactory (new Callback<TableColumn.CellDataFeatures<Book, String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
+				Book book = param.getValue();
+				SimpleStringProperty convertedAuthor = getStringProperty(book.getAuthor());
+				return convertedAuthor;
+			}
+		});
+		basketIsbnCol.setCellValueFactory( new Callback<TableColumn.CellDataFeatures<Book, String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
+				Book book = param.getValue();
+				SimpleStringProperty convertedIsbn = getStringProperty(book.getIsbn());
+				return convertedIsbn;
+			}
+		});
+		
+		
 		//////////////////////////////// SEARCH FUNCTION BOOK TABLE///////////////////////////
 		IDFilter = new SimpleObjectProperty<>();
 		titleFilter = new SimpleObjectProperty<>();
@@ -451,7 +500,23 @@ public class LibraryController implements Initializable {
 		genreFilter.bind(Bindings.createObjectBinding(
 				() -> book -> book.getGenre().toLowerCase().contains(genreFilterField.getText().toLowerCase()),
 				genreFilterField.textProperty()));
-
+		
+		bookTable.setRowFactory( tv -> {
+		    TableRow<Book> row = new TableRow<>();
+		    row.setOnMouseClicked(event -> {
+		        if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+		            Book rowData = row.getItem();
+		            System.out.println(rowData);
+		            if(basket.contains(tempBook)) {
+		            };
+		            if(!basket.contains(tempBook)) {
+		            	 basket.add(tempBook);
+		            }
+		        }
+		    });
+		    return row ;
+		});
+		
 		// 1. Wrap the ObservableList in a FilteredList (initially display all data)
 
 		filteredBooks = new FilteredList<>(getObsBooks(library.getAvailableBooks()), p -> true);
@@ -494,6 +559,9 @@ public class LibraryController implements Initializable {
 
 		// 5. Add sorted (and filtered) data to the table.
 		bookTable.setItems(sortedBooks);
+		
+		basketTable.setItems(basket);
+		
 		customerTable.setItems(sortedCustomers);
 
 //		cstHistoryTable.setItems(value);
@@ -579,8 +647,13 @@ public class LibraryController implements Initializable {
 			}
 			});
 		
-
-
+		cstCurrentBorrowedTable.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				cstCurrentBorrowedTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+			}
+		});
+		
 	}
 
 	public void setLibraryMenu(LibraryMenu libraryMenu) {
@@ -767,6 +840,10 @@ public class LibraryController implements Initializable {
 				refreshTable();
 			}
 		}
+	}
+	@FXML
+	private void addToBasket(ActionEvent event) {
+		basket.add(tempBook);
 	}
 /*
 	 * Alert alert = new Alert(AlertType.ERROR); alert.setTitle("ERROR");
@@ -976,6 +1053,7 @@ public class LibraryController implements Initializable {
 			LendBookController lendBookController = loader.getController();
 			
 			lendBookController.setChosenBook(tempBook);
+			lendBookController.setBasket(this.basket);
 //			lendBookController.setLibraryMenu(libraryMenu);
 //			lendBookController.setLibraryController(this);
 	
@@ -1116,13 +1194,21 @@ public class LibraryController implements Initializable {
 				// 5. Add sorted (and filtered) data to the table.
 
 				bookTable.setItems(sortedBooks);
+
 				customerTable.setItems(sortedCustomers);
 				
-
 				allBorrowedBooksTable.setItems(sortedAllBorrowed);
-
 				popularBooksTable.setItems(sortedPopularBooks);
 
+	}
+	
+	public void undoBookSelection() {
+		bookTable.getSelectionModel().clearSelection();
+		tempBook = null;
+	}
+	public void undoCstSelection() {
+		customerTable.getSelectionModel().clearSelection();
+		tempCst = null;
 	}
 	@FXML
 	private void resetSearchEvent(ActionEvent event) throws IOException {
