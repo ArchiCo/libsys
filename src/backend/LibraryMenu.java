@@ -387,6 +387,12 @@ public class LibraryMenu extends Application{
 			}
 		}
 	}
+	public void returnBook(Customer tempCst, ObservableList<Book> booksToReturn) {
+		for (int i = 0; i < booksToReturn.size(); i++ ) {
+			returnBook(tempCst, booksToReturn.get(i));
+		}
+		
+	}
 
 	private Book findLentBook(Customer customer) {
 		System.out.print("Please enter the book's ID: ");
@@ -622,4 +628,5 @@ public class LibraryMenu extends Application{
 		LibraryMenu program = new LibraryMenu();
 		program.run();
 	}
+
 }

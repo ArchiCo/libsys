@@ -253,7 +253,13 @@ public class Library {
 	}
 
 	public long exceededDays(Record record) {
-		return record.getDateDue().until(today, ChronoUnit.DAYS);
+		
+		long daysLate = 0;
+		long daysBetween = ChronoUnit.DAYS.between(record.getDateTaken(), record.getDateReturned());
+		if (daysBetween > 14)
+		daysLate = record.getDateDue().until(today, ChronoUnit.DAYS);
+		return daysLate;
+//		return record.getDateDue().until(today, ChronoUnit.DAYS);
 	}
 
 	public long lateReturnCharge(Record record) {

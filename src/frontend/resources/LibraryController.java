@@ -14,6 +14,7 @@ import javax.swing.event.TableColumnModelListener;
 import com.sun.javafx.scene.control.skin.IntegerFieldSkin;
 
 import backend.*;
+import database.structure.Column;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
@@ -39,6 +40,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -108,6 +110,7 @@ public class LibraryController implements Initializable {
 	@FXML private TableColumn<Book, String> borrowLateCol;
 	@FXML private TableColumn<Book, String> borrowIDCol;
 	@FXML private TableColumn<Book, String> borrowNameCol;
+	@FXML private TableColumn<Library, Record> borrowLateFeeCol;
 	
 	//popular books
 	@FXML private TableView<Book> popularBooksTable;
@@ -304,6 +307,30 @@ public class LibraryController implements Initializable {
 			}
 		});
 */		
+/*		borrowLateFeeCol.setCellValueFactory ( new Callback<TableColumn.CellDataFeatures<Library, Record>, ObservableValue>() {
+			@Override
+			public ObservableValue call(CellDataFeatures param) {
+				
+				ObservableValue<Record> convertedFee = new SimpleObjectProperty<>(findRecord());
+				return convertedFee;
+			}
+		});
+
+		borrowLateFeeCol.setCellFactory(column-> {
+			return new TableCell<Library,Record>() {
+				@Override
+				protected void updateItem(Record item, boolean empty) {
+					super.updateItem(item, empty);
+				if(item == null || empty) {
+					setText(null);
+				}
+				else {
+					setText(Long.toString(item.getFine()));
+				}
+				}
+			};
+		});
+*/
 		cstHistBookIDCol.setCellValueFactory( new Callback<TableColumn.CellDataFeatures<Book,String>, ObservableValue<String>>() {
 			@Override
 			public ObservableValue<String> call(CellDataFeatures<Book, String> param){
@@ -394,12 +421,12 @@ public class LibraryController implements Initializable {
 				return convertedDelayCol;
 			}
 		});
-
-		allBorrowDelayFeeCol.setCellValueFactory (new Callback<TableColumn.CellDataFeatures<Record, String>, ObservableValue<String>>() {
+*/
+/*		allBorrowDelayFeeCol.setCellValueFactory (new Callback<TableColumn.CellDataFeatures<Record, String>, ObservableValue<String>>() {
 			@Override
 			public ObservableValue<String> call(CellDataFeatures<Record, String> param) {
 				Record record = param.getValue();
-				SimpleStringProperty convertedFee = getStringProperty();
+				SimpleStringProperty convertedFee = getStringProperty(Long.toString(record.getFine()));
 				return convertedFee;
 			}
 		});
@@ -623,6 +650,7 @@ public class LibraryController implements Initializable {
 					cstNameLabel.setText(newValue.getName());
 					cstPhoneLabel.setText(Integer.toString(newValue.getPhoneNumber()));
 					cstAddressLabel.setText(newValue.getAddress());
+					
 					
 					//show individual customer history
 				ArrayList<Book> borrowCheck = library.getBorrowedBooks(tempCst);
@@ -883,19 +911,14 @@ public class LibraryController implements Initializable {
 
 			grid.add(new Label("ISBN:"), 0, 0);
 			grid.add(ISBN, 1, 0);
-
 			grid.add(new Label("Title:"), 0, 1);
 			grid.add(Title, 1, 1);
-
 			grid.add(new Label("Genre:"), 0, 2);
 			grid.add(Genre, 1, 2);
-
 			grid.add(new Label("Author:"), 0, 3);
 			grid.add(Author, 1, 3);
-
 			grid.add(new Label("Publisher:"), 0, 4);
 			grid.add(Publisher, 1, 4);
-			
 			grid.add(new Label("Shelf:"), 0, 5);
 			grid.add(Shelf, 1, 5);
 
@@ -1066,24 +1089,43 @@ public class LibraryController implements Initializable {
 	}
 	@FXML
 	public void returnBookEvent() {
-		Alert confirmedReturn = new Alert(AlertType.CONFIRMATION);
+/*		Alert confirmedReturn = new Alert(AlertType.CONFIRMATION);
 		confirmedReturn.setTitle("Confirm Return");
 		confirmedReturn.setHeaderText("Gotta give bakk em buhkz");
 		confirmedReturn.setContentText("Return?");
 		Optional <ButtonType> result = confirmedReturn.showAndWait();
-		if (result.get() == ButtonType.OK ) {
+		
+*/		
+		TextInputDialog dialog = new TextInputDialog("Return a book");
+		GridPane grid = new GridPane();
+		grid.setHgap(10);
+		grid.setVgap(10);
+		grid.setPadding(new Insets(20, 150, 10, 10));
+
+		//search the record
+		Record cstRec=findRecord();
+		
+		grid.add(new Label("customer: " + tempCst.getName()), 0, 0);
+		grid.add(new Label("book: " + cstCurrentBorrowedTable.getSelectionModel().getSelectedItem().getTitle()), 0, 1);
+		grid.add(new Label("date borrowed: " + cstRec.getDateTaken()), 0,2);
+		grid.add(new Label("date returned: " + cstRec.getDateReturned()), 0, 3);
+		grid.add(new Label("fee: " + library.lateReturnCharge(cstRec)), 0, 4);
+		
+		dialog.getDialogPane().setContent(grid);
+
+		Optional<String> result = dialog.showAndWait();
+		if (result.isPresent()) {
 			Alert confirmation = new Alert(AlertType.INFORMATION);
 			confirmation.setTitle("Book(s) returned");
 			confirmation.setHeaderText(null);
 			confirmation.setContentText("Book(s) Returned");
-			for (Book book : cstCurrentBorrowedTable.getSelectionModel().getSelectedItems()) {
-				libraryMenu.returnBook(tempCst, book);
+//			for (Book book : cstCurrentBorrowedTable.getSelectionModel().getSelectedItems()) {
+				libraryMenu.returnBook(tempCst, cstCurrentBorrowedTable.getSelectionModel().getSelectedItem());
+				confirmation.showAndWait();
 			}
-			confirmation.showAndWait();
-		}
 		refreshTable();
-		
 	}
+	
 ////////////////////////////////////////TextField Checks//////////////////////////////////////////
 	public Boolean bookFieldsAreEmpty(TextField a, TextField b, TextField c, TextField d, TextField e) {
 		Boolean x = false;
@@ -1255,6 +1297,16 @@ public class LibraryController implements Initializable {
 			genreFilterField.setText("");
 		}
 
+	}
+	
+	public Record findRecord() {
+		int i;
+		ArrayList<Record> allRecs = library.getRecords();
+		for (i=0; allRecs.get(i).getCustomerId() != tempCst.getCustomerId() && allRecs.get(i).getLid()
+				!= cstCurrentBorrowedTable.getSelectionModel().getSelectedItem().getLid(); i++);
+		System.out.println(allRecs.get(i).toString());
+		return allRecs.get(i);
+	
 	}
 	
 
