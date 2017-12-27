@@ -45,6 +45,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.geometry.Insets;
@@ -112,6 +113,10 @@ public class LibraryController implements Initializable {
 	@FXML private TableColumn<Book, String> borrowNameCol;
 	@FXML private TableColumn<Library, Record> borrowLateFeeCol;
 	
+	@FXML private TableView<Library> cstCurrentBorrowedDelayTable;
+	@FXML private TableColumn<Library, String> borrowDelayDaysCol;
+	@FXML private TableColumn<Library, Long>  borrowDelayFeeCol;
+	
 	//popular books
 	@FXML private TableView<Book> popularBooksTable;
 	@FXML private TableColumn<Book, String> popIsbnCol;
@@ -125,8 +130,8 @@ public class LibraryController implements Initializable {
 	@FXML private TableColumn<Book, String> allBorrowAuthorCol;
 	@FXML private TableColumn<Book, String> allBorrowPublisherCol;
 	@FXML private TableColumn<Book, String> allBorrowGenreCol;
-	@FXML private TableColumn<Record, String> allBorrowDelayCol;
-	@FXML private TableColumn<Record, String> allBorrowDelayFeeCol;
+	@FXML private TableColumn<Book, String> allBorrowDelayCol;
+	@FXML private TableColumn<Book, String> allBorrowDelayFeeCol;
 	
 	//basket table
 	@FXML private TableView<Book> basketTable;
@@ -134,6 +139,15 @@ public class LibraryController implements Initializable {
 	@FXML private TableColumn<Book, String> basketTitleCol;
 	@FXML private TableColumn<Book, String> basketAuthorCol;
 	@FXML private TableColumn<Book, String> basketIsbnCol;
+	
+	//Records Table
+	@FXML private TableView<Record> recordTable;
+	@FXML private TableColumn<Record, String> aidCol;
+	@FXML private TableColumn<Record, String> cidCol;
+	@FXML private TableColumn<Record, String> lidCol;
+	@FXML private TableColumn<Record, String> dateTakenCol;
+	@FXML private TableColumn<Record, String> dateDueCol;
+	@FXML private TableColumn<Record, String> dateReturnCol;
 	
 	// search filter fields
 	@FXML private TextField IDFilterField;
@@ -171,6 +185,7 @@ public class LibraryController implements Initializable {
 	private SortedList<Book> sortedPopularBooks;
 	private SortedList<Book> sortedAllBorrowed;
 	private SortedList<Book> sortedCstCurrentBorrowed;
+	private SortedList<Record> sortedRecords;
 	
 	
 	protected Book tempBook;
@@ -298,6 +313,20 @@ public class LibraryController implements Initializable {
 				return convertedTitle;
 			}
 		});
+		
+//////////////////////Delay Column/////////////////////////
+		borrowDelayDaysCol.setCellValueFactory( new Callback<TableColumn.CellDataFeatures<Library,String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Library, String> param) {
+				Library library = param.getValue();
+				Record record = findRecord();
+				Book chosenBook = cstCurrentBorrowedTable.getSelectionModel().getSelectedItem();
+				long daysLate = library.exceededDays(record);
+				SimpleStringProperty convertedDays = getStringProperty(Long.toString(daysLate));
+				return convertedDays;
+			}
+		});
+		
 /*		borrowLateCol.setCellValueFactory( new Callback<TableColumn.CellDataFeatures<Customer,String>, ObservableValue<String>>() {
 			@Override
 			public ObservableValue<String> call(CellDataFeatures<Customer, String> param) {
@@ -422,15 +451,17 @@ public class LibraryController implements Initializable {
 			}
 		});
 */
-/*		allBorrowDelayFeeCol.setCellValueFactory (new Callback<TableColumn.CellDataFeatures<Record, String>, ObservableValue<String>>() {
+/*		allBorrowDelayFeeCol.setCellValueFactory (new Callback<TableColumn.CellDataFeatures<Book, String>, ObservableValue<String>>() {
 			@Override
-			public ObservableValue<String> call(CellDataFeatures<Record, String> param) {
-				Record record = param.getValue();
-				SimpleStringProperty convertedFee = getStringProperty(Long.toString(record.getFine()));
+			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
+				Book book = param.getValue();
+				SimpleStringProperty convertedFee = getStringProperty(Long.toString(book.));
 				return convertedFee;
 			}
 		});
 */
+		
+		
 		//////////////////////Popular Books////////////////////////
 		popIsbnCol.setCellValueFactory (new Callback<TableColumn.CellDataFeatures<Book, String>, ObservableValue<String>>() {
 			@Override
@@ -490,6 +521,61 @@ public class LibraryController implements Initializable {
 			}
 		});
 		
+		//////////////////////////////Records///////////////////////////////
+		aidCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Record,String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Record, String> param){
+				Record record = param.getValue();
+				SimpleStringProperty convertedAid = getStringProperty(Integer.toString(record.getArchiveId()));
+				return convertedAid;
+			}
+		});
+		cidCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Record,String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Record, String> param){
+				Record record = param.getValue();
+				SimpleStringProperty convertedCid = getStringProperty(record.getCustomerId());
+				return convertedCid;
+			}
+		});
+		lidCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Record,String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Record, String> param){
+				Record record = param.getValue();
+				SimpleStringProperty convertedLid = getStringProperty(Integer.toString(record.getLid()));
+				return convertedLid;
+			}
+		});
+		dateTakenCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Record,String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Record, String> param){
+				Record record = param.getValue();
+				SimpleStringProperty convertedTaken = getStringProperty(record.getDateTaken().toString());
+				return convertedTaken;
+			}
+		});
+		dateDueCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Record,String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Record, String> param){
+				Record record = param.getValue();
+				LocalDate convertedDue = record.getDateDue();
+				return getStringProperty(convertedDue.toString());
+			}
+		});
+		dateReturnCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Record,String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Record, String> param){
+				Record record = param.getValue();
+				SimpleStringProperty notReturned = getStringProperty("Not Returned Yet");
+				LocalDate convertedReturn = record.getDateReturned();
+				if (convertedReturn != null) {
+				return getStringProperty(convertedReturn.toString());
+				}
+				else {
+				return notReturned;
+				}
+			}
+		});
 		
 		//////////////////////////////// SEARCH FUNCTION BOOK TABLE///////////////////////////
 		IDFilter = new SimpleObjectProperty<>();
@@ -528,6 +614,11 @@ public class LibraryController implements Initializable {
 		genreFilter.bind(Bindings.createObjectBinding(
 				() -> book -> book.getGenre().toLowerCase().contains(genreFilterField.getText().toLowerCase()),
 				genreFilterField.textProperty()));
+		
+		//binding cstcurrentborrowed with delay///////////////////////
+		
+		
+		
 		//adding books to basket//
 		bookTable.setRowFactory( rawr -> {
 		    TableRow<Book> row = new TableRow<>();
@@ -549,7 +640,8 @@ public class LibraryController implements Initializable {
 
 		filteredBooks = new FilteredList<>(getObsBooks(library.getAvailableBooks()), p -> true);
 		filteredCustomers = new FilteredList<>(getObsCustomers(library.getCustomersList()), p -> true);
-
+		ObservableList<Record> delayedDays = FXCollections.observableArrayList();
+		
 		// 2. Set the filter Predicate whenever the filter changes.
 		// bind the filters to each other so the predicates of each are put into 1
 		filteredBooks.predicateProperty().bind(Bindings.createObjectBinding(
@@ -577,6 +669,9 @@ public class LibraryController implements Initializable {
 		sortedCustomers = new SortedList<>(filteredCustomers);
 		sortedPopularBooks = new SortedList<>(getObsBooks(library.getPopularBooksArray()));
 		sortedAllBorrowed = new SortedList<>(getObsBooks(library.getListLentBooks()));
+		sortedRecords = new SortedList<>(getObsRecords(library.getRecords()));
+		
+		
 	
 		
 		// 4. Bind the SortedList comparator to the TableView comparator.
@@ -584,17 +679,18 @@ public class LibraryController implements Initializable {
 		sortedCustomers.comparatorProperty().bind(customerTable.comparatorProperty());
 		sortedAllBorrowed.comparatorProperty().bind(allBorrowedBooksTable.comparatorProperty());
 		sortedPopularBooks.comparatorProperty().bind(popularBooksTable.comparatorProperty());
+		sortedRecords.comparatorProperty().bind(recordTable.comparatorProperty());
 
 		// 5. Add sorted (and filtered) data to the table.
 		bookTable.setItems(sortedBooks);
 		basketTable.setItems(basket);
 		customerTable.setItems(sortedCustomers);
-
-//		cstHistoryTable.setItems(value);
-//		cstCurrentBorrowedTable.setItems(sortedCstCurrentBorrowed);
+//		cstCurrentBorrowedDelayTable.setItems(delayedBooks);
 		
 		allBorrowedBooksTable.setItems(sortedAllBorrowed);
 		popularBooksTable.setItems(sortedPopularBooks);
+		
+		recordTable.setItems(sortedRecords);
 	
 
 		// ObservableList(Arraylist) >> FilteredList >> Sortedlist(comparator bind) >>
@@ -1089,41 +1185,44 @@ public class LibraryController implements Initializable {
 	}
 	@FXML
 	public void returnBookEvent() {
-/*		Alert confirmedReturn = new Alert(AlertType.CONFIRMATION);
+		Alert confirmedReturn = new Alert(AlertType.CONFIRMATION);
 		confirmedReturn.setTitle("Confirm Return");
 		confirmedReturn.setHeaderText("Gotta give bakk em buhkz");
 		confirmedReturn.setContentText("Return?");
 		Optional <ButtonType> result = confirmedReturn.showAndWait();
-		
-*/		
-		TextInputDialog dialog = new TextInputDialog("Return a book");
-		GridPane grid = new GridPane();
-		grid.setHgap(10);
-		grid.setVgap(10);
-		grid.setPadding(new Insets(20, 150, 10, 10));
+		if (result.get() == ButtonType.OK) {
+			ObservableList<Book> booklist = cstCurrentBorrowedTable.getSelectionModel().getSelectedItems();
+			for (int i = 0; i < booklist.size(); i++) {
+				TextInputDialog dialog = new TextInputDialog("Return a book");
+				GridPane grid = new GridPane();
+				grid.setHgap(10);
+				grid.setVgap(10);
+				grid.setPadding(new Insets(20, 150, 10, 10));
 
-		//search the record
-		Record cstRec=findRecord();
-		
-		grid.add(new Label("customer: " + tempCst.getName()), 0, 0);
-		grid.add(new Label("book: " + cstCurrentBorrowedTable.getSelectionModel().getSelectedItem().getTitle()), 0, 1);
-		grid.add(new Label("date borrowed: " + cstRec.getDateTaken()), 0,2);
-		grid.add(new Label("date returned: " + cstRec.getDateReturned()), 0, 3);
-		grid.add(new Label("fee: " + library.lateReturnCharge(cstRec)), 0, 4);
-		
-		dialog.getDialogPane().setContent(grid);
+				//search the record
+				Record cstRec=findRecord();
+				
+				grid.add(new Label("customer: " + tempCst.getName()), 0, 0);
+				grid.add(new Label("book: " + cstCurrentBorrowedTable.getSelectionModel().getSelectedItem().getTitle()), 0, 1);
+				grid.add(new Label("date borrowed: " + cstRec.getDateTaken()), 0,2);
+				grid.add(new Label("date returned: " + cstRec.getDateReturned()), 0, 3);
+				grid.add(new Label("fee: " + library.lateReturnCharge(cstRec)), 0, 4);
+				
+				dialog.getDialogPane().setContent(grid);
 
-		Optional<String> result = dialog.showAndWait();
-		if (result.isPresent()) {
-			Alert confirmation = new Alert(AlertType.INFORMATION);
-			confirmation.setTitle("Book(s) returned");
-			confirmation.setHeaderText(null);
-			confirmation.setContentText("Book(s) Returned");
-//			for (Book book : cstCurrentBorrowedTable.getSelectionModel().getSelectedItems()) {
-				libraryMenu.returnBook(tempCst, cstCurrentBorrowedTable.getSelectionModel().getSelectedItem());
-				confirmation.showAndWait();
+				Optional<String> result1 = dialog.showAndWait();
+				if (result1.isPresent()) {
+					Alert confirmation = new Alert(AlertType.INFORMATION);
+					confirmation.setTitle("Book(s) returned");
+					confirmation.setHeaderText(null);
+					confirmation.setContentText("Book(s) Returned");
+//					for (Book book : cstCurrentBorrowedTable.getSelectionModel().getSelectedItems()) {
+						libraryMenu.returnBook(tempCst, cstCurrentBorrowedTable.getSelectionModel().getSelectedItem());
+						confirmation.showAndWait();
+					}
 			}
-		refreshTable();
+			refreshTable();	
+		}
 	}
 	
 ////////////////////////////////////////TextField Checks//////////////////////////////////////////
@@ -1240,14 +1339,15 @@ public class LibraryController implements Initializable {
 				sortedCustomers = new SortedList<>(filteredCustomers);
 				sortedPopularBooks = new SortedList<>(getObsBooks(library.getPopularBooksArray()));
 				sortedAllBorrowed = new SortedList<>(getObsBooks(library.getListLentBooks()));
+				sortedRecords = new SortedList<>(getObsRecords(library.getRecords()));
 
 				// 4. Bind the SortedList comparator to the TableView comparator.
 				sortedBooks.comparatorProperty().bind(bookTable.comparatorProperty());
 				sortedCustomers.comparatorProperty().bind(customerTable.comparatorProperty());
-				
 				sortedPopularBooks.comparatorProperty().bind(popularBooksTable.comparatorProperty());
 				sortedAllBorrowed.comparatorProperty().bind(allBorrowedBooksTable.comparatorProperty());
-
+				sortedRecords.comparatorProperty().bind(recordTable.comparatorProperty());
+				
 				// 5. Add sorted (and filtered) data to the table.
 
 				bookTable.setItems(sortedBooks);
@@ -1274,6 +1374,7 @@ public class LibraryController implements Initializable {
 				
 				allBorrowedBooksTable.setItems(sortedAllBorrowed);
 				popularBooksTable.setItems(sortedPopularBooks);
+				recordTable.setItems(sortedRecords);
 
 	}
 	
