@@ -608,9 +608,9 @@ public class LibraryMenu extends Application{
 	}
 	
 	
-	private void advanceTime() {
-		System.out.print("Enter number of days: ");
-		int days = sc.nextInt();
+	public void advanceTime(int days) {
+//		System.out.print("Enter number of days: ");
+//		int days = sc.nextInt();
 		System.out.println("Advanced time by " + days + " days.");
 		this.library.advanceDays(days);
 	}

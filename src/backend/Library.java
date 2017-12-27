@@ -322,7 +322,14 @@ public class Library {
 	public ArrayList<Book> getBorrowedBooks(Customer customer, int lid) {
 		return database.books().fetchBorrowed(customer, lid);
 	}
-	
+	public ArrayList<Record> getBorrowedRecords(Customer customer) {
+		ArrayList<Book> borrowedBooks = getBorrowedBooks(customer);
+		ArrayList<Record> borrowedRecords = new ArrayList<>();
+		for (Book book : borrowedBooks) {
+		borrowedRecords.add(findRecord(customer, book));
+		}
+		return borrowedRecords;
+	}
 	public ArrayList<Book> getListDelayedBooks() {
 		return database.books().fetchDelayed(today);
 		//return database.customers()

@@ -75,6 +75,11 @@ public class LibraryController implements Initializable {
 	@FXML private Button editBookBtn;
 	@FXML private Button resetBtn;
 	
+	//Time
+	@FXML private Button advanceTimeBtn;
+	@FXML private TextField toTheFutureField;
+	@FXML private Label today;
+	
 	// Customer buttons
 	@FXML private Button editCustomerBtn;
 	@FXML private Button addCustomerBtn;
@@ -224,14 +229,17 @@ public class LibraryController implements Initializable {
 		this.library = new Library();
 		this.basket = FXCollections.observableArrayList();
 		
-		if (tempCst != null) {
-		ArrayList<Book> borrowCheck = library.getBorrowedBooks(tempCst);
-		if(borrowCheck != null) {
-			for (Book book : borrowCheck) {
-				cstCurrentBookRecs.add(library.findRecord(tempCst, book));
-				}
-			}
-		}
+		today.setText(library.getDate().toString());
+		
+		toTheFutureField.textProperty().addListener(new ChangeListener<String>() {
+		    @Override
+		    public void changed(ObservableValue<? extends String> observable, String oldValue, 
+		        String newValue) {
+		        if (!newValue.matches("\\d*")) {
+		            toTheFutureField.setText(newValue.replaceAll("[^\\d]", ""));
+		        }
+		    }
+		});
 		
 		////////////////////////////////////////////////////////////////////////////
 		bookIDCol.setCellValueFactory (new Callback<TableColumn.CellDataFeatures<Book, Integer>, ObservableValue<Integer>>() {
@@ -689,6 +697,18 @@ public class LibraryController implements Initializable {
 		    });
 		    return row ;
 		});
+		//removing books from basket//
+		basketTable.setRowFactory( rawr -> {
+		    TableRow<Book> row = new TableRow<>();
+		    row.setOnMouseClicked(event -> {
+		        if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+		            Book rowData = row.getItem();
+		            System.out.println(rowData);
+		            basket.remove(rowData);    
+		        }
+		    });
+		    return row ;
+		});
 		
 		// 1. Wrap the ObservableList in a FilteredList (initially display all data)
 
@@ -803,13 +823,11 @@ public class LibraryController implements Initializable {
 					
 					//show individual customer history
 				ArrayList<Book> borrowCheck = library.getBorrowedBooks(tempCst);
+				
 				if(borrowCheck != null) {
 					cstCurrentBorrowedTable.setItems(getObsBooks(library.getBorrowedBooks(tempCst)));
-					for (Book book : borrowCheck) {
-						cstCurrentBookRecs.add(library.findRecord(tempCst, book));
-							cstCurrentBorrowedDelayTable.setItems(cstCurrentBookRecs);
+					cstCurrentBorrowedDelayTable.setItems(getObsRecords(library.getBorrowedRecords(tempCst)));
 					}
-				}
 				
 				ArrayList<Book> fetchedBook = library.getCustomerHistoryArray(tempCst);
 				if (!fetchedBook.isEmpty()) {
@@ -833,6 +851,9 @@ public class LibraryController implements Initializable {
 				cstCurrentBorrowedTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 			}
 		});
+		
+		//time string not allowed//
+
 		
 	}
 
@@ -1417,7 +1438,7 @@ public class LibraryController implements Initializable {
 				borrowCheck = library.getBorrowedBooks(tempCst);
 					if(borrowCheck != null) {
 						cstCurrentBorrowedTable.setItems(getObsBooks(library.getBorrowedBooks(tempCst)));
-						cstCurrentBorrowedDelayTable.setItems(cstCurrentBookRecs);
+						cstCurrentBorrowedDelayTable.setItems(getObsRecords(library.getBorrowedRecords(tempCst)));
 					}
 				}
 				
@@ -1466,6 +1487,16 @@ public class LibraryController implements Initializable {
 		System.out.println(allRecs.get(i).toString());
 		return allRecs.get(i);
 	
+	}
+	
+	@FXML 
+	private void advanceTimeEvent(ActionEvent event) {
+		if(event.getSource().equals(advanceTimeBtn)) {
+			System.out.println(library.getDate());
+		libraryMenu.advanceTime(Integer.parseInt(toTheFutureField.getText()));
+		System.out.println(library.getDate());
+		}
+		refreshTable();
 	}
 	
 
