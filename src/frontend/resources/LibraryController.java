@@ -111,11 +111,11 @@ public class LibraryController implements Initializable {
 	@FXML private TableColumn<Book, String> borrowLateCol;
 	@FXML private TableColumn<Book, String> borrowIDCol;
 	@FXML private TableColumn<Book, String> borrowNameCol;
-	@FXML private TableColumn<Library, Record> borrowLateFeeCol;
+	@FXML private TableColumn<Book, Record> borrowLateFeeCol;
 	
-	@FXML private TableView<Library> cstCurrentBorrowedDelayTable;
-	@FXML private TableColumn<Library, String> borrowDelayDaysCol;
-	@FXML private TableColumn<Library, Long>  borrowDelayFeeCol;
+	@FXML private TableView<Record> cstCurrentBorrowedDelayTable;
+	@FXML private TableColumn<Record, String> borrowDelayDaysCol;
+	@FXML private TableColumn<Record, String>  borrowDelayFeeCol;
 	
 	//popular books
 	@FXML private TableView<Book> popularBooksTable;
@@ -317,15 +317,16 @@ public class LibraryController implements Initializable {
 		});
 		
 //////////////////////Delay Column/////////////////////////
-		borrowDelayDaysCol.setCellValueFactory( new Callback<TableColumn.CellDataFeatures<Library,String>, ObservableValue<String>>() {
+		borrowDelayDaysCol.setCellValueFactory( new Callback<TableColumn.CellDataFeatures<Record,String>, ObservableValue<String>>() {
 			@Override
-			public ObservableValue<String> call(CellDataFeatures<Library, String> param) {
-				Library library = param.getValue();
-				Record record = findRecord();
-				Book chosenBook = cstCurrentBorrowedTable.getSelectionModel().getSelectedItem();
-				long daysLate = library.exceededDays(record);
-				SimpleStringProperty convertedDays = getStringProperty(Long.toString(daysLate));
-				return convertedDays;
+			public ObservableValue<String> call(CellDataFeatures<Record, String> param) {
+				Customer customer = tempCst;
+				Record record = param.getValue();
+				SimpleStringProperty notDelayed = getStringProperty("0");
+				long delayDays = library.exceededDays(record);
+				SimpleStringProperty convertedDays = getStringProperty(Long.toString(library.exceededDays(record)));
+				if (delayDays > 0) { return convertedDays; }
+				else { return notDelayed; }
 			}
 		});
 		
@@ -644,9 +645,7 @@ public class LibraryController implements Initializable {
 				genreFilterField.textProperty()));
 		
 		//binding cstcurrentborrowed with delay///////////////////////
-		
-		
-		
+
 		//adding books to basket//
 		bookTable.setRowFactory( rawr -> {
 		    TableRow<Book> row = new TableRow<>();
@@ -1061,7 +1060,7 @@ public class LibraryController implements Initializable {
 					alert.setContentText("Book correctly added.");
 
 					alert.showAndWait();
-					libraryMenu.addBook("", Title.getText(), Author.getText(), Genre.getText(),
+					libraryMenu.addBook(ISBN.getText(), Title.getText(), Author.getText(), Genre.getText(),
 							Publisher.getText(), Shelf.getText());
 					refreshTable();
 				}
