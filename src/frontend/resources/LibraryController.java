@@ -180,6 +180,7 @@ public class LibraryController implements Initializable {
 	
 	private FilteredList<Book> filteredBooks;
 	private FilteredList<Customer> filteredCustomers;
+	ObservableList<Record> cstCurrentBookRecs = FXCollections.observableArrayList();
 	
 	private SortedList<Book> sortedBooks;
 	private SortedList<Customer> sortedCustomers;
@@ -222,6 +223,15 @@ public class LibraryController implements Initializable {
 		this.libraryMenu = new LibraryMenu();
 		this.library = new Library();
 		this.basket = FXCollections.observableArrayList();
+		
+		if (tempCst != null) {
+		ArrayList<Book> borrowCheck = library.getBorrowedBooks(tempCst);
+		if(borrowCheck != null) {
+			for (Book book : borrowCheck) {
+				cstCurrentBookRecs.add(library.findRecord(tempCst, book));
+				}
+			}
+		}
 		
 		////////////////////////////////////////////////////////////////////////////
 		bookIDCol.setCellValueFactory (new Callback<TableColumn.CellDataFeatures<Book, Integer>, ObservableValue<Integer>>() {
@@ -327,6 +337,21 @@ public class LibraryController implements Initializable {
 				SimpleStringProperty convertedDays = getStringProperty(Long.toString(library.exceededDays(record)));
 				if (delayDays > 0) { return convertedDays; }
 				else { return notDelayed; }
+			}
+		});
+		borrowDelayFeeCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Record,String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Record, String> param){
+				Record record = param.getValue();
+				SimpleStringProperty noFee = getStringProperty("0");
+				long fee = library.lateReturnCharge(record);
+				SimpleStringProperty convertedFee = getStringProperty(Long.toString(library.lateReturnCharge(record)));
+				if (fee > 0) {
+				return convertedFee;
+				}
+				else {
+				return noFee;
+				}
 			}
 		});
 		
@@ -597,11 +622,13 @@ public class LibraryController implements Initializable {
 		delayDaysCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Record,String>, ObservableValue<String>>() {
 			@Override
 			public ObservableValue<String> call(CellDataFeatures<Record, String> param){
+//				ArrayList<Book> borrowCheck = library.getBorrowedBooks(tempCst);
 				Record record = param.getValue();
 				SimpleStringProperty notDelayed = getStringProperty("0");
 				long delayDays = library.exceededDays(record);
 				SimpleStringProperty convertedDays = getStringProperty(Long.toString(library.exceededDays(record)));
 				if (delayDays > 0) { return convertedDays; }
+				
 				else { return notDelayed; }
 			}
 		});
@@ -667,7 +694,7 @@ public class LibraryController implements Initializable {
 
 		filteredBooks = new FilteredList<>(getObsBooks(library.getAvailableBooks()), p -> true);
 		filteredCustomers = new FilteredList<>(getObsCustomers(library.getCustomersList()), p -> true);
-		ObservableList<Record> delayedDays = FXCollections.observableArrayList();
+		
 		
 		// 2. Set the filter Predicate whenever the filter changes.
 		// bind the filters to each other so the predicates of each are put into 1
@@ -699,7 +726,6 @@ public class LibraryController implements Initializable {
 		sortedRecords = new SortedList<>(getObsRecords(library.getRecords()));
 		
 		
-	
 		
 		// 4. Bind the SortedList comparator to the TableView comparator.
 		sortedBooks.comparatorProperty().bind(bookTable.comparatorProperty());
@@ -712,7 +738,7 @@ public class LibraryController implements Initializable {
 		bookTable.setItems(sortedBooks);
 		basketTable.setItems(basket);
 		customerTable.setItems(sortedCustomers);
-//		cstCurrentBorrowedDelayTable.setItems(delayedBooks);
+		
 		
 		allBorrowedBooksTable.setItems(sortedAllBorrowed);
 		popularBooksTable.setItems(sortedPopularBooks);
@@ -779,6 +805,10 @@ public class LibraryController implements Initializable {
 				ArrayList<Book> borrowCheck = library.getBorrowedBooks(tempCst);
 				if(borrowCheck != null) {
 					cstCurrentBorrowedTable.setItems(getObsBooks(library.getBorrowedBooks(tempCst)));
+					for (Book book : borrowCheck) {
+						cstCurrentBookRecs.add(library.findRecord(tempCst, book));
+							cstCurrentBorrowedDelayTable.setItems(cstCurrentBookRecs);
+					}
 				}
 				
 				ArrayList<Book> fetchedBook = library.getCustomerHistoryArray(tempCst);
@@ -792,10 +822,10 @@ public class LibraryController implements Initializable {
 					genreLabel.setText("");
 					publisherLabel.setText("");
 					cstHistoryTable.getItems().clear();
+					}
 				}
-			}
-			}
-			});
+			}	
+		});
 		
 		cstCurrentBorrowedTable.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
@@ -1050,8 +1080,8 @@ public class LibraryController implements Initializable {
 			Optional<String> result = dialog.showAndWait();
 			if (result.isPresent()) {
 				Boolean existing = false;
-				Book newBook = new Book("", Title.getText(), Author.getText(), Shelf.getText(),
-						Publisher.getText(), Genre.getText());
+//				Book newBook = new Book("", Title.getText(), Author.getText(), Shelf.getText(),
+//						Publisher.getText(), Genre.getText());
 
 				if (!bookFieldsAreEmpty( Title, Author, Shelf, Publisher, Genre)) {
 					Alert alert = new Alert(AlertType.INFORMATION);
@@ -1387,6 +1417,7 @@ public class LibraryController implements Initializable {
 				borrowCheck = library.getBorrowedBooks(tempCst);
 					if(borrowCheck != null) {
 						cstCurrentBorrowedTable.setItems(getObsBooks(library.getBorrowedBooks(tempCst)));
+						cstCurrentBorrowedDelayTable.setItems(cstCurrentBookRecs);
 					}
 				}
 				
