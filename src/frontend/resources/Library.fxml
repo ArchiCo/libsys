@@ -489,6 +489,8 @@
                                                       <TableColumn fx:id="dateTakenCol" prefWidth="75.0" text="Date Taken " />
                                                       <TableColumn fx:id="dateDueCol" prefWidth="75.0" text="Date Due" />
                                                       <TableColumn fx:id="dateReturnCol" prefWidth="75.0" text="Return Date" />
+                                                      <TableColumn fx:id="delayFeeCol" prefWidth="75.0" text="Delay Fee" />
+                                                      <TableColumn fx:id="delayDaysCol" prefWidth="75.0" text="Days Delayed" />
                                                   </columns>
                                                    <columnResizePolicy>
                                                       <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

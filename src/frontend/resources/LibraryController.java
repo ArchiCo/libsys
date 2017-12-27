@@ -148,6 +148,8 @@ public class LibraryController implements Initializable {
 	@FXML private TableColumn<Record, String> dateTakenCol;
 	@FXML private TableColumn<Record, String> dateDueCol;
 	@FXML private TableColumn<Record, String> dateReturnCol;
+	@FXML private TableColumn<Record, String> delayFeeCol;
+	@FXML private TableColumn<Record, String> delayDaysCol;
 	
 	// search filter fields
 	@FXML private TextField IDFilterField;
@@ -574,6 +576,32 @@ public class LibraryController implements Initializable {
 				else {
 				return notReturned;
 				}
+			}
+		});
+		delayFeeCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Record,String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Record, String> param){
+				Record record = param.getValue();
+				SimpleStringProperty noFee = getStringProperty("0");
+				long fee = library.lateReturnCharge(record);
+				SimpleStringProperty convertedFee = getStringProperty(Long.toString(library.lateReturnCharge(record)));
+				if (fee > 0) {
+				return convertedFee;
+				}
+				else {
+				return noFee;
+				}
+			}
+		});
+		delayDaysCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Record,String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Record, String> param){
+				Record record = param.getValue();
+				SimpleStringProperty notDelayed = getStringProperty("0");
+				long delayDays = library.exceededDays(record);
+				SimpleStringProperty convertedDays = getStringProperty(Long.toString(library.exceededDays(record)));
+				if (delayDays > 0) { return convertedDays; }
+				else { return notDelayed; }
 			}
 		});
 		
