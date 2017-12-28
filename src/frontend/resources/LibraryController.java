@@ -595,11 +595,13 @@ public class LibraryController implements Initializable {
 			public void changed(ObservableValue<? extends Book> observable, Book oldValue, Book newValue) {
 
 				selectedBorrowed = cstCurrentBorrowedTable.getSelectionModel().getSelectedItem();
-				if (!selectedBorrowed.equals(null))
+				if (selectedBorrowed!=null)
 					try {
 						returnBookBtn.setDisable(false);
 					System.out.println(tempCst.getName() + " is borrowing " + selectedBorrowed.getTitle());}
 				catch (Exception e) {System.out.println("Hey");}
+				else if (selectedBorrowed==null)
+					returnBookBtn.setDisable(true);
 			}
 		});
 
