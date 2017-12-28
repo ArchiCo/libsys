@@ -708,8 +708,15 @@ public class LibraryController implements Initializable {
 		custNameField.textProperty().addListener((observable, oldValue, newValue) -> {});
 				
 		//binding disabled property to tableview size//
+		//disabling lendbookbtn when there are no books in basket//
+		//disabling all other relevant buttons
 		lendBookBtn.disableProperty().bind(Bindings.size(basket).isEqualTo(0));
-
+		editBookBtn.disableProperty().bind(bookTable.getSelectionModel().selectedItemProperty().isNull());
+		removeBookBtn.disableProperty().bind(bookTable.getSelectionModel().selectedItemProperty().isNull());
+		//customer table disable buttons//
+		editCustomerBtn.disableProperty().bind(customerTable.getSelectionModel().selectedItemProperty().isNull());		
+		removeCustomerBtn.disableProperty().bind(customerTable.getSelectionModel().selectedItemProperty().isNull());
+		returnBookBtn.disableProperty().bind(cstCurrentBorrowedTable.getSelectionModel().selectedItemProperty().isNull());
 		// 3. Wrap the FilteredList in a SortedList.
 		sortedBooks = new SortedList<>(filteredBooks);
 		sortedCustomers = new SortedList<>(filteredCustomers);
@@ -780,10 +787,6 @@ public class LibraryController implements Initializable {
 			@Override
 			public void changed(ObservableValue<? extends Customer> observable, Customer oldValue, Customer newValue) {
 				
-//				ObservableList<Book> customerHistoryArray = FXCollections.observableArrayList();
-			
-			
-	//			sortedCstCurrentBorrowed = new SortedList<>(getObsBooks(library.getBorrowedBooks(tempCst)));
 				tempCst = customerTable.getSelectionModel().getSelectedItem();
 				System.out.println("customer row " + customerTable.getSelectionModel().getSelectedIndex());
 				if (newValue != null) {
@@ -791,7 +794,6 @@ public class LibraryController implements Initializable {
 					cstNameLabel.setText(newValue.getName());
 					cstPhoneLabel.setText(Integer.toString(newValue.getPhoneNumber()));
 					cstAddressLabel.setText(newValue.getAddress());
-					
 					
 					//show individual customer history
 				ArrayList<Book> borrowCheck = library.getBorrowedBooks(tempCst);
@@ -822,13 +824,8 @@ public class LibraryController implements Initializable {
 			public void handle(MouseEvent event) {
 				cstCurrentBorrowedTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 			}
-		});
-		
-		//time string not allowed//
-
-		
+		});	
 	}
-
 	public void setLibraryMenu(LibraryMenu libraryMenu) {
 		this.libraryMenu = libraryMenu;
 	}
@@ -857,7 +854,6 @@ public class LibraryController implements Initializable {
 			window.setScene(registerScene);
 			window.show();
 		}
-
 	}
 
 	@FXML
@@ -865,9 +861,6 @@ public class LibraryController implements Initializable {
 		if(tempCst != null) {
 		if (event.getSource().equals(editCustomerBtn)) {
 			TextInputDialog dialog = new TextInputDialog("Edit Customer");
-			// dialog.setTitle("Text Input Dialog");
-			// dialog.setHeaderText("Look, a Text Input Dialog");
-			// dialog.setContentText("Please enter your name:");
 
 			GridPane grid = new GridPane();
 			grid.setHgap(10);
@@ -1015,13 +1008,6 @@ public class LibraryController implements Initializable {
 		}
 	}
 
-/*
-	 * Alert alert = new Alert(AlertType.ERROR); alert.setTitle("ERROR");
-	 * alert.setHeaderText("Error during adding a customer");
-	 * alert.setContentText("The customer is already registered in the library.");
-	 * 
-	 * alert.showAndWait(); } } }
-	 */
 	@FXML
 	private void addBookEvent(ActionEvent event) throws IOException {
 
@@ -1073,8 +1059,6 @@ public class LibraryController implements Initializable {
 			Optional<String> result = dialog.showAndWait();
 			if (result.isPresent()) {
 				Boolean existing = false;
-//				Book newBook = new Book("", Title.getText(), Author.getText(), Shelf.getText(),
-//						Publisher.getText(), Genre.getText());
 
 				if (!bookFieldsAreEmpty( Title, Author, Shelf, Publisher, Genre)) {
 					Alert alert = new Alert(AlertType.INFORMATION);
@@ -1172,18 +1156,11 @@ public class LibraryController implements Initializable {
 					if (!Genre.getText().isEmpty())
 						modifyIntoThis.setGenre(Genre.getText());
 					
-					//tempBook=bookTable.getSelectionModel().getSelectedItem();
-//					library.findBook(tempBook.getLid()).setTitle(Title.getText());
-//					library.findBook(tempBook.getLid()).setAuthor(Author.getText());
-//					library.findBook(tempBook.getLid()).setShelf(Shelf.getText());
-//					library.findBook(tempBook.getLid()).setPublisher(Publisher.getText());
-//					library.findBook(tempBook.getLid()).setGenre(Genre.getText());
 					library.changeBookInformation(modifyIntoThis);
 					refreshTable();
 				}
 			}
 	}
-
 
 	@FXML
 	public void removeBookEvent(ActionEvent event) {

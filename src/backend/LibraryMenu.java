@@ -366,6 +366,7 @@ public class LibraryMenu extends Application{
 			System.out.println("");
 			this.library.lendBook(foundCustomer, foundBook);
 			System.out.println("Please return the book in 2 weeks.");
+			System.out.println();
 
 		}
 	}
