@@ -363,39 +363,7 @@ public class LibraryController implements Initializable {
 			}
 		});
 		
-/*		borrowLateCol.setCellValueFactory( new Callback<TableColumn.CellDataFeatures<Customer,String>, ObservableValue<String>>() {
-			@Override
-			public ObservableValue<String> call(CellDataFeatures<Customer, String> param) {
-				Customer customer = param.getValue();
-				SimpleStringProperty convertedCstId = getStringProperty(customer.());
-				return convertedCstId;
-			}
-		});
-*/		
-/*		borrowLateFeeCol.setCellValueFactory ( new Callback<TableColumn.CellDataFeatures<Library, Record>, ObservableValue>() {
-			@Override
-			public ObservableValue call(CellDataFeatures param) {
-				
-				ObservableValue<Record> convertedFee = new SimpleObjectProperty<>(findRecord());
-				return convertedFee;
-			}
-		});
 
-		borrowLateFeeCol.setCellFactory(column-> {
-			return new TableCell<Library,Record>() {
-				@Override
-				protected void updateItem(Record item, boolean empty) {
-					super.updateItem(item, empty);
-				if(item == null || empty) {
-					setText(null);
-				}
-				else {
-					setText(Long.toString(item.getFine()));
-				}
-				}
-			};
-		});
-*/
 		cstHistBookIDCol.setCellValueFactory( new Callback<TableColumn.CellDataFeatures<Book,String>, ObservableValue<String>>() {
 			@Override
 			public ObservableValue<String> call(CellDataFeatures<Book, String> param){
@@ -710,6 +678,7 @@ public class LibraryController implements Initializable {
 		    return row ;
 		});
 		
+		
 		// 1. Wrap the ObservableList in a FilteredList (initially display all data)
 
 		filteredBooks = new FilteredList<>(getObsBooks(library.getAvailableBooks()), p -> true);
@@ -737,6 +706,9 @@ public class LibraryController implements Initializable {
 		genreFilterField.textProperty().addListener((observable, oldvalue, newvalue) -> {});
 
 		custNameField.textProperty().addListener((observable, oldValue, newValue) -> {});
+				
+		//binding disabled property to tableview size//
+		lendBookBtn.disableProperty().bind(Bindings.size(basket).isEqualTo(0));
 
 		// 3. Wrap the FilteredList in a SortedList.
 		sortedBooks = new SortedList<>(filteredBooks);
@@ -1249,7 +1221,6 @@ public class LibraryController implements Initializable {
 			lendBookController.setBasket(this.basket);
 //			lendBookController.setLibraryMenu(libraryMenu);
 //			lendBookController.setLibraryController(this);
-	
 			
 			Scene newScene = new Scene(root);
 			window.setTitle("Choose Customer");
@@ -1278,13 +1249,15 @@ public class LibraryController implements Initializable {
 				grid.setPadding(new Insets(20, 150, 10, 10));
 
 				//search the record
-				Record cstRec=findRecord();
+				Book selectedBook = cstCurrentBorrowedTable.getSelectionModel().getSelectedItem();
+				Record cstRec = findRecord();
+						//library.findRecord(tempCst, selectedBook);
 				
-				grid.add(new Label("customer: " + tempCst.getName()), 0, 0);
-				grid.add(new Label("book: " + cstCurrentBorrowedTable.getSelectionModel().getSelectedItem().getTitle()), 0, 1);
-				grid.add(new Label("date borrowed: " + cstRec.getDateTaken()), 0,2);
-				grid.add(new Label("date returned: " + cstRec.getDateReturned()), 0, 3);
-				grid.add(new Label("fee: " + library.lateReturnCharge(cstRec)), 0, 4);
+				grid.add(new Label("Customer: " + tempCst.getName()), 0, 0);
+				grid.add(new Label("Book: " + selectedBook.getTitle()), 0, 1);
+				grid.add(new Label("Date Borrowed: " + cstRec.getDateTaken()), 0,2);
+				grid.add(new Label("Date Returned: " + cstRec.getDateReturned()), 0, 3);
+				grid.add(new Label("Fee: " + library.lateReturnCharge(cstRec)), 0, 4);
 				
 				dialog.getDialogPane().setContent(grid);
 
@@ -1480,19 +1453,17 @@ public class LibraryController implements Initializable {
 	}
 	
 	public Record findRecord() {
-		int i;
-		ArrayList<Record> allRecs = library.getRecords();
-		for (i=0; allRecs.get(i).getCustomerId() != tempCst.getCustomerId() && allRecs.get(i).getLid()
-				!= cstCurrentBorrowedTable.getSelectionModel().getSelectedItem().getLid(); i++);
-		System.out.println(allRecs.get(i).toString());
-		return allRecs.get(i);
+		Customer chosenCustomer = customerTable.getSelectionModel().getSelectedItem();
+		Book chosenBook = cstCurrentBorrowedTable.getSelectionModel().getSelectedItem();
+		return library.findRecord(chosenCustomer, chosenBook);
+		
 	
 	}
 	
 	@FXML 
 	private void advanceTimeEvent(ActionEvent event) {
-		if(event.getSource().equals(advanceTimeBtn)) {
-			System.out.println(library.getDate());
+		if(event.getSource().equals(advanceTimeBtn) && !toTheFutureField.getText().isEmpty()) {
+		System.out.println(library.getDate());
 		libraryMenu.advanceTime(Integer.parseInt(toTheFutureField.getText()));
 		System.out.println(library.getDate());
 		}

@@ -4,6 +4,8 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import com.sun.java.swing.plaf.windows.resources.windows;
+
 import backend.Book;
 import backend.Customer;
 import backend.Library;
@@ -112,6 +114,10 @@ public class LendBookController implements Initializable{
 			System.out.println(chosenCustomer);
 			Stage window = 	(Stage) lendBtn.getScene().getWindow();
 			basket.clear();
+			window.close();
+		}
+		else {
+			Stage window = (Stage) lendBtn.getScene().getWindow();
 			window.close();
 		}
 

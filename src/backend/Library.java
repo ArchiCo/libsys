@@ -146,6 +146,7 @@ public class Library {
 			LocalDate dueDate = today.plusDays(14);
 			Record newRecord = new Record(regCustomer.getCustomerId(), book.getLid(), today, dueDate);
 			database.records().add(newRecord);
+			System.out.println(newRecord);
 			//this.records.add(0, newRecord);
 			//this.listLentBooks.add(book);
 			//this.listBooks.remove(book);
