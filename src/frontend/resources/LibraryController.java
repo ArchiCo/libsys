@@ -1231,9 +1231,10 @@ public class LibraryController implements Initializable {
 		confirmedReturn.setHeaderText("Gotta give bakk em buhkz");
 		confirmedReturn.setContentText("Return?");
 		Optional <ButtonType> result = confirmedReturn.showAndWait();
+		
 		if (result.get() == ButtonType.OK) {
-			ObservableList<Book> booklist = cstCurrentBorrowedTable.getSelectionModel().getSelectedItems();
-			for (int i = 0; i < booklist.size(); i++) {
+//			ObservableList<Book> booklist = cstCurrentBorrowedTable.getSelectionModel().getSelectedItems();
+			if (cstCurrentBorrowedTable.getSelectionModel().getSelectedItems().size() == 1) {
 				TextInputDialog dialog = new TextInputDialog("Return a book");
 				GridPane grid = new GridPane();
 				grid.setHgap(10);
@@ -1242,7 +1243,7 @@ public class LibraryController implements Initializable {
 
 				//search the record
 				Book selectedBook = cstCurrentBorrowedTable.getSelectionModel().getSelectedItem();
-				Record cstRec = findRecord();
+				Record cstRec = findRecord(tempCst, selectedBook.getLid());
 						//library.findRecord(tempCst, selectedBook);
 				
 				grid.add(new Label("Customer: " + tempCst.getName()), 0, 0);
@@ -1259,21 +1260,50 @@ public class LibraryController implements Initializable {
 					confirmation.setTitle("Book(s) returned");
 					confirmation.setHeaderText(null);
 					confirmation.setContentText("Book(s) Returned");
-//					for (Book book : cstCurrentBorrowedTable.getSelectionModel().getSelectedItems()) {
-					if (cstCurrentBorrowedTable.getSelectionModel().getSelectedItems().size() == 1) {
-						libraryMenu.returnBook(tempCst, cstCurrentBorrowedTable.getSelectionModel().getSelectedItem());
+					library.returnBook(selectedBook, cstRec);
+					confirmation.showAndWait();
 					}
-					if (cstCurrentBorrowedTable.getSelectionModel().getSelectedItems().size() > 1) {
-						for (Book book : cstCurrentBorrowedTable.getSelectionModel().getSelectedItems()) {
-							libraryMenu.returnBook(tempCst, book);
-						}
-					}
+			
+			}
+			if (cstCurrentBorrowedTable.getSelectionModel().getSelectedItems().size() > 1) {
+				for (Book book : cstCurrentBorrowedTable.getSelectionModel().getSelectedItems()) {
+					TextInputDialog dialog = new TextInputDialog("Return a book");
+					GridPane grid = new GridPane();
+					grid.setHgap(10);
+					grid.setVgap(10);
+					grid.setPadding(new Insets(20, 150, 10, 10));
+
+					//search the record
+					Record cstRec = findRecord(tempCst, book.getLid());
+							//library.findRecord(tempCst, selectedBook);
+					
+					grid.add(new Label("Customer: " + tempCst.getName()), 0, 0);
+					grid.add(new Label("Book: " + book.getTitle()), 0, 1);
+					grid.add(new Label("Date Borrowed: " + cstRec.getDateTaken()), 0,2);
+					grid.add(new Label("Date Returned: " + cstRec.getDateReturned()), 0, 3);
+					grid.add(new Label("Fee: " + library.lateReturnCharge(cstRec)), 0, 4);
+					
+					dialog.getDialogPane().setContent(grid);
+
+					Optional<String> result1 = dialog.showAndWait();
+					if (result1.isPresent()) {
+						Alert confirmation = new Alert(AlertType.INFORMATION);
+						confirmation.setTitle("Book(s) returned");
+						confirmation.setHeaderText(null);
+						confirmation.setContentText("Book(s) Returned");
+						library.returnBook(book, cstRec);
 						confirmation.showAndWait();
-					}
+						}
+				
+				}
+			}
+			
+//			for (int i = 0; i < booklist.size(); i++) {
+				
 			}
 			refreshTable();	
 		}
-	}
+//	}
 	
 ////////////////////////////////////////TextField Checks//////////////////////////////////////////
 	public Boolean bookFieldsAreEmpty(TextField a, TextField b, TextField c, TextField d, TextField e) {
@@ -1451,12 +1481,15 @@ public class LibraryController implements Initializable {
 
 	}
 	
-	public Record findRecord() {
-		Customer chosenCustomer = customerTable.getSelectionModel().getSelectedItem();
-		Book chosenBook = cstCurrentBorrowedTable.getSelectionModel().getSelectedItem();
-		return library.findRecord(chosenCustomer, chosenBook);
-		
-	
+	public Record findRecord(Customer chosenCustomer, int lid) {
+		ArrayList<Record> borrowedRecs = library.getBorrowedRecords(chosenCustomer);
+		Record foundRec = borrowedRecs.get(0);
+		for (Record record : borrowedRecs) {
+			if (record.getLid() == lid) {
+				foundRec = record;
+			}
+		}
+		return foundRec;
 	}
 	
 	@FXML 

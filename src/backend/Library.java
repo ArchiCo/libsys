@@ -351,6 +351,7 @@ public class Library {
 			return null;
 		}
 	}
+	//first takes all of the records that the same customer borrowed with the same exact book
 	public ArrayList<Record> findSameCustomerBookRecList(Customer customer, Book book) {
 		ArrayList<Record> foundRecs = new ArrayList<>();
 		for (Record record : database.records().fetchAll()) {
@@ -370,7 +371,7 @@ public class Library {
 				return null;
 			}
 */
-	
+	//second takes only the latest of all of these records to return 
 	public Record findLatestBorrowedRecord(ArrayList<Record> foundRecs) {
 		Record latestRec = foundRecs.get(0);
 		if (foundRecs != null) {
