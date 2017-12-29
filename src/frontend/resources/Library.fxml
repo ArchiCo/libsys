@@ -346,17 +346,19 @@
                                                                         <content>
                                                                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                                                                  <children>
-                                                                                    <TableView fx:id="cstCurrentBorrowedTable" layoutX="14.0" layoutY="15.0" prefHeight="200.0" prefWidth="429.0">
+                                                                                    <TableView fx:id="cstCurrentBorrowedTable" layoutX="14.0" layoutY="15.0" prefHeight="200.0" prefWidth="330.0">
                                                                                       <columns>
-                                                                                        <TableColumn fx:id="borrowIDCol" prefWidth="126.0" text="ID" />
-                                                                                          <TableColumn fx:id="borrowNameCol" prefWidth="319.0" text="Borrowed book name" />
+                                                                                        <TableColumn fx:id="borrowIDCol" prefWidth="99.99999141693115" text="ID" />
+                                                                                          <TableColumn fx:id="borrowNameCol" prefWidth="227.99990844726562" text="Borrowed book name" />
                                                                                       </columns>
                                                                                        <columnResizePolicy>
                                                                                           <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                                                                        </columnResizePolicy>
                                                                                     </TableView>
-                                                                                    <TableView fx:id="cstCurrentBorrowedDelayTable" layoutX="460.0" layoutY="15.0" prefHeight="200.0" prefWidth="253.0">
+                                                                                    <TableView fx:id="cstCurrentBorrowedDelayTable" layoutX="356.0" layoutY="15.0" prefHeight="200.0" prefWidth="357.0">
                                                                                        <columns>
+                                                                                          <TableColumn fx:id="borrowDelayLidCol" prefWidth="75.0" text="LID" />
+                                                                                          <TableColumn fx:id="borrowDelayAidCol" prefWidth="75.0" text="Archive ID" />
                                                                                           <TableColumn fx:id="borrowDelayDaysCol" prefWidth="75.0" text="Days Delayed" />
                                                                                           <TableColumn fx:id="borrowDelayFeeCol" prefWidth="75.0" text="Delay Fee" />
                                                                                        </columns>

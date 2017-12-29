@@ -132,14 +132,6 @@ public class Library {
 		}
 	}
 	
-	public Record findRecord(int aid) {
-		Record record = database.records().fetchById(aid);
-		if (record != null) {
-			return record;
-		} else {
-			return null;
-		}
-	}
 	
 	public void lendBook(Customer regCustomer, Book book) {
 		if (regCustomer != null && book != null) {
@@ -326,8 +318,11 @@ public class Library {
 	public ArrayList<Record> getBorrowedRecords(Customer customer) {
 		ArrayList<Book> borrowedBooks = getBorrowedBooks(customer);
 		ArrayList<Record> borrowedRecords = new ArrayList<>();
+		ArrayList<Record> sameBorrowedBookRecs = new ArrayList<>();
+		
 		for (Book book : borrowedBooks) {
-		borrowedRecords.add(findRecord(customer, book));
+		sameBorrowedBookRecs = findSameCustomerBookRecList(customer, book);
+		borrowedRecords.add(findLatestBorrowedRecord(sameBorrowedBookRecs));
 		}
 		return borrowedRecords;
 	}
@@ -339,13 +334,59 @@ public class Library {
 	
 	public Record findRecord(Customer regCustomer, Book book) {
 		//for (Record customer : records) {
-		for (Record customer : database.records().fetchAll()) {
-			if (customer != null && customer.getCustomerId().equals(regCustomer.getCustomerId()))
-				if (customer.getLid() == book.getLid())
-					return customer;
-		}
+		for (Record record : database.records().fetchAll()) {
+			if (record != null && record.getCustomerId().equals(regCustomer.getCustomerId()))
+				if (record.getLid() == book.getLid())
+					return record;
+			}
 		return null;
 	}
+	
+	
+	public Record findRecord(int aid) {
+		Record record = database.records().fetchById(aid);
+		if (record != null) {
+			return record;
+		} else {
+			return null;
+		}
+	}
+	public ArrayList<Record> findSameCustomerBookRecList(Customer customer, Book book) {
+		ArrayList<Record> foundRecs = new ArrayList<>();
+		for (Record record : database.records().fetchAll()) {
+			if (record != null && record.getCustomerId().equals(customer.getCustomerId())) {
+				if (record.getLid() == book.getLid()) {
+					foundRecs.add(record);
+					System.out.println(record);
+				}
+			}
+		}
+		return foundRecs;
+	}
+/*		if(foundRecs.size() > 1) {
+			return foundRecs;
+			}
+			else {
+				return null;
+			}
+*/
+	
+	public Record findLatestBorrowedRecord(ArrayList<Record> foundRecs) {
+		Record latestRec = foundRecs.get(0);
+		if (foundRecs != null) {
+		System.out.println(foundRecs.toString());
+		if(foundRecs.size() > 1) {
+		for (Record record : foundRecs) {
+			if (record.getArchiveId() > latestRec.getArchiveId()) {
+				latestRec = record;
+				}
+			}
+		}
+		}
+		return latestRec;
+	}
+		
+					
 
 	public ArrayList<Book> getPopularBooks() {
 		return popularBooks;
