@@ -102,14 +102,14 @@ public class LendBookController implements Initializable{
 		Optional <ButtonType> result = confirmedLend.showAndWait();
 		if (result.get() == ButtonType.OK ) {
 			Alert confirmation = new Alert(AlertType.INFORMATION);
-			confirmation.setTitle("Book Lent");
+			confirmation.setTitle("Book(s) Lent");
 			confirmation.setHeaderText(null);
-			confirmation.setContentText("Book Lent");
-			confirmation.showAndWait();
+			confirmation.setContentText("Please return the book(s) in 2 weeks. " + "\n" 
+					+ "Due Date: " + library.getDate().plusDays(14));
 			for(Book book : basket) {
 				libraryMenu.lendBook(chosenCustomer.getCustomerId(), book);
 				System.out.println(book);
-				
+				confirmation.showAndWait();
 			}
 			System.out.println(chosenCustomer);
 			Stage window = 	(Stage) lendBtn.getScene().getWindow();
