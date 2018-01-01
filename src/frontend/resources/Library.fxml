@@ -194,6 +194,7 @@
                                                             <Font name="System Bold" size="15.0" />
                                                          </font>
                                                       </Label>
+                                                      <Label layoutX="338.0" layoutY="19.0" text="double click to add or remove" />
                                                    </children>
                                                    <padding>
                                                       <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -271,8 +272,8 @@
                                                                         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="382.00001525878906" minWidth="10.0" prefWidth="217.3333740234375" />
                                                                         <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="479.66668701171875" minWidth="10.0" prefWidth="428.6666259765625" />
                                                                         <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="200.33331298828125" minWidth="0.0" prefWidth="48.99997965494788" />
-                                                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="179.33331298828125" minWidth="10.0" prefWidth="60.33331298828125" />
-                                                                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="237.33335367838538" minWidth="10.0" prefWidth="184.66666666666663" />
+                                                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="179.33331298828125" minWidth="10.0" prefWidth="10.999979654947879" />
+                                                                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="237.33335367838538" minWidth="10.0" prefWidth="232.33335367838538" />
                                                                      </columnConstraints>
                                                                      <rowConstraints>
                                                                         <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
@@ -343,6 +344,16 @@
                                                                            <font>
                                                                               <Font size="20.0" />
                                                                            </font>
+                                                                        </Label>
+                                                                        <Label text="Shift click to select multiple books" GridPane.columnIndex="4" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+                                                                           <GridPane.margin>
+                                                                              <Insets right="10.0" />
+                                                                           </GridPane.margin>
+                                                                        </Label>
+                                                                        <Label text="in currently borrowing" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="TOP">
+                                                                           <GridPane.margin>
+                                                                              <Insets right="10.0" />
+                                                                           </GridPane.margin>
                                                                         </Label>
                                                                      </children>
                                                                   </GridPane>
