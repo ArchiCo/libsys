@@ -797,7 +797,13 @@ public class LibraryController implements Initializable {
 		publisherFilterField.textProperty().addListener((observable, oldvalue, newvalue) -> {});
 		genreFilterField.textProperty().addListener((observable, oldvalue, newvalue) -> {});
 
-		custNameField.textProperty().addListener((observable, oldValue, newValue) -> {});
+		custNameField.textProperty().addListener((observable, oldValue, newValue) -> {
+			if(!custNameField.getText().isEmpty()) {
+				undoCstSelection();
+				cstCurrentBorrowedTable.getItems().clear();
+				cstCurrentBorrowedDelayTable.getItems().clear();
+			}
+		});
 				
 		// 3. Wrap the FilteredList in a SortedList.
 		sortedBooks = new SortedList<>(filteredBooks);
@@ -1344,11 +1350,11 @@ public class LibraryController implements Initializable {
 
 					Optional<String> result1 = dialog.showAndWait();
 					if (result1.isPresent()) {
+						library.returnBook(book, cstRec);
 						Alert confirmation = new Alert(AlertType.INFORMATION);
 						confirmation.setTitle("Book(s) returned");
 						confirmation.setHeaderText(null);
 						confirmation.setContentText("Book(s) Returned");
-						library.returnBook(book, cstRec);
 						confirmation.showAndWait();
 						}	
 					}
