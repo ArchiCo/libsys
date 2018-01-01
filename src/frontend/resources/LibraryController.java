@@ -1292,7 +1292,14 @@ public class LibraryController implements Initializable {
 				grid.add(new Label("Customer: " + tempCst.getName()), 0, 0);
 				grid.add(new Label("Book: " + selectedBook.getTitle()), 0, 1);
 				grid.add(new Label("Date Borrowed: " + cstRec.getDateTaken()), 0,2);
-				grid.add(new Label("Date Returned: " + cstRec.getDateReturned()), 0, 3);
+				
+				String dateReturn;
+				if (cstRec.getDateReturned() == null) {
+					dateReturn = "Today, right now, " + library.getDate().toString();
+				} else {
+					dateReturn = "null, error because i changed it and this is a problem now";
+				}
+				grid.add(new Label("Date Returned: " + dateReturn), 0, 3);	
 				grid.add(new Label("Fee: " + library.lateReturnCharge(cstRec)), 0, 4);
 				
 				dialog.getDialogPane().setContent(grid);
@@ -1322,7 +1329,15 @@ public class LibraryController implements Initializable {
 					grid.add(new Label("Customer: " + tempCst.getName()), 0, 0);
 					grid.add(new Label("Book: " + book.getTitle()), 0, 1);
 					grid.add(new Label("Date Borrowed: " + cstRec.getDateTaken()), 0,2);
-					grid.add(new Label("Date Returned: " + cstRec.getDateReturned()), 0, 3);
+					
+					String dateReturn;
+					if (cstRec.getDateReturned() == null) {
+						dateReturn = "Today, right now, " + library.getDate().toString();
+					}
+					else {
+						dateReturn = "null, error because i changed it and this is a problem now";
+					}
+					grid.add(new Label("Date Returned: " + dateReturn), 0, 3);
 					grid.add(new Label("Fee: " + library.lateReturnCharge(cstRec)), 0, 4);
 					
 					dialog.getDialogPane().setContent(grid);
@@ -1483,7 +1498,7 @@ public class LibraryController implements Initializable {
 				allBooksTable.setItems(sortedAllBooks);
 				
 			//secondary tables	refresh
-				cstCurrentBorrowedTable.getItems().clear();
+				
 				ArrayList<Book> borrowCheck;
 				if(tempCst != null) {
 				borrowCheck = library.getBorrowedBooks(tempCst);
@@ -1492,7 +1507,8 @@ public class LibraryController implements Initializable {
 						cstCurrentBorrowedDelayTable.setItems(getObsRecords(library.getBorrowedRecords(tempCst)));
 					}
 				}
-				cstHistoryTable.getItems().clear();
+				cstCurrentBorrowedTable.getItems().clear();
+				cstCurrentBorrowedDelayTable.getItems().clear();
 				
 				if(tempCst != null) {
 				ArrayList<Book> fetchedBook = library.getCustomerHistoryArray(tempCst);
@@ -1511,6 +1527,7 @@ public class LibraryController implements Initializable {
 					authorLabel.setText("");
 					genreLabel.setText("");
 					publisherLabel.setText("");
+					
 					cstHistoryTable.getItems().clear();
 					cstHistoryRecordsTable.getItems().clear();
 					}
