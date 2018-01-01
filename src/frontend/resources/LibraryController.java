@@ -15,6 +15,7 @@ import com.sun.javafx.scene.control.skin.IntegerFieldSkin;
 
 import backend.*;
 import database.structure.Column;
+import database.structure.Table;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
@@ -99,22 +100,27 @@ public class LibraryController implements Initializable {
 	@FXML private TableColumn<Customer, String> customerNameCol;
 
 	//Lent table
-	@FXML private TableView<Book> lentTable;
-	@FXML private TableColumn<Book, String> lentBookIDCol;
-	@FXML private TableColumn<Book, String> lentBookNameCol;
+//	@FXML private TableView<Book> lentTable;
+//	@FXML private TableColumn<Book, String> lentBookIDCol;
+//	@FXML private TableColumn<Book, String> lentBookNameCol;
 
 	// Customer borrowed books history
 	@FXML private TableView<Book> cstHistoryTable;
 	@FXML private TableColumn<Book, String> cstHistBookIDCol;
 	@FXML private TableColumn<Book, String> cstHistBookTitleCol;
-//	@FXML private TableColumn<Book, String> cstHistBookAuthorCol;
-//	@FXML private TableColumn<Book, String> cstHistBookGenreCol;
+	
+	//customer history records table
+	@FXML private TableView<Record> cstHistoryRecordsTable;
+	@FXML private TableColumn<Record, String> cstHistRecsLidCol;
+	@FXML private TableColumn<Record, String> cstHistRecsAidCol;
+	@FXML private TableColumn<Record, String> cstHistRecsDateBorrowedCol;	
+	@FXML private TableColumn<Record, String> cstHistRecsDateReturnedCol;
 	
 	// customer currently borrowed
 	@FXML private TableView<Book> cstCurrentBorrowedTable;
 	@FXML private TableColumn<Book, String> borrowIDCol;
 	@FXML private TableColumn<Book, String> borrowNameCol;
-	//delay table
+	// records delay table
 	@FXML private TableView<Record> cstCurrentBorrowedDelayTable;
 	@FXML private TableColumn<Record, String> borrowDelayDaysCol;
 	@FXML private TableColumn<Record, String> borrowDelayFeeCol;
@@ -134,8 +140,8 @@ public class LibraryController implements Initializable {
 	@FXML private TableColumn<Book, String> allBorrowAuthorCol;
 	@FXML private TableColumn<Book, String> allBorrowPublisherCol;
 	@FXML private TableColumn<Book, String> allBorrowGenreCol;
-	@FXML private TableColumn<Book, String> allBorrowDelayCol;
-	@FXML private TableColumn<Book, String> allBorrowDelayFeeCol;
+//	@FXML private TableColumn<Book, String> allBorrowDelayCol;
+//	@FXML private TableColumn<Book, String> allBorrowDelayFeeCol;
 	
 	//all Books
 	@FXML private TableView<Book> allBooksTable;
@@ -181,7 +187,7 @@ public class LibraryController implements Initializable {
 	@FXML private Label authorLabel;
 	@FXML private Label genreLabel;
 	@FXML private Label publisherLabel;
-	@FXML private Label publicationDateLabel;
+//	@FXML private Label publicationDateLabel;
 
 	// Customer details
 	@FXML private Label cstIDLabel;
@@ -439,6 +445,43 @@ public class LibraryController implements Initializable {
 				SimpleStringProperty convertedTitle = getStringProperty(book.getTitle());
 				return convertedTitle;
 			}});
+		//////////////customer history records table/////////////////////
+		cstHistRecsLidCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Record,String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Record, String> param){
+				Record record = param.getValue();
+				SimpleStringProperty convertedID = getStringProperty(Integer.toString(record.getLid()));
+				return convertedID;
+			}});
+		cstHistRecsAidCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Record,String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Record, String> param){
+				Record record = param.getValue();
+				SimpleStringProperty convertedAid = getStringProperty(Integer.toString(record.getArchiveId()));
+				return convertedAid;
+			}});
+		cstHistRecsDateBorrowedCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Record,String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Record, String> param){
+				Record record = param.getValue();
+				SimpleStringProperty convertedTaken = getStringProperty(record.getDateTaken().toString());
+				return convertedTaken;
+			}
+		});
+		cstHistRecsDateReturnedCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Record,String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Record, String> param){
+				Record record = param.getValue();
+				SimpleStringProperty notReturned = getStringProperty("Not Returned Yet");
+				LocalDate convertedReturn = record.getDateReturned();
+				if (convertedReturn != null) {
+				return getStringProperty(convertedReturn.toString());
+				}
+				else {
+				return notReturned;
+				}
+			}
+		});
 /*		cstHistBookAuthorCol.setCellValueFactory (new Callback<TableColumn.CellDataFeatures<Book, String>, ObservableValue<String>>() {
 			@Override
 			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
@@ -763,6 +806,7 @@ public class LibraryController implements Initializable {
 		sortedAllBorrowed = new SortedList<>(getObsBooks(library.getListLentBooks()));
 		sortedRecords = new SortedList<>(getObsRecords(library.getRecords()));
 		sortedAllBooks = new SortedList<>(getObsBooks(library.getListBooks()));
+		
 	
 		// 4. Bind the SortedList comparator to the TableView comparator.
 		sortedBooks.comparatorProperty().bind(bookTable.comparatorProperty());
@@ -838,6 +882,13 @@ public class LibraryController implements Initializable {
 				ArrayList<Book> fetchedBook = library.getCustomerHistoryArray(tempCst);
 				if (!fetchedBook.isEmpty()) {
 					cstHistoryTable.setItems(getObsBooks(library.getCustomerHistoryArray(tempCst)));
+					
+					//finding record for each history
+					ArrayList<Record> customerHistRecs = new ArrayList<>();
+					for (Book book : library.getCustomerHistoryArray(tempCst)) {
+						customerHistRecs.add(library.findRecord(tempCst, book));
+					}
+					cstHistoryRecordsTable.setItems(getObsRecords(customerHistRecs));
 				}
 				else {
 					LIDLabel.setText("");
@@ -846,6 +897,7 @@ public class LibraryController implements Initializable {
 					genreLabel.setText("");
 					publisherLabel.setText("");
 					cstHistoryTable.getItems().clear();
+					cstHistoryRecordsTable.getItems().clear();
 					}
 				}
 			}	
@@ -1446,6 +1498,21 @@ public class LibraryController implements Initializable {
 				ArrayList<Book> fetchedBook = library.getCustomerHistoryArray(tempCst);
 				if (!fetchedBook.isEmpty()) {
 					cstHistoryTable.setItems(getObsBooks(library.getCustomerHistoryArray(tempCst)));
+					//finding record for each history
+					ArrayList<Record> customerHistRecs = new ArrayList<>();
+					for (Book book : library.getCustomerHistoryArray(tempCst)) {
+						customerHistRecs.add(library.findRecord(tempCst, book));
+					}
+					cstHistoryRecordsTable.setItems(getObsRecords(customerHistRecs));
+					}
+				else {
+					LIDLabel.setText("");
+					titleLabel.setText("");
+					authorLabel.setText("");
+					genreLabel.setText("");
+					publisherLabel.setText("");
+					cstHistoryTable.getItems().clear();
+					cstHistoryRecordsTable.getItems().clear();
 					}
 				}
 				

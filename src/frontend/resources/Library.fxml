@@ -384,12 +384,12 @@
                                                                                           <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                                                                        </columnResizePolicy>
                                                                                     </TableView>
-                                                                                    <TableView layoutX="356.0" layoutY="15.0" prefHeight="200.0" prefWidth="377.0">
+                                                                                    <TableView fx:id="cstHistoryRecordsTable" layoutX="356.0" layoutY="15.0" prefHeight="200.0" prefWidth="377.0">
                                                                                       <columns>
-                                                                                        <TableColumn prefWidth="67.33331298828125" text="LID" />
-                                                                                        <TableColumn prefWidth="74.66671752929688" text="Archive ID" />
-                                                                                          <TableColumn prefWidth="108.66677856445312" text="Date Borrowed" />
-                                                                                          <TableColumn prefWidth="123.99995930989581" text="Date Returned" />
+                                                                                        <TableColumn fx:id="cstHistRecsLidCol" prefWidth="67.33331298828125" text="LID" />
+                                                                                        <TableColumn fx:id="cstHistRecsAidCol" prefWidth="74.66671752929688" text="Archive ID" />
+                                                                                          <TableColumn fx:id="cstHistRecsDateBorrowedCol" prefWidth="108.66677856445312" text="Date Borrowed" />
+                                                                                          <TableColumn fx:id="cstHistRecsDateReturnedCol" prefWidth="123.99995930989581" text="Date Returned" />
                                                                                       </columns>
                                                                                     </TableView>
                                                                                  </children></AnchorPane>

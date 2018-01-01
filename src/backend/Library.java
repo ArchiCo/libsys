@@ -413,7 +413,6 @@ public class Library {
 	}
 	else {
 		//create empty book
-	
 		//customerHistoryBook.add(new Book("", "", "", "", "", ""));
 		return customerHistoryBook;
 	}
