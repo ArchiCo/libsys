@@ -257,6 +257,9 @@ public class Library {
 		if (daysLate < 0) {
 			daysLate = 0;
 		}
+		if (record.getDateReturned() != null) {
+			daysLate = record.getDateDue().until(record.getDateReturned(), ChronoUnit.DAYS);
+		}
 		return daysLate;
 	}
 
