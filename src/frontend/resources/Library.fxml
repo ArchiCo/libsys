@@ -515,6 +515,70 @@
                                              </padding></AnchorPane>
                                     </content>
                                   </Tab>
+                                    <Tab text="Records">
+                                      <content>
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                             <children>
+                                                <Accordion prefHeight="541.3333333333334" prefWidth="1200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                  <panes>
+                                                    <TitledPane animated="false" text="All Records">
+                                                      <content>
+                                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                                               <padding>
+                                                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                                               </padding>
+                                                               <children>
+                                                                  <TableView fx:id="recordTable" prefHeight="541.3333333333334" prefWidth="1200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                    <columns>
+                                                                      <TableColumn fx:id="aidCol" prefWidth="75.0" text="AID" />
+                                                                      <TableColumn fx:id="cidCol" prefWidth="75.0" text="CID" />
+                                                                        <TableColumn fx:id="lidCol" prefWidth="75.0" text="LID" />
+                                                                        <TableColumn fx:id="dateTakenCol" prefWidth="75.0" text="Date Taken " />
+                                                                        <TableColumn fx:id="dateDueCol" prefWidth="75.0" text="Date Due" />
+                                                                        <TableColumn fx:id="dateReturnCol" prefWidth="75.0" text="Return Date" />
+                                                                        <TableColumn fx:id="delayFeeCol" prefWidth="75.0" text="Delay Fee" />
+                                                                        <TableColumn fx:id="delayDaysCol" prefWidth="75.0" text="Days Delayed" />
+                                                                    </columns>
+                                                                     <columnResizePolicy>
+                                                                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                                                     </columnResizePolicy>
+                                                                  </TableView>
+                                                               </children>
+                                                            </AnchorPane>
+                                                      </content>
+                                                    </TitledPane>
+                                                    <TitledPane animated="false" text="Delayed Books">
+                                                      <content>
+                                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                                               <children>
+                                                                  <TableView fx:id="delayedBooksRecordTable" prefHeight="484.6666666666667" prefWidth="1188.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                    <columns>
+                                                                      <TableColumn fx:id="delayedBooksAidCol" prefWidth="75.0" text="AID" />
+                                                                      <TableColumn fx:id="delayedBooksCidCol" prefWidth="75.0" text="CID" />
+                                                                        <TableColumn fx:id="delayedBooksLidCol" prefWidth="75.0" text="LID" />
+                                                                        <TableColumn fx:id="delayedBooksDateTakenCol" prefWidth="75.0" text="Date Taken" />
+                                                                        <TableColumn fx:id="delayedBooksDateDueCol" prefWidth="75.0" text="Date Due" />
+                                                                        <TableColumn fx:id="delayedBooksDateReturnCol" prefWidth="75.0" text="Date Returned" />
+                                                                        <TableColumn fx:id="delayedBooksDelayFeeCol" prefWidth="75.0" text="Delay Fee" />
+                                                                        <TableColumn fx:id="delayedBooksDelayDaysCol" prefWidth="75.0" text="Days Delayed" />
+                                                                    </columns>
+                                                                     <columnResizePolicy>
+                                                                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                                                     </columnResizePolicy>
+                                                                  </TableView>
+                                                               </children>
+                                                            </AnchorPane>
+                                                      </content>
+                                                    </TitledPane>
+                                                  </panes>
+                                                </Accordion>
+                                             </children>
+                                             <padding>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                             </padding>
+                                          </AnchorPane>
+                                      </content>
+                                    </Tab>
                                   <Tab text="Statistics">
                                     <content>
                                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
@@ -540,32 +604,6 @@
                                              </children></AnchorPane>
                                     </content>
                                   </Tab>
-                                    <Tab text="Records">
-                                      <content>
-                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                                             <children>
-                                                <TableView fx:id="recordTable" layoutX="136.0" layoutY="103.0" prefHeight="541.3333333333334" prefWidth="1200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                                  <columns>
-                                                    <TableColumn fx:id="aidCol" prefWidth="75.0" text="AID" />
-                                                    <TableColumn fx:id="cidCol" prefWidth="75.0" text="CID" />
-                                                      <TableColumn fx:id="lidCol" prefWidth="75.0" text="LID" />
-                                                      <TableColumn fx:id="dateTakenCol" prefWidth="75.0" text="Date Taken " />
-                                                      <TableColumn fx:id="dateDueCol" prefWidth="75.0" text="Date Due" />
-                                                      <TableColumn fx:id="dateReturnCol" prefWidth="75.0" text="Return Date" />
-                                                      <TableColumn fx:id="delayFeeCol" prefWidth="75.0" text="Delay Fee" />
-                                                      <TableColumn fx:id="delayDaysCol" prefWidth="75.0" text="Days Delayed" />
-                                                  </columns>
-                                                   <columnResizePolicy>
-                                                      <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                                                   </columnResizePolicy>
-                                                </TableView>
-                                             </children>
-                                             <padding>
-                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                             </padding>
-                                          </AnchorPane>
-                                      </content>
-                                    </Tab>
                                     <Tab text="Secret Manipulator">
                                       <content>
                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">

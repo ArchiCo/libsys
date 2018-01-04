@@ -171,6 +171,17 @@ public class LibraryController implements Initializable {
 	@FXML private TableColumn<Record, String> delayFeeCol;
 	@FXML private TableColumn<Record, String> delayDaysCol;
 	
+	//Delayed Books Records table
+	@FXML private TableView<Record> delayedBooksRecordTable;
+	@FXML private TableColumn<Record, String> delayedBooksAidCol;
+	@FXML private TableColumn<Record, String> delayedBooksCidCol;
+	@FXML private TableColumn<Record, String> delayedBooksLidCol;
+	@FXML private TableColumn<Record, String> delayedBooksDateTakenCol;
+	@FXML private TableColumn<Record, String> delayedBooksDateDueCol;
+	@FXML private TableColumn<Record, String> delayedBooksDateReturnCol;
+	@FXML private TableColumn<Record, String> delayedBooksDelayFeeCol;
+	@FXML private TableColumn<Record, String> delayedBooksDelayDaysCol;
+	
 	// search filter fields
 	@FXML private TextField IDFilterField;
 	@FXML private TextField titleFilterField;
@@ -211,6 +222,7 @@ public class LibraryController implements Initializable {
 	private SortedList<Book> sortedCstCurrentBorrowed;
 	private SortedList<Record> sortedRecords;
 	private SortedList<Book> sortedAllBooks;
+	private SortedList<Record> sortedDelayedBooks;
 	
 	protected Book tempBook;
 	protected Customer tempCst;
@@ -693,6 +705,89 @@ public class LibraryController implements Initializable {
 				else { return notDelayed; }
 			}
 		});
+		////////////////////////Delayed books records table//////////////////////////////////////
+		delayedBooksAidCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Record,String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Record, String> param){
+				Record record = param.getValue();
+				SimpleStringProperty convertedAid = getStringProperty(Integer.toString(record.getArchiveId()));
+				return convertedAid;
+			}
+		});
+		delayedBooksCidCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Record,String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Record, String> param){
+				Record record = param.getValue();
+				SimpleStringProperty convertedCid = getStringProperty(record.getCustomerId());
+				return convertedCid;
+			}
+		});
+		delayedBooksLidCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Record,String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Record, String> param){
+				Record record = param.getValue();
+				SimpleStringProperty convertedLid = getStringProperty(Integer.toString(record.getLid()));
+				return convertedLid;
+			}
+		});
+		delayedBooksDateTakenCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Record,String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Record, String> param){
+				Record record = param.getValue();
+				SimpleStringProperty convertedTaken = getStringProperty(record.getDateTaken().toString());
+				return convertedTaken;
+			}
+		});
+		delayedBooksDateDueCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Record,String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Record, String> param){
+				Record record = param.getValue();
+				LocalDate convertedDue = record.getDateDue();
+				return getStringProperty(convertedDue.toString());
+			}
+		});
+		delayedBooksDateReturnCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Record,String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Record, String> param){
+				Record record = param.getValue();
+				SimpleStringProperty notReturned = getStringProperty("Not Returned Yet");
+				LocalDate convertedReturn = record.getDateReturned();
+				if (convertedReturn != null) {
+				return getStringProperty(convertedReturn.toString());
+				}
+				else {
+				return notReturned;
+				}
+			}
+		});
+		delayedBooksDelayFeeCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Record,String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Record, String> param){
+				Record record = param.getValue();
+				SimpleStringProperty noFee = getStringProperty("0");
+				long fee = library.lateReturnCharge(record);
+				SimpleStringProperty convertedFee = getStringProperty(Long.toString(library.lateReturnCharge(record)));
+				if (fee > 0) {
+				return convertedFee;
+				}
+				else {
+				return noFee;
+				}
+			}
+		});
+		delayedBooksDelayDaysCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Record,String>, ObservableValue<String>>() {
+			@Override
+			public ObservableValue<String> call(CellDataFeatures<Record, String> param){
+//				ArrayList<Book> borrowCheck = library.getBorrowedBooks(tempCst);
+				Record record = param.getValue();
+				SimpleStringProperty notDelayed = getStringProperty("0");
+				long delayDays = library.exceededDays(record);
+				SimpleStringProperty convertedDays = getStringProperty(Long.toString(library.exceededDays(record)));
+				if (delayDays > 0) { return convertedDays; }
+				
+				else { return notDelayed; }
+			}
+		});
 		
 		
 		//////////////////////////////// SEARCH FUNCTION BOOK TABLE///////////////////////////
@@ -762,6 +857,8 @@ public class LibraryController implements Initializable {
 		    return row ;
 		});
 		
+		ObservableList<Record> delayedBooksRecords = setDelayedBooksRecList();
+		
 		//binding disabled property to tableview size//
 		//disabling lendbookbtn when there are no books in basket//
 		//disabling all other relevant buttons
@@ -812,7 +909,7 @@ public class LibraryController implements Initializable {
 		sortedAllBorrowed = new SortedList<>(getObsBooks(library.getListLentBooks()));
 		sortedRecords = new SortedList<>(getObsRecords(library.getRecords()));
 		sortedAllBooks = new SortedList<>(getObsBooks(library.getListBooks()));
-		
+		sortedDelayedBooks = new SortedList<>(delayedBooksRecords);
 	
 		// 4. Bind the SortedList comparator to the TableView comparator.
 		sortedBooks.comparatorProperty().bind(bookTable.comparatorProperty());
@@ -821,6 +918,7 @@ public class LibraryController implements Initializable {
 		sortedPopularBooks.comparatorProperty().bind(popularBooksTable.comparatorProperty());
 		sortedRecords.comparatorProperty().bind(recordTable.comparatorProperty());
 		sortedAllBooks.comparatorProperty().bind(allBooksTable.comparatorProperty());
+		sortedDelayedBooks.comparatorProperty().bind(delayedBooksRecordTable.comparatorProperty());
 
 		// 5. Add sorted (and filtered) data to the table.
 		bookTable.setItems(sortedBooks);
@@ -830,6 +928,7 @@ public class LibraryController implements Initializable {
 		allBorrowedBooksTable.setItems(sortedAllBorrowed);
 		popularBooksTable.setItems(sortedPopularBooks);
 		
+		delayedBooksRecordTable.setItems(sortedDelayedBooks);
 		recordTable.setItems(sortedRecords);
 		// ObservableList(Arraylist) >> FilteredList >> Sortedlist(comparator bind) >>
 		// into table
@@ -1477,6 +1576,8 @@ public class LibraryController implements Initializable {
 
 				custNameField.textProperty().addListener((observable, oldValue, newValue) -> {});
 
+				ObservableList<Record> delayedBooksRecords = setDelayedBooksRecList();
+				
 				// 3. Wrap the FilteredList in a SortedList.
 				sortedBooks = new SortedList<>(filteredBooks);
 				sortedCustomers = new SortedList<>(filteredCustomers);
@@ -1484,6 +1585,7 @@ public class LibraryController implements Initializable {
 				sortedAllBorrowed = new SortedList<>(getObsBooks(library.getListLentBooks()));
 				sortedRecords = new SortedList<>(getObsRecords(library.getRecords()));
 				sortedAllBooks = new SortedList<>(getObsBooks(library.getListBooks()));
+				sortedDelayedBooks = new SortedList<>(delayedBooksRecords);
 
 				// 4. Bind the SortedList comparator to the TableView comparator.
 				sortedBooks.comparatorProperty().bind(bookTable.comparatorProperty());
@@ -1492,7 +1594,7 @@ public class LibraryController implements Initializable {
 				sortedAllBorrowed.comparatorProperty().bind(allBorrowedBooksTable.comparatorProperty());
 				sortedRecords.comparatorProperty().bind(recordTable.comparatorProperty());
 				sortedAllBooks.comparatorProperty().bind(allBooksTable.comparatorProperty());
-				
+				sortedDelayedBooks.comparatorProperty().bind(delayedBooksRecordTable.comparatorProperty());
 				// 5. Add sorted (and filtered) data to the table.
 
 				bookTable.setItems(sortedBooks);
@@ -1502,6 +1604,8 @@ public class LibraryController implements Initializable {
 				popularBooksTable.setItems(sortedPopularBooks);
 				recordTable.setItems(sortedRecords);
 				allBooksTable.setItems(sortedAllBooks);
+				
+				delayedBooksRecordTable.setItems(sortedDelayedBooks);
 				
 			//secondary tables	refresh
 				
@@ -1538,9 +1642,6 @@ public class LibraryController implements Initializable {
 					cstHistoryRecordsTable.getItems().clear();
 					}
 				}
-				
-
-
 	}
 	
 	public void undoBookSelection() {
@@ -1551,6 +1652,19 @@ public class LibraryController implements Initializable {
 		customerTable.getSelectionModel().clearSelection();
 		tempCst = null;
 	}
+	
+	public ObservableList<Record> setDelayedBooksRecList() {
+		//creating delayed books only list
+		ObservableList<Record> booksRecords = FXCollections.observableArrayList(library.getRecords());
+		ObservableList<Record> delayedBooksRecords = FXCollections.observableArrayList();
+		for(Record record : booksRecords) {
+			if (library.lateReturnCharge(record) > 0 && library.exceededDays(record) > 0) {
+				delayedBooksRecords.add(record);
+			}
+		}
+		return delayedBooksRecords;
+	}
+	
 	@FXML
 	private void resetSearchEvent(ActionEvent event) throws IOException {
 		 
