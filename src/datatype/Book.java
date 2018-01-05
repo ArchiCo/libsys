@@ -2,13 +2,13 @@ package datatype;
 
 public class Book {
 	final String END_OF_LINE = System.lineSeparator();
-	private int lid, lentTimes;
-	private String isbn, title, author, genre, publisher, shelf;
+	private int lid, lentTimes, shelf;
+	private String isbn, title, author, genre, publisher;
 
-	public Book(String isbn, String title, String genre, String author, String publisher, String shelf) {
+	public Book(String isbn, String title, String genre, String author, String publisher, int shelf) {
 		this(-1, isbn, title, genre, author, publisher, shelf);
 	}
-	public Book(int lid, String isbn, String title, String genre, String author, String publisher, String shelf) {
+	public Book(int lid, String isbn, String title, String genre, String author, String publisher, int shelf) {
 		this.lid       = lid;
 		this.isbn      = isbn;
 		this.title     = title;
@@ -25,7 +25,7 @@ public class Book {
 	public String getAuthor()    { return    author; }	
 	public String getGenre()     { return     genre; }
 	public String getPublisher() { return publisher; }
-	public String getShelf()     { return     shelf; }
+	public int getShelf()        { return     shelf; }
 	public int    getLentTimes() { return lentTimes; }
 	// Setters
 	public void setLid      (int    var) { lid        = var; }
@@ -34,7 +34,7 @@ public class Book {
 	public void setAuthor   (String var) { author     = var; }
 	public void setGenre    (String var) { genre      = var; }
 	public void setPublisher(String var) { publisher  = var; }
-	public void setShelf    (String var) { shelf      = var; }
+	public void setShelf    (int var) 	 { shelf      = var; }
 	public void setLentTimes(int    var) { lentTimes += var; }
 
 	public String toString() {

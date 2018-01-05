@@ -79,7 +79,7 @@ public class BookManager {
 				stmt.setString(3, book.getGenre());
 				stmt.setString(4, book.getAuthor());
 				stmt.setString(5, book.getPublisher());
-				stmt.setString(6, book.getShelf());
+				stmt.setInt(6, book.getShelf());
 				stmt.addBatch();
 			}
 			stmt.executeBatch();
@@ -109,7 +109,7 @@ public class BookManager {
 				stmt.setString(3, book.getGenre());
 				stmt.setString(4, book.getAuthor());
 				stmt.setString(5, book.getPublisher());
-				stmt.setString(6, book.getShelf());
+				stmt.setInt(6, book.getShelf());
 				stmt.setInt(7, book.getLid());
 				stmt.addBatch();
 			}
@@ -123,7 +123,7 @@ public class BookManager {
 	}
 	
 	public boolean delete(int lid) throws Exception {
-		return delete(new Book(lid, null, null, null, null, null, null));
+		return delete(new Book(lid, null, null, null, null, null, 0));
 	}
 	
 	public boolean delete(Book book) throws Exception{
@@ -192,7 +192,7 @@ public class BookManager {
 					String author      = books.getString(4);
 					String publisher   = books.getString(5);
 					int popularity     = books.getInt(6);
-					Book book = new Book(-1, isbn, title, genre, author, publisher, "");
+					Book book = new Book(-1, isbn, title, genre, author, publisher, 0);
 					book.setLentTimes(popularity);
 					fetchedBooks.add(book);
 				}
@@ -277,10 +277,9 @@ public class BookManager {
 					String genre       = books.getString(GENRE_COL);
 					String author      = books.getString(AUTHOR_COL);
 					String publisher   = books.getString(PUBLISHER_COL);
-					String shelf       = books.getString(SHELF_COL);
+					int shelf       = books.getInt(SHELF_COL);
 
-					fetchedBooks.add(new Book(lid, isbn, title, genre, author, 
-							                  publisher, shelf));
+					fetchedBooks.add(new Book(lid, isbn, title, genre, author, publisher, shelf));
 					}
 				return fetchedBooks;
 				}	
