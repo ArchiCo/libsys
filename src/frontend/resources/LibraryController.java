@@ -1234,6 +1234,13 @@ public class LibraryController implements Initializable {
 			Publisher.setPromptText("");
 			TextField Shelf = new TextField();
 			Shelf.setPromptText("");
+			Shelf.textProperty().addListener(new ChangeListener<String>() {
+			    @Override
+			    public void changed(ObservableValue<? extends String> observable, String oldValue, 
+			        String newValue) {
+			        if (!newValue.matches("\\d*")) {
+			            Shelf.setText(newValue.replaceAll("[^\\d]", ""));
+			        }}});
 
 			grid.add(new Label("ISBN:"), 0, 0);
 			grid.add(ISBN, 1, 0);
@@ -1306,6 +1313,13 @@ public class LibraryController implements Initializable {
 				Publisher.setPromptText(tempBook.getPublisher());
 				TextField Shelf = new TextField();
 				Shelf.setPromptText(Integer.toString(tempBook.getShelf()));
+				Shelf.textProperty().addListener(new ChangeListener<String>() {
+				    @Override
+				    public void changed(ObservableValue<? extends String> observable, String oldValue, 
+				        String newValue) {
+				        if (!newValue.matches("\\d*")) {
+				            Shelf.setText(newValue.replaceAll("[^\\d]", ""));
+				        }}});
 
 				grid.add(new Label("ISBN:"), 0, 0);
 				grid.add(ISBN, 1, 0);
@@ -1334,7 +1348,7 @@ public class LibraryController implements Initializable {
 					if (!Author.getText().isEmpty())
 						modifyIntoThis.setAuthor(Author.getText());
 					if (!Shelf.getText().isEmpty())
-						modifyIntoThis.setShelf(Integer.getInteger(Shelf.getText()));
+						modifyIntoThis.setShelf(Integer.parseInt((Shelf.getText())));
 					if (!Publisher.getText().isEmpty())
 						modifyIntoThis.setPublisher(Publisher.getText());
 					if (!Genre.getText().isEmpty())
@@ -1490,6 +1504,12 @@ public class LibraryController implements Initializable {
 				|| e.getText().isEmpty()) {
 			x = true;
 		System.out.println("There's at least an empty field!");
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("ERROR");
+		alert.setHeaderText("Error during adding a book");
+		alert.setContentText("There's at least one empty field.");
+
+		alert.showAndWait();
 		} else {
 			x = false;
 		}
@@ -1501,6 +1521,13 @@ public class LibraryController implements Initializable {
 		if (a.getText().isEmpty() || b.getText().isEmpty() || c.getText().isEmpty()) {
 			x = true;
 		System.out.println("There's at least an empty field!");
+/*		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("ERROR");
+		alert.setHeaderText("Error during adding a book");
+		alert.setContentText("There's at least one empty field.");
+
+		alert.showAndWait();
+*/	
 		} else {
 			x = false;
 		}
