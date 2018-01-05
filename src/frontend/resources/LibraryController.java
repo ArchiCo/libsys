@@ -891,6 +891,7 @@ public class LibraryController implements Initializable {
 
 		filteredCustomers.predicateProperty()
 				.bind(Bindings.createObjectBinding(() -> custNameFilter.get(), custNameFilter));
+		
 
 		// addlistener calls changelistener.changed
 		IDFilterField.textProperty().addListener((observable, oldValue, newValue) -> {});

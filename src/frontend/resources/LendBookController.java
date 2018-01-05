@@ -3,17 +3,23 @@ package frontend.resources;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.function.Predicate;
 
 import com.sun.java.swing.plaf.windows.resources.windows;
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Text;
 
 import backend.Library;
 import datatype.Book;
 import datatype.Customer;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -26,6 +32,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.stage.Stage;
@@ -43,6 +50,10 @@ public class LendBookController implements Initializable{
 	private Customer chosenCustomer;
 	private Book chosenBook;
 	
+	@FXML private TextField cidFilterField;
+	
+	private ObjectProperty<Predicate<Customer>> cidFilter;
+	
 	private LibraryController librarycontroller;
 	private Library	library;
 //	private LibraryMenu libraryMenu;
@@ -55,7 +66,7 @@ public class LendBookController implements Initializable{
 		this.librarycontroller = new LibraryController();
 		this.basket = FXCollections.observableArrayList();
 		
-		SortedList<Customer> sortedCustomers = new SortedList<>(librarycontroller.getObsCustomers(library.getCustomersList()));
+		FilteredList<Customer> filteredCustomers = new FilteredList<>(librarycontroller.getObsCustomers(library.getCustomersList()));
 	
 		
 		lendCustomerIDCol.setCellValueFactory( new Callback<TableColumn.CellDataFeatures<Customer, String>, ObservableValue<String>>() {
@@ -82,6 +93,16 @@ public class LendBookController implements Initializable{
 				chosenCustomer =  lendCustomerTable.getSelectionModel().getSelectedItem();
 			}
 		});
+		
+		cidFilter = new SimpleObjectProperty<>();
+		
+		cidFilter.bind(Bindings.createObjectBinding(
+				() -> customer -> customer.getCid().toLowerCase().contains(cidFilterField.getText().toLowerCase()), 
+				cidFilterField.textProperty()));
+		
+		cidFilterField.textProperty().addListener((observable, oldValue, newValue) -> {});
+		filteredCustomers.predicateProperty().bind(Bindings.createObjectBinding(() -> cidFilter.get(), cidFilter));
+		SortedList<Customer> sortedCustomers = new SortedList<>(filteredCustomers);
 	lendCustomerTable.setItems(sortedCustomers);
 	
 	}
