@@ -8,13 +8,13 @@ public class Book {
 	private String publisher;
 	private String genre;
 	private String author;
-	private String shelf;
+	private int shelf;
 	private int lentTimes;
 
-	public Book(String isbn, String title, String genre, String author, String publisher, String shelf) {
+	public Book(String isbn, String title, String genre, String author, String publisher, int shelf) {
 		this(-1, isbn, title, genre, author, publisher, shelf);
 	}
-	public Book(int lid, String isbn, String title, String genre, String author, String publisher, String shelf) {
+	public Book(int lid, String isbn, String title, String genre, String author, String publisher, int shelf) {
 		this.setLid(lid);
 		this.setTitle(title);
 		this.setIsbn(isbn);
@@ -72,11 +72,11 @@ public class Book {
 		this.author = author;
 	}
 
-	public String getShelf() {
+	public int getShelf() {
 		return shelf;
 	}
 
-	public void setShelf(String shelf) {
+	public void setShelf(int shelf) {
 		this.shelf = shelf;
 	}
 

@@ -122,7 +122,7 @@ public class Library extends Application{
 		}
 	}
 	
-	public void addBook(String isbn, String title, String genre, String author, String publisher, String shelf) {
+	public void addBook(String isbn, String title, String genre, String author, String publisher, int shelf) {
 		//listBooks.add(book);
 		Book newBook = new Book(isbn, title, genre, author, publisher, shelf);
 		addBook(newBook);

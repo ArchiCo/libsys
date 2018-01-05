@@ -90,7 +90,7 @@ public class LibraryController implements Initializable {
 	@FXML private TableColumn<Book, Integer> bookIDCol;
 	@FXML private TableColumn<Book, String> bookTitleCol;
 	@FXML private TableColumn<Book, String> bookAuthorCol;
-	@FXML private TableColumn<Book, String> bookShelfCol;
+	@FXML private TableColumn<Book, Integer> bookShelfCol;
 	@FXML private TableColumn<Book, String> bookPublisherCol;
 	@FXML private TableColumn<Book, String> bookGenreCol;
 	@FXML private TableColumn<Book, String> bookISBNCol;
@@ -149,7 +149,7 @@ public class LibraryController implements Initializable {
 	@FXML private TableColumn<Book, String> allBooksISBNCol;
 	@FXML private TableColumn<Book, String> allBooksTitleCol;
 	@FXML private TableColumn<Book, String> allBooksAuthorCol;
-	@FXML private TableColumn<Book, String> allBooksShelfCol;
+	@FXML private TableColumn<Book, Integer> allBooksShelfCol;
 	@FXML private TableColumn<Book, String> allBooksPublisherCol;
 	@FXML private TableColumn<Book, String> allBooksGenreCol;
 
@@ -296,12 +296,14 @@ public class LibraryController implements Initializable {
 				SimpleStringProperty convertedAuthor = getStringProperty(book.getAuthor());
 				return convertedAuthor;
 			}});
-		bookShelfCol.setCellValueFactory (new Callback<TableColumn.CellDataFeatures<Book, String>, ObservableValue<String>>() {
+		
+		//bookShelfCol.setCellValueFactory (new Callback<TableColumn.CellDataFeatures<Book, Integer>, ObservableValue<Integer>>() {
+		bookShelfCol.setCellValueFactory (new Callback<TableColumn.CellDataFeatures<Book, Integer>, ObservableValue<Integer>>() {
 			@Override
-			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
+			public ObservableValue<Integer> call(CellDataFeatures<Book, Integer> param) {
 				Book book = param.getValue();
-				SimpleStringProperty convertedShelf = getStringProperty(book.getShelf());
-				return convertedShelf;
+				SimpleIntegerProperty convertedShelf = getIntegerProperty(book.getShelf());
+				return convertedShelf.asObject();
 			}});
 		bookPublisherCol.setCellValueFactory( new Callback<TableColumn.CellDataFeatures<Book, String>, ObservableValue<String>>() {
 			@Override
@@ -353,12 +355,12 @@ public class LibraryController implements Initializable {
 				SimpleStringProperty convertedAuthor = getStringProperty(book.getAuthor());
 				return convertedAuthor;
 			}});
-		allBooksShelfCol.setCellValueFactory (new Callback<TableColumn.CellDataFeatures<Book, String>, ObservableValue<String>>() {
+		allBooksShelfCol.setCellValueFactory (new Callback<TableColumn.CellDataFeatures<Book, Integer>, ObservableValue<Integer>>() {
 			@Override
-			public ObservableValue<String> call(CellDataFeatures<Book, String> param) {
+			public ObservableValue<Integer> call(CellDataFeatures<Book, Integer> param) {
 				Book book = param.getValue();
-				SimpleStringProperty convertedShelf = getStringProperty(book.getShelf());
-				return convertedShelf;
+				SimpleIntegerProperty convertedShelf = getIntegerProperty(book.getShelf());
+				return convertedShelf.asObject();
 			}});
 		allBooksPublisherCol.setCellValueFactory( new Callback<TableColumn.CellDataFeatures<Book, String>, ObservableValue<String>>() {
 			@Override
@@ -821,7 +823,7 @@ public class LibraryController implements Initializable {
 				authorFilterField.textProperty()));
 
 		shelfFilter.bind(Bindings.createObjectBinding(
-				() -> book -> book.getShelf().toLowerCase().contains(shelfFilterField.getText().toLowerCase()),
+				() -> book -> Integer.toString(book.getShelf()).toLowerCase().contains(shelfFilterField.getText().toLowerCase()),
 				shelfFilterField.textProperty()));
 
 		publisherFilter.bind(Bindings.createObjectBinding(
@@ -1262,7 +1264,7 @@ public class LibraryController implements Initializable {
 					//void backend.LibraryMenu.addBook(String isbn, String title, String genre, String author, String publisher, String shelf)
 
 					library.addBook(ISBN.getText(), Title.getText(), Genre.getText(), Author.getText(),
-							Publisher.getText(), Shelf.getText());
+							Publisher.getText(), Integer.parseInt(Shelf.getText()));
 					refreshTable();
 				}
 				////// IF IT DOES, DON'T ADD IT
@@ -1303,7 +1305,7 @@ public class LibraryController implements Initializable {
 				TextField Publisher = new TextField();
 				Publisher.setPromptText(tempBook.getPublisher());
 				TextField Shelf = new TextField();
-				Shelf.setPromptText(tempBook.getShelf());
+				Shelf.setPromptText(String.valueOf(tempBook.getShelf()));
 
 				grid.add(new Label("ISBN:"), 0, 0);
 				grid.add(ISBN, 1, 0);
@@ -1332,7 +1334,7 @@ public class LibraryController implements Initializable {
 					if (!Author.getText().isEmpty())
 						modifyIntoThis.setAuthor(Author.getText());
 					if (!Shelf.getText().isEmpty())
-						modifyIntoThis.setShelf(Shelf.getText());
+						modifyIntoThis.setShelf(Integer.parseInt(Shelf.getText()));
 					if (!Publisher.getText().isEmpty())
 						modifyIntoThis.setPublisher(Publisher.getText());
 					if (!Genre.getText().isEmpty())
@@ -1560,7 +1562,7 @@ public class LibraryController implements Initializable {
 				authorFilterField.textProperty()));
 
 		shelfFilter.bind(Bindings.createObjectBinding(
-				() -> book -> book.getShelf().toLowerCase().contains(shelfFilterField.getText().toLowerCase()),
+				() -> book -> Integer.toString(book.getShelf()).contains(shelfFilterField.getText().toLowerCase()),
 				shelfFilterField.textProperty()));
 
 		publisherFilter.bind(Bindings.createObjectBinding(
