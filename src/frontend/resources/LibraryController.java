@@ -266,14 +266,14 @@ public class LibraryController implements Initializable {
 		//time label
 		today.setText(library.getDate().toString());
 		//making sure only numbers are allowed for time input
-		toTheFutureField.textProperty().addListener(new ChangeListener<String>() {
+/*		toTheFutureField.textProperty().addListener(new ChangeListener<String>() {
 		    @Override
 		    public void changed(ObservableValue<? extends String> observable, String oldValue, 
 		        String newValue) {
 		        if (!newValue.matches("\\d*")) {
 		            toTheFutureField.setText(newValue.replaceAll("[^\\d]", ""));
 		        }}});
-		
+*/		
 		//////////////////////////////Book Table//////////////////////////////////////////////
 		bookIDCol.setCellValueFactory (new Callback<TableColumn.CellDataFeatures<Book, Integer>, ObservableValue<Integer>>() {
 			@Override
