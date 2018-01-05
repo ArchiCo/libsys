@@ -1,7 +1,5 @@
 package database;
 
-import java.sql.Date;
-
 public class Credentials {
 	private final String adminUser = "AdminUser";
 	private final String adminPass = "AdminPass";

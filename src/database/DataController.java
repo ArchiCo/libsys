@@ -19,12 +19,6 @@ public class DataController extends Database{
 		rm = new RecordManager(this);
 		cm = new CustomerManager(this);
 		bm = new BookManager(this);
-//		rm.dropTable();
-//		cm.dropTable();
-//		bm.dropTable();
-//		cm.createTable();
-//		bm.createTable();
-//		rm.createTable();
 	}
 	
 	public CustomerManager customers() { return cm; }
@@ -32,6 +26,21 @@ public class DataController extends Database{
 	public BookManager     books()     { return bm; }
 	
 	// Customer handlers
+	
+	private void dbFlush() {
+		try {
+			rm.dropTable();
+			cm.dropTable();
+			bm.dropTable();
+			cm.createTable();
+			bm.createTable();
+			rm.createTable();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public boolean registerCustomer(Customer customer) {
 		try {
 			return cm.add(customer); 

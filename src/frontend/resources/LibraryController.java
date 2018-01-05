@@ -1,6 +1,5 @@
 package frontend.resources;
 
-import frontend.*;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -16,6 +15,7 @@ import com.sun.javafx.scene.control.skin.IntegerFieldSkin;
 import backend.*;
 import database.structure.Column;
 import database.structure.Table;
+import frontend.resources.*;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
