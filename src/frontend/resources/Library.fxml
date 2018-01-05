@@ -148,9 +148,8 @@
                                              <children>
                                                 <GridPane prefHeight="240.0" prefWidth="543.0">
                                                    <columnConstraints>
-                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="195.99997965494794" minWidth="10.0" prefWidth="195.99997965494794" />
-                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="266.33333333333337" minWidth="10.0" prefWidth="258.33333333333337" />
-                                                      <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="142.3333282470703" minWidth="10.0" prefWidth="53.666666666666686" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="195.99997965494794" minWidth="10.0" prefWidth="125.0" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="332.0" minWidth="10.0" prefWidth="332.0" />
                                                       <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="102.33325195312506" minWidth="10.0" prefWidth="21.666595458984375" />
                                                    </columnConstraints>
                                                    <rowConstraints>
@@ -196,32 +195,32 @@
                                                             <Font size="15.0" />
                                                          </font>
                                                       </Label>
-                                                      <Label fx:id="LIDLabel" prefHeight="26.0" prefWidth="103.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                      <Label fx:id="LIDLabel" prefHeight="21.0" prefWidth="346.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                                          <font>
                                                             <Font size="15.0" />
                                                          </font>
                                                       </Label>
-                                                      <Label fx:id="ISBNLabel" prefHeight="26.0" prefWidth="103.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                                      <Label fx:id="ISBNLabel" prefHeight="22.0" prefWidth="356.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                                          <font>
                                                             <Font size="15.0" />
                                                          </font>
                                                       </Label>
-                                                      <Label fx:id="titleLabel" prefHeight="26.0" prefWidth="103.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                                      <Label fx:id="titleLabel" prefHeight="22.0" prefWidth="344.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                                          <font>
                                                             <Font size="15.0" />
                                                          </font>
                                                       </Label>
-                                                      <Label fx:id="authorLabel" prefHeight="26.0" prefWidth="103.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                                      <Label fx:id="authorLabel" prefHeight="22.0" prefWidth="346.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                                                          <font>
                                                             <Font size="15.0" />
                                                          </font>
                                                       </Label>
-                                                      <Label fx:id="genreLabel" prefHeight="26.0" prefWidth="103.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                                                      <Label fx:id="genreLabel" prefHeight="22.0" prefWidth="334.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
                                                          <font>
                                                             <Font size="15.0" />
                                                          </font>
                                                       </Label>
-                                                      <Label fx:id="publisherLabel" prefHeight="26.0" prefWidth="103.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                                                      <Label fx:id="publisherLabel" prefHeight="22.0" prefWidth="358.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
                                                          <font>
                                                             <Font size="15.0" />
                                                          </font>
@@ -234,7 +233,6 @@
                                                       <Separator prefHeight="3.0" prefWidth="543.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
                                                       <Separator prefWidth="200.0" GridPane.rowIndex="7" />
                                                       <Separator prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="7" />
-                                                      <Separator prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="7" />
                                                       <Label text="double click to add or remove" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="9">
                                                          <font>
                                                             <Font size="10.0" />

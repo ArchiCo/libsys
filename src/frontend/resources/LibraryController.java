@@ -869,7 +869,6 @@ public class LibraryController implements Initializable {
 		editCustomerBtn.disableProperty().bind(customerTable.getSelectionModel().selectedItemProperty().isNull());		
 		removeCustomerBtn.disableProperty().bind(customerTable.getSelectionModel().selectedItemProperty().isNull());
 		returnBookBtn.disableProperty().bind(cstCurrentBorrowedTable.getSelectionModel().selectedItemProperty().isNull());
-	
 		// 1. Wrap the ObservableList in a FilteredList (initially display all data)
 
 		filteredBooks = new FilteredList<>(getObsBooks(library.getAvailableBooks()), p -> true);
@@ -1108,7 +1107,7 @@ public class LibraryController implements Initializable {
 		grid.setPadding(new Insets(20, 150, 10, 10));
 
 		TextField name = new TextField();
-		name.setPromptText("Title");
+		name.setPromptText("Name");
 		TextField phone = new TextField();
 		phone.setPromptText("Phone");
 		//do not allow letters
@@ -1134,21 +1133,21 @@ public class LibraryController implements Initializable {
 		dialog.getDialogPane().setContent(grid);
 		//making sure the buttons pressed are correct and dealing with each
 		final Button cancel = (Button) dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
-		cancel.addEventFilter(ActionEvent.ACTION, event1 ->
-		    System.out.println("Cancel was definitely pressed")
-		);
+//		cancel.addEventFilter(ActionEvent.ACTION, event1 ->
+//		    System.out.println("Cancel was definitely pressed")
+//		);
 		 final Button ok = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
-	        ok.addEventFilter(ActionEvent.ACTION, event1 ->
-	            System.out.println("OK was definitely pressed")
-	        );
+//	        ok.addEventFilter(ActionEvent.ACTION, event1 ->
+//	            System.out.println("OK was definitely pressed")
+//	        );
 		// Traditional way to get the response value.
 		Optional<String> result = dialog.showAndWait();
 		
 		if (result.isPresent() && cstFieldsAreEmpty(name, address, phone) == false) {
 			Alert confirmedGangMember = new Alert(AlertType.INFORMATION);
-			confirmedGangMember.setTitle("Woot");
+			confirmedGangMember.setTitle("New customer registration");
 			confirmedGangMember.setHeaderText(null);
-			confirmedGangMember.setContentText("Welcome, " + name.getText());
+			confirmedGangMember.setContentText("Welcome, " + name.getText() + " \n \n");
 			confirmedGangMember.showAndWait();
 			libraryMenu.registerCustomer(name.getText(), address.getText(), Integer.parseInt(phone.getText()));
 			refreshTable();
