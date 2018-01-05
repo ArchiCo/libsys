@@ -7,6 +7,10 @@ import java.util.Random;
 import java.util.function.Consumer;
 
 import database.DataController;
+import datatype.Book;
+import datatype.Customer;
+import datatype.History;
+import datatype.Record;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -55,7 +59,7 @@ public class Library extends Application{
 	public void registerCustomer(String customerId, String name, String address, String phoneNumber) {
 		Customer newCustomer = new Customer(customerId, name, address, phoneNumber);
 		database.registerCustomer(newCustomer);
-		//this.customers.add(newCustomer);
+
 	}
 
 	public Customer findCustomer(String customerId) {
@@ -65,13 +69,6 @@ public class Library extends Application{
 		} else {
 			return null;
 		}
-		/*
-		for (Customer customer : customers) {
-			if (customer != null && customer.getCustomerId().equals(customerId));
-				return customer;
-		}
-		return null;
-		*/
 	}
 	
 	public boolean deregisterCustomer(String customerId) {
@@ -111,7 +108,6 @@ public class Library extends Application{
 	}
 	
 	public void addBook(String isbn, String title, String genre, String author, String publisher, String shelf) {
-		//listBooks.add(book);
 		Book newBook = new Book(isbn, title, genre, author, publisher, shelf);
 		addBook(newBook);
 	}
@@ -137,12 +133,10 @@ public class Library extends Application{
 		Customer foundCustomer = findCustomer(libraryID);
 		System.out.println("");
 		if (foundCustomer != null) {
-			System.out.println("");
-			System.out.println("Today's date is " + this.getDate() + ".");
-			System.out.println("");
+			System.out.println("\nToday's date is " + this.getDate() + ".\n");
 			lendBook(foundCustomer, foundBook);
-			System.out.println("Please return the book in 2 weeks.");
-			System.out.println();
+			System.out.println("Please return the book in 2 weeks.\n");
+
 
 		}
 	}
@@ -150,18 +144,13 @@ public class Library extends Application{
 	public void lendBook(Customer regCustomer, Book book) {
 		if (regCustomer != null && book != null) {
 			LocalDate dueDate = today.plusDays(14);
-			Record newRecord = new Record(regCustomer.getCustomerId(), book.getLid(), today, dueDate);
+			Record newRecord = new Record(regCustomer.getCid(), book.getLid(), today, dueDate);
 			database.records().add(newRecord);
 			System.out.println(newRecord);
-			//this.records.add(0, newRecord);
-			//this.listLentBooks.add(book);
-			//this.listBooks.remove(book);
 		}
 	}
 
 	public void returnBook(Book book, Record record) {
-		//this.listBooks.add(book);
-		//this.listLentBooks.remove(book);
 		record.setDateReturned(today);
 		record.setFine(lateReturnCharge(record));
 		database.records().modify(record);
@@ -170,14 +159,6 @@ public class Library extends Application{
 	public ArrayList<Book> getBooksByAuthor() {
 		return database.books().fetchAllByAuthor();
 	}
-/*	public void sortListBooksBy(FlexibleBookComparator.Order sortingBy) {
-		/*FlexibleBookComparator comparator = new FlexibleBookComparator();
-		comparator.setSortingBy(sortingBy);
-		Collections.sort(database.books().fetchAll(), comparator);
-		//Collections.sort(this.listBooks, comparator);
-		
-
-	}*/
 
 	public void printPopularBooks() {
 		System.out.println(database.books().fetchPopularity());
@@ -200,13 +181,6 @@ public class Library extends Application{
 	}
 
 	public long exceededDays(Record record) {
-		
-/*		long daysLate = 0;
-		long daysBetween = ChronoUnit.DAYS.between(record.getDateTaken(), record.getDateReturned());
-		if (daysBetween > 14)
-		daysLate = record.getDateDue().until(today, ChronoUnit.DAYS);
-		return daysLate;
-*/
 		long daysLate = record.getDateDue().until(today, ChronoUnit.DAYS);
 		if (daysLate < 0) {
 			daysLate = 0;
@@ -257,13 +231,10 @@ public class Library extends Application{
 
 	public ArrayList<Book> getListBooks() {
 		return database.books().fetchAll();
-		//return listBooks;
 	}
 
 	public ArrayList<Book> getListLentBooks() {
 		return database.books().fetchBorrowed();
-		//return database.customers()
-		//return listLentBooks;
 	}
 
 	public ArrayList<Book> getBorrowedBooks(Customer customer) {
@@ -286,14 +257,11 @@ public class Library extends Application{
 	}
 	public ArrayList<Book> getListDelayedBooks() {
 		return database.books().fetchDelayed(today);
-		//return database.customers()
-		//return listLentBooks;
 	}
 	
 	public Record findRecord(Customer regCustomer, Book book) {
-		//for (Record customer : records) {
 		for (Record record : database.records().fetchAll()) {
-			if (record != null && record.getCustomerId().equals(regCustomer.getCustomerId()))
+			if (record != null && record.getCid().equals(regCustomer.getCid()))
 				if (record.getLid() == book.getLid())
 					return record;
 			}
@@ -309,11 +277,12 @@ public class Library extends Application{
 			return null;
 		}
 	}
+	
 	//first takes all of the records that the same customer borrowed with the same exact book
 	public ArrayList<Record> findSameCustomerBookRecList(Customer customer, Book book) {
 		ArrayList<Record> foundRecs = new ArrayList<>();
 		for (Record record : database.records().fetchAll()) {
-			if (record != null && record.getCustomerId().equals(customer.getCustomerId())) {
+			if (record != null && record.getCid().equals(customer.getCid())) {
 				if (record.getLid() == book.getLid()) {
 					foundRecs.add(record);
 					System.out.println(record);
@@ -322,25 +291,19 @@ public class Library extends Application{
 		}
 		return foundRecs;
 	}
-/*		if(foundRecs.size() > 1) {
-			return foundRecs;
-			}
-			else {
-				return null;
-			}
-*/
+
 	//second takes only the latest of all of these records to return 
 	public Record findLatestBorrowedRecord(ArrayList<Record> foundRecs) {
 		Record latestRec = foundRecs.get(0);
 		if (foundRecs != null) {
-		System.out.println(foundRecs.toString());
-		if(foundRecs.size() > 1) {
-		for (Record record : foundRecs) {
-			if (record.getArchiveId() > latestRec.getArchiveId()) {
-				latestRec = record;
+			System.out.println(foundRecs.toString());
+			if(foundRecs.size() > 1) {
+				for (Record record : foundRecs) {
+					if (record.getAid() > latestRec.getAid()) {
+						latestRec = record;
+					}
 				}
 			}
-		}
 		}
 		return latestRec;
 	}
@@ -362,25 +325,20 @@ public class Library extends Application{
 	}
 	public ArrayList<Book> getCustomerHistoryArray(Customer customer) {
 		ArrayList<Book> customerHistoryBook = new ArrayList<Book>();
-	if (getCustomerHistory(customer.getCustomerId()) != null) {
-		for (History s : getCustomerHistory(customer.getCustomerId())) {
+	if (getCustomerHistory(customer.getCid()) != null) {
+		for (History s : getCustomerHistory(customer.getCid())) {
 			if (s != null)
 				customerHistoryBook.add(s.getBook());
 			}
 		return customerHistoryBook;
 	}
 	else {
-		//create empty book
-		//customerHistoryBook.add(new Book("", "", "", "", "", ""));
 		return customerHistoryBook;
 	}
 	}
 
 	
 	public void modifyCustomer(String libraryID, String name, String address, String phoneNumber) {
-//		System.out.print("Please show your library card: ");
-//		String libraryID = sc.nextLine();
-		
 		Customer customer = this.findCustomer(libraryID);
 		if (customer != null) {
 
@@ -392,7 +350,7 @@ public class Library extends Application{
 			}
 			try {
 				if (!phoneNumber.isEmpty()) {
-					customer.setPhoneNumber(phoneNumber);
+					customer.setPhone(phoneNumber);
 				}
 			} catch (Exception e) {
 			}
@@ -425,8 +383,6 @@ public class Library extends Application{
 	}
 	
 	public void removeCustomer(String libraryID) {
-	//	System.out.print("Please show your library card: ");
-	//	String libraryID = sc.nextLine();
 		this.deregisterCustomer(libraryID);
 	}
 	

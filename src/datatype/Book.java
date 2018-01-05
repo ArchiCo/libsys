@@ -1,114 +1,52 @@
 package datatype;
 
-import java.sql.Date;
-import java.util.ArrayList;
+public class Book {
+	final String END_OF_LINE = System.lineSeparator();
+	private int lid, lentTimes;
+	private String isbn, title, author, genre, publisher, shelf;
 
-public class Book{
-	int lid;
-	String isbn, title, genre, author, publisher, shelf;
-	Date publicationDate;
-	ArrayList<Record> records;
-	
-	public Book(int lid, String isbn, String title, String genre, 
-		        String author,  String publisher, Date publicationDate) {
-		
-		this(lid, isbn, title, genre, author, publisher, publicationDate, "");
+	public Book(String isbn, String title, String genre, String author, String publisher, String shelf) {
+		this(-1, isbn, title, genre, author, publisher, shelf);
+	}
+	public Book(int lid, String isbn, String title, String genre, String author, String publisher, String shelf) {
+		this.lid       = lid;
+		this.isbn      = isbn;
+		this.title     = title;
+		this.author    = author;
+		this.genre     = genre;
+		this.publisher = publisher;
+		this.shelf     = shelf;
 	}
 	
-	public Book(int lid, String isbn, String title, String genre, 
-			    String author,  String publisher, Date publicationDate,
-			    String shelf) {
-		
-		this(lid, isbn, title, genre, author, publisher, 
-			 publicationDate, shelf, new ArrayList<Record>());
-	}
-	
-	public Book(int lid,
-			    String isbn,
-                String title,
-                String genre,
-                String author,
-                String publisher,
-			    Date   publicationDate,
-			    String shelf,
-			    ArrayList<Record> records) {
-		
-		this.lid             =             lid;
-		this.isbn            =            isbn;
-		this.title           =           title;
-		this.genre           =           genre;
-		this.author          =          author;
-		this.publisher       =       publisher;
-		this.publicationDate = publicationDate;
-		this.shelf           =           shelf;
-		this.records         =         records;
-	}
-	
-	public int getLid()                   { return lid; }
-	public String getIsbn()               { return isbn; }
-	public String getGenre()              { return genre; }
-	public String getShelf()              { return shelf; }
-	public String getTitle()              { return title; }
-	public String getAuthor()             { return author; }
-	public ArrayList<Record> getRecords() { return records; }
-	public String getPublisher()          { return publisher; }
-	public Date   getPublicationDate()    { return publicationDate; }
-	public String getPublicationDateTxt() { 
-		if (publicationDate == null) {
-			return null;
-		}
-		return publicationDate.toString(); 
-	}
-	
-	public void   setIsbn(String newIsbn) { 
-		isbn = newIsbn; 
-	}
+	// Getters
+	public int    getLid()       { return       lid; }
+	public String getIsbn()      { return      isbn; }
+	public String getTitle()     { return     title; }
+	public String getAuthor()    { return    author; }	
+	public String getGenre()     { return     genre; }
+	public String getPublisher() { return publisher; }
+	public String getShelf()     { return     shelf; }
+	public int    getLentTimes() { return lentTimes; }
+	// Setters
+	public void setLid      (int    var) { lid        = var; }
+	public void setIsbn     (String var) { isbn       = var; }
+	public void setTitle    (String var) { title      = var; }
+	public void setAuthor   (String var) { author     = var; }
+	public void setGenre    (String var) { genre      = var; }
+	public void setPublisher(String var) { publisher  = var; }
+	public void setShelf    (String var) { shelf      = var; }
+	public void setLentTimes(int    var) { lentTimes += var; }
 
-	public void   setTitle(String newTitle) { 
-		title = newTitle; 
-	}
-	public void   setGenre(String newGenre) { 
-		genre = newGenre; 
-	}
-	public void   setAuthor(String newAuthor) { 
-		author = newAuthor;
-	}
-	public void   setPublisher(String newPublisher) {
-		publisher = newPublisher;
-	}
-	public void   setDatePublished(Date newDatePublished) {
-		publicationDate = newDatePublished;
-	}
-	
-	public String getPrintout(Book book) {
-		String bookMeta = "LiD: "       + book.getLid()       + "\n" +
-		                  "ISBN: "      + book.getIsbn()      + "\n" +
-		                  "Title: "     + book.getTitle()     + "\n" +
-		                  "Genre: "     + book.getGenre()     + "\n" +
-		                  "Author: "    + book.getAuthor()    + "\n" +
-                          "Publisher: " + book.getPublisher() + "\n" +
-		                  "Publication Date: " + book.getPublicationDateTxt() + "\n" + 
-		                  "Shelf: "     + book.getShelf();
-		
-		
-		if (book.getRecords() != null && book.getRecords().size() > 0) {
-		    String bookRecords = "Records:\n";
-	        for (int i = 0; i < records.size(); i++) {
-	    	   bookRecords +=  "Record #" + i +
-	    			           "| ArchiveID: " + book.getRecords().get(i).getAid() +
-	    			           "| Username: "  + book.getRecords().get(i).getCid() +
-	    			           "| LiD: "       + book.getRecords().get(i).getLid() +
-	    			           "| Taken: "     + book.getRecords().get(i).getTakenDateString() +
-	    			           "| Due: "       + book.getRecords().get(i).getDueDateString() +
-	    			           "| Returned:"   + book.getRecords().get(i).getReturnedDateString();
-	    	   if (i < records.size()-1) {
-	    		   bookRecords += "\n";
-	    	   }
-		    }
-	        return bookMeta + "\n" + bookRecords;
-		}
-		
-		return bookMeta + "\nRecords: Empty.";
+	public String toString() {
+		String result = "";
+		result += "LID: "        + getLid()       + END_OF_LINE;
+		result += "Name: "       + getTitle()     + END_OF_LINE;
+		result += "ISBN-13: "    + getIsbn()      + END_OF_LINE;
+		result += "Author: "     + getAuthor()    + END_OF_LINE;
+		result += "Genre: "      + getGenre()     + END_OF_LINE;
+		result += "Publisher: "  + getPublisher() + END_OF_LINE;
+		result += "Shelf: "      + getShelf()     + END_OF_LINE;
+		result += "Popularity: " + getLentTimes() + END_OF_LINE;
+		return result;
 	}
 }
-

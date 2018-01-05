@@ -8,10 +8,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import backend.Customer;
-import backend.History;
-import backend.Book;
-import backend.Record;
+
+import datatype.Book;
+import datatype.Customer;
+import datatype.History;
+import datatype.Record;
 
 public class CustomerManager {
 	private final int CID_COL = 1;
@@ -57,10 +58,10 @@ public class CustomerManager {
 
 		try (PreparedStatement stmt = db.getConnection().prepareStatement(SQL_INSERT)) {
 			for (Customer Customer : Customers) {
-				stmt.setString(1, Customer.getCustomerId());
+				stmt.setString(1, Customer.getCid());
 				stmt.setString(2, Customer.getName());
 				stmt.setString(3, Customer.getAddress());
-				stmt.setString(4, Customer.getPhoneNumber());
+				stmt.setString(4, Customer.getPhone());
 				stmt.addBatch();
 			}
 			stmt.executeBatch();
@@ -85,8 +86,8 @@ public class CustomerManager {
 			for (Customer customer : customers) {
 				stmt.setString(1, customer.getName());
 				stmt.setString(2, customer.getAddress());
-				stmt.setString(3, customer.getPhoneNumber());
-				stmt.setString(4, customer.getCustomerId());
+				stmt.setString(3, customer.getPhone());
+				stmt.setString(4, customer.getCid());
 				stmt.addBatch();
 			}
 			stmt.executeBatch();
@@ -108,7 +109,7 @@ public class CustomerManager {
 		}
 		try (PreparedStatement stmt = db.getConnection().prepareStatement(SQL_DELETE);) {
 			for (Customer Customer : Customers) {
-				stmt.setString(1, Customer.getCustomerId());
+				stmt.setString(1, Customer.getCid());
 				stmt.addBatch();
 			}
 			stmt.executeBatch();

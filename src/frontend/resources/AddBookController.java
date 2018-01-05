@@ -1,6 +1,8 @@
 package frontend.resources;
 
 import backend.*;
+import datatype.Book;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;

@@ -10,8 +10,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import backend.Book;
-import backend.Customer;
+import datatype.Book;
+import datatype.Customer;
 
 public class BookManager {
 	
@@ -211,7 +211,7 @@ public class BookManager {
 	
 	public ArrayList<Book> fetch(Customer customer) {
 		try (PreparedStatement stmt = db.getConnection().prepareStatement(SQL_SELECT_BORROWED_C)){
-			stmt.setString(1, customer.getCustomerId());  
+			stmt.setString(1, customer.getCid());  
 			return fetch(stmt);	  
 			} catch (SQLException e) {
 				System.out.println("[BookManager, fetchBorrowed(C)] SQL ERROR: " + e.getMessage());
@@ -221,7 +221,7 @@ public class BookManager {
 	
 	public ArrayList<Book> fetch(Customer customer, int lid) {
 		try (PreparedStatement stmt = db.getConnection().prepareStatement(SQL_SELECT_BORROWED_CL)){
-			stmt.setString(1, customer.getCustomerId()); 
+			stmt.setString(1, customer.getCid()); 
 			stmt.setInt(2, lid);
 			return fetch(stmt);	  
 			} catch (SQLException e) {

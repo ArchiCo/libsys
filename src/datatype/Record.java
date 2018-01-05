@@ -1,106 +1,82 @@
 package datatype;
-import java.sql.Date;
-import java.sql.Timestamp;
+
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class Record {
-	private int       aid, lid;
-	private String    cid = null;
-	private LocalDate dateTaken,
-	                  dateDue,
-                      dateReturned;
-	private DateTimeFormatter standardFormatter = DateTimeFormatter.ISO_LOCAL_DATE;
-	
-	public Record(String cid, int lid, Date dateTaken, Date dateDue) {
-		this(0, cid, lid, dateTaken, dateDue);
-	}
-	
-	public Record(int aid, String cid, int lid, Date dateTaken, Date dateDue) {
-		this(aid, cid, lid, dateTaken, dateDue, null);
-	}
-	
-	public Record(int aid, String cid, int lid, Date dateTaken, Date dateDue, Date dateReturned) {
-		this(aid, cid, lid, dateTaken.toLocalDate(), dateDue.toLocalDate(), dateReturned.toLocalDate());
+	final String END_OF_LINE = System.lineSeparator();
+	private int aid, lid;
+	private String cid;
+	private LocalDate dateTaken, dateDue, dateReturned;
+	private long fine;
+
+	public Record(int archiveId, String customerId, int lid, LocalDate dateTaken, LocalDate dateDue){
+		this(archiveId, customerId, lid, dateTaken, dateDue, null);
 	}
 
-	public Record(String cid, int lid, LocalDate dateTaken, LocalDate dateDue) {
-		this(0, cid, lid, dateTaken, dateDue);
-	}
-
-	public Record(int aid, String cid, int lid, LocalDate dateTaken, LocalDate dateDue) {
-		this(aid, cid, lid, dateTaken, dateDue, null);
+	public Record(String customerId, int lid, LocalDate dateTaken, LocalDate dateDue, LocalDate dateReturned){
+		this(-1, customerId, lid, dateTaken, dateDue, dateReturned);
 	}
 	
-	public Record(int aid, String cid,  int lid, LocalDate dateTaken, LocalDate dateDue, LocalDate dateReturned) {
-		this.aid          = aid;
-		this.cid          = cid;
-		this.lid          = lid;
-		this.dateTaken    = dateTaken;
-		this.dateDue      = dateDue;
+	public Record(String customerId, int lid, LocalDate dateTaken, LocalDate dateDue){
+		this(-1, customerId, lid, dateTaken, dateDue, null);
+	}
+	
+	public Record(int archiveId, String cid, int lid, LocalDate dateTaken, LocalDate dateDue, LocalDate dateReturned) {
+		this.aid = archiveId;
+		this.cid = cid;
+		this.lid = lid;
+		this.dateTaken = dateTaken;
+		this.dateDue = dateDue;
 		this.dateReturned = dateReturned;
 	}
-	
-	public int       getAid() { return aid; }
-	public int       getLid() { return lid; }
-	public String 	 getCid() { return cid; }
-	
-	public LocalDate getTakenLocalDate()    { return    dateTaken; }
-	public LocalDate getDueLocalDate()      { return      dateDue; }
-	public LocalDate getReturnedLocalDate() { return dateReturned; }
-	public Date      getTakenDate()         { return getConvertedDate(dateTaken); }
-	public Date      getDueDate()           { return getConvertedDate(dateDue); }
-	public Date      getReturnedDate()      { return getConvertedDate(dateReturned); }
 
+	public int       getAid()          { return          aid; }
+	public String    getCid()          { return          cid; }
+	public int       getLid()          { return          lid; }
+	public LocalDate getDateTaken()    { return    dateTaken; }	
+	public LocalDate getDateDue()      { return      dateDue; }
+	public LocalDate getDateReturned() { return dateReturned; }
+	public long      getFine()         { return         fine; }
 	
-	public Date getConvertedDate(LocalDate date) {
-		if (date != null) {
-			return Date.valueOf(date);
+	public void setAid         (int       var) { aid          = var; }
+	public void setCid         (String    var) { cid          = var; }
+	public void setLid         (int       var) { lid          = var; }
+	public void setDateTaken   (LocalDate var) { dateTaken    = var; }
+	public void setDateDue     (LocalDate var) { dateDue      = var; }
+	public void setDateReturned(LocalDate var) { dateReturned = var; }
+	public void setFine        (long      var) { fine         = var; }
+
+	public boolean equals(Object otherObject) {
+		if (otherObject instanceof Record) {
+			Record otherRecord = (Record) otherObject;
+			boolean result = (cid == otherRecord.getCid()) && (lid == otherRecord.getLid());
+			return result;
+
 		} else {
-			return null;
+			return false;
 		}
 	}
 	
-	public String getTakenDateString()    { return dateTaken   .format(standardFormatter); }
-	public String getDueDateString()      { return dateDue     .format(standardFormatter); }
-	public String getReturnedDateString() { 
-		if (dateReturned == null) {
-			return "N/A";
+	public String getDatesToString() {
+		String result = "";
+		result += "Date taken: " + getDateTaken().toString() + END_OF_LINE +
+				  "Date due: "   + getDateDue().toString()   + END_OF_LINE;	
+		if (getDateReturned() != null) {
+			result += "Date returned: " + getDateReturned().toString() + END_OF_LINE;	
 		}
-		return dateReturned.format(standardFormatter); 
-	}
-
-	
-	public int getTakenDay()      { return dateTaken   .getDayOfMonth(); }
-	public int getDueDay()        { return dateDue     .getDayOfMonth(); }
-	public int getReturnedDay()   { return dateReturned.getDayOfMonth(); }
-	public int getTakenMonth()    { return dateTaken   .getMonthValue(); }
-	public int getDueMonth()      { return dateDue     .getMonthValue(); }
-	public int getReturnedMonth() { return dateReturned.getMonthValue(); }
-	public int getTakenYear()     { return dateTaken   .getYear(); }
-	public int getDueYear()       { return dateDue     .getYear(); }
-	public int getReturnedYear()  { return dateReturned.getYear(); }
-	
-	
-public void setTakenDate(int year, int month, int day) { setDate(dateTaken, year, month, day); }
-public void setDueDate(int year, int month, int day) { setDate(dateDue, year, month, day); }
-public void setReturnedDate(int year, int month, int day) { setDate(dateReturned, year, month, day); }
-
-public void setTakenDate(Date date) { setDate(dateTaken, date); }
-public void setDueDate(Date date) { setDate(dateTaken, date); }
-public void setReturnedDate(Date date) { setDate(dateTaken, date); }
-
-
-public void setTakenDate(LocalDate date) { setDate(dateTaken, date); }
-public void setDueDate(LocalDate date) { setDate(dateDue, date); }
-public void setReturnedDate(LocalDate date) { setDate(dateReturned, date); }
-	
-
-	public void setDate(LocalDate localDate, LocalDate newLocalDate) { localDate = newLocalDate; }
-	public void setDate(LocalDate localDate, Date date) { localDate = date.toLocalDate();}
-	public void setDate(LocalDate localDate, int year, int month, int day) {
-		localDate = LocalDate.of(year, month, day);
+		return result;
 	}
 	
+	public String toString() {
+		String result = "";
+		result += "aID: " + getAid() + END_OF_LINE +
+				  "cID: " + getCid() + END_OF_LINE +
+				  "lID: " + getLid() + END_OF_LINE +
+				  "Date taken: " + getDateTaken().toString() + END_OF_LINE +
+				  "Date due: "   + getDateDue().toString();	
+		if (getDateReturned() != null) {
+			result += "Date returned: " + getDateReturned().toString() + END_OF_LINE;	
+		}
+		return result;
+	}
 }

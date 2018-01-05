@@ -13,8 +13,10 @@ import javax.swing.event.TableColumnModelListener;
 import com.sun.javafx.scene.control.skin.IntegerFieldSkin;
 
 import backend.*;
-import database.structure.Column;
-import database.structure.Table;
+import datatype.Book;
+import datatype.Customer;
+import datatype.History;
+import datatype.Record;
 import frontend.resources.*;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
@@ -379,7 +381,7 @@ public class LibraryController implements Initializable {
 			@Override
 			public ObservableValue<String> call(CellDataFeatures<Customer, String> param) {
 				Customer customer = param.getValue();
-				SimpleStringProperty convertedCstId = getStringProperty(customer.getCustomerId());
+				SimpleStringProperty convertedCstId = getStringProperty(customer.getCid());
 				return convertedCstId;
 			}});
 		customerNameCol.setCellValueFactory( new Callback<TableColumn.CellDataFeatures<Customer, String>, ObservableValue<String>>() {
@@ -442,7 +444,7 @@ public class LibraryController implements Initializable {
 			@Override
 			public ObservableValue<String> call(CellDataFeatures<Record, String> param){
 				Record record = param.getValue();
-				SimpleStringProperty convertedAid = getStringProperty(Integer.toString(record.getArchiveId()));
+				SimpleStringProperty convertedAid = getStringProperty(Integer.toString(record.getAid()));
 				return convertedAid;
 			}});
 ////////////////////////////////////////////////////////////////////////////
@@ -473,7 +475,7 @@ public class LibraryController implements Initializable {
 			@Override
 			public ObservableValue<String> call(CellDataFeatures<Record, String> param){
 				Record record = param.getValue();
-				SimpleStringProperty convertedAid = getStringProperty(Integer.toString(record.getArchiveId()));
+				SimpleStringProperty convertedAid = getStringProperty(Integer.toString(record.getAid()));
 				return convertedAid;
 			}});
 		cstHistRecsDateBorrowedCol.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Record,String>, ObservableValue<String>>() {
@@ -631,7 +633,7 @@ public class LibraryController implements Initializable {
 			@Override
 			public ObservableValue<String> call(CellDataFeatures<Record, String> param){
 				Record record = param.getValue();
-				SimpleStringProperty convertedAid = getStringProperty(Integer.toString(record.getArchiveId()));
+				SimpleStringProperty convertedAid = getStringProperty(Integer.toString(record.getAid()));
 				return convertedAid;
 			}
 		});
@@ -639,7 +641,7 @@ public class LibraryController implements Initializable {
 			@Override
 			public ObservableValue<String> call(CellDataFeatures<Record, String> param){
 				Record record = param.getValue();
-				SimpleStringProperty convertedCid = getStringProperty(record.getCustomerId());
+				SimpleStringProperty convertedCid = getStringProperty(record.getCid());
 				return convertedCid;
 			}
 		});
@@ -714,7 +716,7 @@ public class LibraryController implements Initializable {
 			@Override
 			public ObservableValue<String> call(CellDataFeatures<Record, String> param){
 				Record record = param.getValue();
-				SimpleStringProperty convertedAid = getStringProperty(Integer.toString(record.getArchiveId()));
+				SimpleStringProperty convertedAid = getStringProperty(Integer.toString(record.getAid()));
 				return convertedAid;
 			}
 		});
@@ -722,7 +724,7 @@ public class LibraryController implements Initializable {
 			@Override
 			public ObservableValue<String> call(CellDataFeatures<Record, String> param){
 				Record record = param.getValue();
-				SimpleStringProperty convertedCid = getStringProperty(record.getCustomerId());
+				SimpleStringProperty convertedCid = getStringProperty(record.getCid());
 				return convertedCid;
 			}
 		});
@@ -974,9 +976,9 @@ public class LibraryController implements Initializable {
 				tempCst = customerTable.getSelectionModel().getSelectedItem();
 //				System.out.println("customer row " + customerTable.getSelectionModel().getSelectedIndex());
 				if (newValue != null) {
-					cstIDLabel.setText(newValue.getCustomerId());
+					cstIDLabel.setText(newValue.getCid());
 					cstNameLabel.setText(newValue.getName());
-					cstPhoneLabel.setText(newValue.getPhoneNumber());
+					cstPhoneLabel.setText(newValue.getPhone());
 					cstAddressLabel.setText(newValue.getAddress());
 					
 					//show individual customer history
@@ -1076,7 +1078,7 @@ public class LibraryController implements Initializable {
 			TextField name = new TextField();
 			name.setPromptText(tempCst.getName());
 			TextField phone = new TextField();
-			phone.setPromptText(tempCst.getPhoneNumber());
+			phone.setPromptText(tempCst.getPhone());
 			TextField address = new TextField();
 			address.setPromptText(tempCst.getAddress());
 
@@ -1098,7 +1100,7 @@ public class LibraryController implements Initializable {
 				Optional <ButtonType> choice = confirmModify.showAndWait();
 				if(choice.get() == ButtonType.OK) {
 					library.modifyCustomer(
-							tempCst.getCustomerId(), name.getText(), address.getText(), phone.getText());
+							tempCst.getCid(), name.getText(), address.getText(), phone.getText());
 				refreshTable();
 				}
 			}
@@ -1196,7 +1198,7 @@ public class LibraryController implements Initializable {
 				confirmedCustomerKill.setHeaderText(null);
 				confirmedCustomerKill.setContentText("Customer Removed.");
 				confirmedCustomerKill.showAndWait();
-				library.removeCustomer(tempCst.getCustomerId());
+				library.removeCustomer(tempCst.getCid());
 				refreshTable();
 			} else {
 				alert.close();
