@@ -70,7 +70,7 @@ public class LibraryMenu extends Application{
 	public void start(Stage primaryStage) throws Exception {
 		try {
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(getClass().getResource("/frontend/resources/Login.fxml"));
+			loader.setLocation(getClass().getResource("/frontend/resources/Library.fxml"));
 			Parent root = loader.load();
 		    Scene scene = new Scene(root);
 		    primaryStage.setTitle("Library System");
@@ -236,7 +236,7 @@ public class LibraryMenu extends Application{
 
 	}
 
-	public void registerCustomer(String name, String address, int phoneNumber) {
+	public void registerCustomer(String name, String address, String phoneNumber) {
 	/*	System.out.print("Please enter customer's name: ");
 		String name = sc.nextLine();
 		System.out.print("Please enter customer's address: ");

@@ -60,7 +60,7 @@ public class CustomerManager {
 				stmt.setString(1, Customer.getCustomerId());
 				stmt.setString(2, Customer.getName());
 				stmt.setString(3, Customer.getAddress());
-				stmt.setInt(4, Customer.getPhoneNumber());
+				stmt.setString(4, Customer.getPhoneNumber());
 				stmt.addBatch();
 			}
 			stmt.executeBatch();
@@ -85,7 +85,7 @@ public class CustomerManager {
 			for (Customer customer : customers) {
 				stmt.setString(1, customer.getName());
 				stmt.setString(2, customer.getAddress());
-				stmt.setInt(3, customer.getPhoneNumber());
+				stmt.setString(3, customer.getPhoneNumber());
 				stmt.setString(4, customer.getCustomerId());
 				stmt.addBatch();
 			}
@@ -206,7 +206,7 @@ public class CustomerManager {
 					String cid = Customers.getString(CID_COL);
 					String name = Customers.getString(NAME_COL);
 					String address = Customers.getString(ADDRESS_COL);
-					int phone = Customers.getInt(PHONE_COL);
+					String phone = Customers.getString(PHONE_COL);
 					fetchedCustomers.add(new Customer(cid, name, address, phone));
 				}
 				return fetchedCustomers;
@@ -223,7 +223,7 @@ public class CustomerManager {
 				"(cid text primary key," + 
 		        "name text not null,"    + 
 			    "address text not null," + 
-		        "phone int  not null)");
+		        "phone text  not null)");
 	}
 
 	public boolean dropTable() throws Exception {

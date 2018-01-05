@@ -115,7 +115,7 @@ public class Record {
 		result += "cID: " + getCustomerId() + END_OF_LINE;
 		result += "lID: " + getLid() + END_OF_LINE;
 		result += "Date taken: " + getDateTaken().toString() + END_OF_LINE;
-		result += "Date due: "   + getDateDue().toString() + END_OF_LINE;	
+		result += "Date due: "   + getDateDue().toString();	
 		if (getDateReturned() != null) {
 			result += "Date returned: "   + getDateReturned().toString() + END_OF_LINE;	
 		}

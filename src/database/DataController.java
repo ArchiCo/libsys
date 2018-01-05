@@ -19,12 +19,12 @@ public class DataController extends Database{
 		rm = new RecordManager(this);
 		cm = new CustomerManager(this);
 		bm = new BookManager(this);
-		/*rm.dropTable();
-		cm.dropTable();
-		bm.dropTable();
-		cm.createTable();
-		bm.createTable();
-		rm.createTable();*/
+//		rm.dropTable();
+//		cm.dropTable();
+//		bm.dropTable();
+//		cm.createTable();
+//		bm.createTable();
+//		rm.createTable();
 	}
 	
 	public CustomerManager customers() { return cm; }
@@ -43,7 +43,7 @@ public class DataController extends Database{
 	}
 	
 	public boolean deregisterCustomer(String customerId) {
-		return deregisterCustomer(new Customer(customerId, null, null, 0));
+		return deregisterCustomer(new Customer(customerId, null, null, "0"));
 	}
 	
 	public boolean deregisterCustomer(Customer customer) {

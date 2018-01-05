@@ -7,14 +7,14 @@ public class Customer {
 	private String customerId;
 	private String name;
 	private String address;
-	private int phoneNumber;
+	private String phoneNumber;
 	private ArrayList<Book> customerHistory;
 
 	public Customer(String customerId) {
-		this(customerId, "", "", 0);
+		this(customerId, "", "", "0");
 	}
 	
-	public Customer(String customerId, String name, String address, int phoneNumber) {
+	public Customer(String customerId, String name, String address, String phoneNumber) {
 		this.customerId = customerId;
 		this.name = name;
 		this.address = address;
@@ -33,7 +33,7 @@ public class Customer {
 		return address;
 	}
 
-	public int getPhoneNumber() {
+	public String getPhoneNumber() {
 		return phoneNumber;
 	}
 
@@ -52,7 +52,7 @@ public class Customer {
 		this.address = address;
 	}
 	
-	public void setPhoneNumber(int phoneNumber) {
+	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
 	
@@ -77,7 +77,7 @@ public class Customer {
 		String result = "Name: " + getName() + END_OF_LINE;
 		result += "Address: " + getAddress() + END_OF_LINE;
 		result += "Phone Number: " + getPhoneNumber() + END_OF_LINE;
-		result += "Library ID: " + getCustomerId();
+		result += "Library ID: " + getCustomerId() + END_OF_LINE;
 		return result;
 	}
 }

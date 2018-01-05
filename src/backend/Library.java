@@ -51,7 +51,7 @@ public class Library {
 		}
 	}
 
-	public void registerCustomer(String customerId, String name, String address, int phoneNumber) {
+	public void registerCustomer(String customerId, String name, String address, String phoneNumber) {
 		Customer newCustomer = new Customer(customerId, name, address, phoneNumber);
 		database.registerCustomer(newCustomer);
 		//this.customers.add(newCustomer);

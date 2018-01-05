@@ -834,7 +834,7 @@ public class LibraryController implements Initializable {
 		    row.setOnMouseClicked(event -> {
 		        if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
 		            Book rowData = row.getItem();
-		            System.out.println(rowData);
+//		            System.out.println(rowData);
 		            if(basket.contains(tempBook)) {
 		            };
 		            if(!basket.contains(tempBook)) {
@@ -850,7 +850,7 @@ public class LibraryController implements Initializable {
 		    row.setOnMouseClicked(event -> {
 		        if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
 		            Book rowData = row.getItem();
-		            System.out.println(rowData);
+//		            System.out.println(rowData);
 		            basket.remove(rowData);    
 		        }
 		    });
@@ -862,6 +862,7 @@ public class LibraryController implements Initializable {
 		//binding disabled property to tableview size//
 		//disabling lendbookbtn when there are no books in basket//
 		//disabling all other relevant buttons
+		logoutBtn.setDisable(true);
 		lendBookBtn.disableProperty().bind(Bindings.size(basket).isEqualTo(0));
 		editBookBtn.disableProperty().bind(bookTable.getSelectionModel().selectedItemProperty().isNull());
 		removeBookBtn.disableProperty().bind(bookTable.getSelectionModel().selectedItemProperty().isNull());
@@ -940,7 +941,7 @@ public class LibraryController implements Initializable {
 			@Override
 			public void changed(ObservableValue<? extends Book> observable, Book oldValue, Book newValue) {
 				tempBook = bookTable.getSelectionModel().getSelectedItem();
-				System.out.println("book row " + bookTable.getSelectionModel().getSelectedIndex());
+//				System.out.println("book row " + bookTable.getSelectionModel().getSelectedIndex());
 				if (newValue != null) {
 					LIDLabel.setText(Integer.toString(newValue.getLid()));
 					titleLabel.setText(newValue.getTitle());
@@ -967,11 +968,11 @@ public class LibraryController implements Initializable {
 			public void changed(ObservableValue<? extends Customer> observable, Customer oldValue, Customer newValue) {
 	
 				tempCst = customerTable.getSelectionModel().getSelectedItem();
-				System.out.println("customer row " + customerTable.getSelectionModel().getSelectedIndex());
+//				System.out.println("customer row " + customerTable.getSelectionModel().getSelectedIndex());
 				if (newValue != null) {
 					cstIDLabel.setText(newValue.getCustomerId());
 					cstNameLabel.setText(newValue.getName());
-					cstPhoneLabel.setText(Integer.toString(newValue.getPhoneNumber()));
+					cstPhoneLabel.setText(newValue.getPhoneNumber());
 					cstAddressLabel.setText(newValue.getAddress());
 					
 					//show individual customer history
@@ -1068,7 +1069,7 @@ public class LibraryController implements Initializable {
 			TextField name = new TextField();
 			name.setPromptText(tempCst.getName());
 			TextField phone = new TextField();
-			phone.setPromptText(Integer.toString(tempCst.getPhoneNumber()));
+			phone.setPromptText(tempCst.getPhoneNumber());
 			TextField address = new TextField();
 			address.setPromptText(tempCst.getAddress());
 
@@ -1158,7 +1159,7 @@ public class LibraryController implements Initializable {
 			confirmedGangMember.setHeaderText(null);
 			confirmedGangMember.setContentText("Welcome, " + name.getText() + " \n \n");
 			confirmedGangMember.showAndWait();
-			libraryMenu.registerCustomer(name.getText(), address.getText(), Integer.parseInt(phone.getText()));
+			libraryMenu.registerCustomer(name.getText(), address.getText(), phone.getText());
 			refreshTable();
 		}
 		if(result.isPresent() && cstFieldsAreEmpty(name, address, phone) == true) {
@@ -1383,8 +1384,8 @@ public class LibraryController implements Initializable {
 	@FXML
 	public void returnBookEvent() {
 		Alert confirmedReturn = new Alert(AlertType.CONFIRMATION);
-		confirmedReturn.setTitle("Confirm Return");
-		confirmedReturn.setHeaderText("Gotta give bakk em buhkz");
+		confirmedReturn.setTitle("Book return");
+		confirmedReturn.setHeaderText("The book is being returned");
 		confirmedReturn.setContentText("Return?");
 		Optional <ButtonType> result = confirmedReturn.showAndWait();
 		
