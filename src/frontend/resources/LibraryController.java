@@ -1711,9 +1711,8 @@ public class LibraryController implements Initializable {
 	@FXML 
 	private void advanceTimeEvent(ActionEvent event) {
 		if(event.getSource().equals(advanceTimeBtn) && !toTheFutureField.getText().isEmpty()) {
-		System.out.println(library.getDate());
-		libraryMenu.advanceTime(Integer.parseInt(toTheFutureField.getText()));
-		System.out.println(library.getDate());
+			library.advanceDays(Integer.parseInt(toTheFutureField.getText()));		
+			today.setText(library.getDate().toString());
 		}
 		refreshTable();
 	}

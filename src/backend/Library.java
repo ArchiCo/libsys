@@ -33,19 +33,8 @@ public class Library {
 			this.listLentBooks = new ArrayList<Book>();
 			this.customers = new ArrayList<Customer>();
 			this.records = new ArrayList<Record>();
-			book1 = new Book("100", "Book 1", "Genre 1", "Author 1", "Publisher 1", "");
-			book2 = new Book("200", "Book 2", "Genre 2", "Author 2", "Publisher 2", "");
-			book3 = new Book("300", "Book 3", "Genre 3", "Author 3", "Publisher 3", "");
-			
-			book1.setLid(1);
-			book2.setLid(2);
-			book3.setLid(3);
-			
 			this.registerBookCallback = book -> {};
 			this.unregisterBookCallback = book -> {};
-			/*addBook(book1);
-			addBook(book2);
-			addBook(book3);*/
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -285,6 +274,7 @@ public class Library {
 
 	public void advanceDays(int days) {
 		today = today.plusDays(days);
+		System.out.println("Advanced time by " + days + " days.");
 	}
 
 	public ArrayList<Record> getRecords() {
