@@ -9,7 +9,6 @@ import com.sun.java.swing.plaf.windows.resources.windows;
 import backend.Book;
 import backend.Customer;
 import backend.Library;
-import backend.LibraryMenu;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -46,13 +45,13 @@ public class LendBookController implements Initializable{
 	
 	private LibraryController librarycontroller;
 	private Library	library;
-	private LibraryMenu libraryMenu;
+//	private LibraryMenu libraryMenu;
 	
 	private ObservableList<Book> basket;
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		this.library = new Library();
-		this.libraryMenu = new LibraryMenu();
+//		this.libraryMenu = new LibraryMenu();
 		this.librarycontroller = new LibraryController();
 		this.basket = FXCollections.observableArrayList();
 		
@@ -107,7 +106,7 @@ public class LendBookController implements Initializable{
 			confirmation.setContentText("Please return the book(s) in 2 weeks. " + "\n" 
 					+ "Due Date: " + library.getDate().plusDays(14));
 			for(Book book : basket) {
-				libraryMenu.lendBook(chosenCustomer.getCustomerId(), book);
+				library.lendBook(chosenCustomer.getCustomerId(), book);
 				System.out.println(book);
 				confirmation.showAndWait();
 			}
@@ -128,9 +127,9 @@ public class LendBookController implements Initializable{
 	public Book getChosenBook() {
 		return this.chosenBook;
 	}
-	public void setLibraryMenu(LibraryMenu libraryMenu) {
+	/*public void setLibraryMenu(LibraryMenu libraryMenu) {
 		this.libraryMenu = libraryMenu;
-	}
+	}*/
 	public void setLibraryController(LibraryController libraryController) {
 		this.librarycontroller = libraryController;
 	}

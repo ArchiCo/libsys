@@ -4,14 +4,20 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Random;
 import java.util.function.Consumer;
 
 import backend.FlexibleBookComparator.Order;
 import database.Credentials;
 import database.DataController;
+import javafx.application.Application;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
-public class Library {
+public class Library extends Application{
 	private ArrayList<Book> listBooks;
 	private ArrayList<Book> listLentBooks;
 	private ArrayList<Book> popularBooks;
@@ -25,7 +31,7 @@ public class Library {
 	private Consumer<Book> registerBookCallback;
 	private Consumer<Book> unregisterBookCallback;
 	
-	public Library() {
+	public Library(){
 		try {
 			database = new DataController();
 			today = LocalDate.now();
@@ -36,6 +42,24 @@ public class Library {
 			this.registerBookCallback = book -> {};
 			this.unregisterBookCallback = book -> {};
 		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	//Application starting method
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+		try {
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(getClass().getResource("/frontend/resources/Library.fxml"));
+			Parent root = loader.load();
+		    Scene scene = new Scene(root);
+		    primaryStage.setTitle("Library System");
+			
+		    
+		    primaryStage.setScene(scene);
+			primaryStage.show();
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -121,6 +145,19 @@ public class Library {
 		}
 	}
 	
+	public void lendBook(String libraryID, Book foundBook) {
+		Customer foundCustomer = findCustomer(libraryID);
+		System.out.println("");
+		if (foundCustomer != null) {
+			System.out.println("");
+			System.out.println("Today's date is " + this.getDate() + ".");
+			System.out.println("");
+			lendBook(foundCustomer, foundBook);
+			System.out.println("Please return the book in 2 weeks.");
+			System.out.println();
+
+		}
+	}
 	
 	public void lendBook(Customer regCustomer, Book book) {
 		if (regCustomer != null && book != null) {
@@ -410,4 +447,61 @@ public class Library {
 		return customerHistoryBook;
 	}
 	}
+
+	
+	public void modifyCustomer(String libraryID, String name, String address, String phoneNumber) {
+//		System.out.print("Please show your library card: ");
+//		String libraryID = sc.nextLine();
+		
+		Customer customer = this.findCustomer(libraryID);
+		if (customer != null) {
+
+			if (!name.isEmpty()) {
+				customer.setName(name);
+			}
+			if (!address.isEmpty()) {
+				customer.setAddress(address);
+			}
+			try {
+				if (!phoneNumber.isEmpty()) {
+					customer.setPhoneNumber(phoneNumber);
+				}
+			} catch (Exception e) {
+			}
+			this.changeCustomerInformation(customer);
+		} else {
+			System.out.println("Customer is not registered in the system.");
+		}
+	}
+	
+	public void registerCustomer(String name, String address, String phoneNumber) {
+
+		String libraryID;
+		do {
+			libraryID = generateRandomChars("ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890", 4);
+		} while (this.findCustomer(libraryID) != null);
+		
+		this.registerCustomer(libraryID, name, address, phoneNumber);
+		System.out.println("Here's your library card!");
+		Customer foundCustomer = this.findCustomer(libraryID);
+		System.out.print(foundCustomer);
+	}
+	
+	public static String generateRandomChars(String candidateChars, int length) {
+		StringBuilder sb = new StringBuilder();
+		Random random = new Random();
+		for (int i = 0; i < length; i++) {
+			sb.append(candidateChars.charAt(random.nextInt(candidateChars.length())));
+		}
+		return sb.toString();
+	}
+	
+	public void removeCustomer(String libraryID) {
+	//	System.out.print("Please show your library card: ");
+	//	String libraryID = sc.nextLine();
+		this.deregisterCustomer(libraryID);
+	}
+	
+
+
 }

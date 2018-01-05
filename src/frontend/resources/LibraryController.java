@@ -206,7 +206,7 @@ public class LibraryController implements Initializable {
 	@FXML private Label cstPhoneLabel;
 	@FXML private Label cstAddressLabel;
 
-	protected LibraryMenu libraryMenu;
+	//protected LibraryMenu libraryMenu;
 	protected Library library;
 	//Arraylists
 	private FilteredList<Book> filteredBooks;
@@ -238,8 +238,12 @@ public class LibraryController implements Initializable {
 	
 	ObservableList<Book> basket;
 	
-	public LibraryController(LibraryMenu libraryMenu, Library library) {
+	/*public LibraryController(LibraryMenu libraryMenu, Library library) {
 		this.libraryMenu = libraryMenu;
+		this.library = library;
+	}*/
+	
+	public LibraryController(Library library) {
 		this.library = library;
 	}
 
@@ -254,7 +258,7 @@ public class LibraryController implements Initializable {
 		// determine which field
 		// inside the Book objects should be used for the particular column.
 		// if using ints and stuff, asObject() needs to be added after getproperty()
-		this.libraryMenu = new LibraryMenu();
+		//this.libraryMenu = new LibraryMenu();
 		this.library = new Library();
 		this.basket = FXCollections.observableArrayList();
 		
@@ -1025,9 +1029,9 @@ public class LibraryController implements Initializable {
 			}
 		});	
 	}
-	public void setLibraryMenu(LibraryMenu libraryMenu) {
+	/* public void setLibraryMenu(LibraryMenu libraryMenu) {
 		this.libraryMenu = libraryMenu;
-	}
+	}*/
 
 	@FXML
 	public void handleButtonAction(ActionEvent event) throws IOException {
@@ -1093,7 +1097,7 @@ public class LibraryController implements Initializable {
 				confirmModify.setContentText("Are you sure you want to edit it?");
 				Optional <ButtonType> choice = confirmModify.showAndWait();
 				if(choice.get() == ButtonType.OK) {
-					libraryMenu.modifyCustomer(
+					library.modifyCustomer(
 							tempCst.getCustomerId(), name.getText(), address.getText(), phone.getText());
 				refreshTable();
 				}
@@ -1163,7 +1167,7 @@ public class LibraryController implements Initializable {
 			confirmedGangMember.setHeaderText(null);
 			confirmedGangMember.setContentText("Welcome, " + name.getText() + " \n \n");
 			confirmedGangMember.showAndWait();
-			libraryMenu.registerCustomer(name.getText(), address.getText(), phone.getText());
+			library.registerCustomer(name.getText(), address.getText(), phone.getText());
 			refreshTable();
 		}
 		if(result.isPresent() && cstFieldsAreEmpty(name, address, phone) == true) {
@@ -1192,7 +1196,7 @@ public class LibraryController implements Initializable {
 				confirmedCustomerKill.setHeaderText(null);
 				confirmedCustomerKill.setContentText("Customer Removed.");
 				confirmedCustomerKill.showAndWait();
-				libraryMenu.removeCustomer(tempCst.getCustomerId());
+				library.removeCustomer(tempCst.getCustomerId());
 				refreshTable();
 			} else {
 				alert.close();
@@ -1257,7 +1261,7 @@ public class LibraryController implements Initializable {
 					alert.showAndWait();
 					//void backend.LibraryMenu.addBook(String isbn, String title, String genre, String author, String publisher, String shelf)
 
-					libraryMenu.addBook(ISBN.getText(), Title.getText(), Genre.getText(), Author.getText(),
+					library.addBook(ISBN.getText(), Title.getText(), Genre.getText(), Author.getText(),
 							Publisher.getText(), Shelf.getText());
 					refreshTable();
 				}
@@ -1356,7 +1360,7 @@ public class LibraryController implements Initializable {
 			confirmedBookKill.setHeaderText(null);
 			confirmedBookKill.setContentText("Book Removed.");
 			confirmedBookKill.showAndWait();
-			libraryMenu.removeBook(tempBook.getLid());
+			library.removeBook(tempBook.getLid());
 			refreshTable();
 		} else {
 			alert.close();

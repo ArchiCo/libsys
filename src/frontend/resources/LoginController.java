@@ -10,7 +10,7 @@ import com.sun.glass.ui.TouchInputSupport;
 import com.sun.xml.internal.bind.v2.runtime.unmarshaller.Loader;
 
 import backend.Library;
-import backend.LibraryMenu;
+//import backend.LibraryMenu;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,7 +24,13 @@ import javafx.scene.Node;
 
 public class LoginController implements Initializable{
 
-	@FXML
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+/*	@FXML
 	private Button loginBtn;
 	@FXML
 	private Button registerBtn;
@@ -88,6 +94,6 @@ public class LoginController implements Initializable{
 		
 		
 	}
-	
+	*/
 
 }

@@ -1,6 +1,6 @@
 package backend;
 
-
+/*
 import backend.*;
 import java.util.Observable;
 import frontend.resources.*;
@@ -173,11 +173,6 @@ public class LibraryMenu extends Application{
 					advanceTime();
 					break;
 
-				/*
-				 * case PRINT_POPULAR_BOOKS: library.printPopularBooks(); for (Book popularBook
-				 * : this.library.getPopularBooks()) { System.out.println("");
-				 * System.out.println(popularBook); } break;
-				 */
 				case QUIT:
 					System.out.println();
 					break;
@@ -237,14 +232,7 @@ public class LibraryMenu extends Application{
 	}
 
 	public void registerCustomer(String name, String address, String phoneNumber) {
-	/*	System.out.print("Please enter customer's name: ");
-		String name = sc.nextLine();
-		System.out.print("Please enter customer's address: ");
-		String address = sc.nextLine();
-		System.out.print("Please enter customer's phone number: ");
-		int phoneNumber = sc.nextInt();
-		sc.nextLine();
-	*/
+
 		String libraryID;
 		do {
 			libraryID = generateRandomChars("ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890", 4);
@@ -291,13 +279,7 @@ public class LibraryMenu extends Application{
 		
 		Customer customer = library.findCustomer(libraryID);
 		if (customer != null) {
-		/*	System.out.print("Please enter new name: ");
-			String name = sc.nextLine();
-			System.out.print("Please enter new address: ");
-			String address = sc.nextLine();
-			System.out.print("Please enter new phone number: ");
-			String phoneNumber = sc.nextLine();
-		*/
+
 			if (!name.isEmpty()) {
 				customer.setName(name);
 			}
@@ -349,9 +331,7 @@ public class LibraryMenu extends Application{
 	}
 
 	private void customerHistory(Customer customer) {
-		/*for (Book book : customer.getCustomerHistory()) {
-			System.out.println(book);
-		}*/
+
 		library.printCustomerHistory(customer.getCustomerId());
 	}
 
@@ -425,17 +405,7 @@ public class LibraryMenu extends Application{
 	}
 
 	public void addBook(String isbn, String title, String genre,String author, String publisher, String shelf ) {
-/*		System.out.print("Please enter book's ISBN: ");
-		String isbn = sc.nextLine();
-		System.out.print("Please enter book's title: ");
-		String title = sc.nextLine();
-		System.out.print("Please enter book's genre: ");
-		String genre = sc.nextLine();
-		System.out.print("Please enter book's author: ");
-		String author = sc.nextLine();
-		System.out.print("Please enter book's publisher: ");
-		String publisher = sc.nextLine();
-	*/
+
 		this.library.addBook(isbn, title, genre, author, publisher, shelf);
 	}
 	
@@ -630,4 +600,4 @@ public class LibraryMenu extends Application{
 		program.run();
 	}
 
-}
+}*/

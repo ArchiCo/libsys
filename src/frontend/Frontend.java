@@ -25,7 +25,6 @@ public class Frontend extends Application {
 		    Scene scene = new Scene(root);
 		    primaryStage.setTitle("Library System");
 			
-		    
 		    primaryStage.setScene(scene);
 			primaryStage.show();
 		} catch(Exception e) {
