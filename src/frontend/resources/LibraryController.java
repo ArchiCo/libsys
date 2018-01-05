@@ -1060,7 +1060,10 @@ public class LibraryController implements Initializable {
 		if(tempCst != null) {
 		if (event.getSource().equals(editCustomerBtn)) {
 			TextInputDialog dialog = new TextInputDialog("Edit Customer");
-
+			dialog.setTitle("Edit customer information");
+			dialog.setHeaderText("Edi");
+			dialog.setContentText("What String shall we use to summon Your Gracious?");
+			
 			GridPane grid = new GridPane();
 			grid.setHgap(10);
 			grid.setVgap(10);
@@ -1085,9 +1088,9 @@ public class LibraryController implements Initializable {
 			
 			if (result.isPresent()) {
 				Alert confirmModify = new Alert (AlertType.CONFIRMATION);
-				confirmModify.setTitle("Modify Customer");
-				confirmModify.setHeaderText("MANIPULATE THAT INFO");
-				confirmModify.setContentText("Modify Customer Info?");
+				confirmModify.setTitle("Modify Customer data");
+				confirmModify.setHeaderText("Data is being modified");
+				confirmModify.setContentText("Are you sure you want to edit it?");
 				Optional <ButtonType> choice = confirmModify.showAndWait();
 				if(choice.get() == ButtonType.OK) {
 					libraryMenu.modifyCustomer(

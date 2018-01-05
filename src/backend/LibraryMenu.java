@@ -306,7 +306,7 @@ public class LibraryMenu extends Application{
 			}
 			try {
 				if (!phoneNumber.isEmpty()) {
-					customer.setPhoneNumber(Integer.parseInt(phoneNumber));
+					customer.setPhoneNumber(phoneNumber);
 				}
 			} catch (Exception e) {
 			}
