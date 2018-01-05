@@ -1124,7 +1124,7 @@ public class LibraryController implements Initializable {
 		TextField phone = new TextField();
 		phone.setPromptText("Phone");
 		//do not allow letters
-		phone.textProperty().addListener(new ChangeListener<String>() {
+/*		phone.textProperty().addListener(new ChangeListener<String>() {
 		    @Override
 		    public void changed(ObservableValue<? extends String> observable, String oldValue, 
 		        String newValue) {
@@ -1133,6 +1133,7 @@ public class LibraryController implements Initializable {
 		        }
 		    }
 		});
+*/		
 		TextField address = new TextField();
 		address.setPromptText("Address");
 
