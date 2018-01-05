@@ -6,9 +6,9 @@ import java.util.ResourceBundle;
 
 import com.sun.java.swing.plaf.windows.resources.windows;
 
-import backend.Book;
-import backend.Customer;
 import backend.Library;
+import datatype.Book;
+import datatype.Customer;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -62,7 +62,7 @@ public class LendBookController implements Initializable{
 			@Override
 			public ObservableValue<String> call(CellDataFeatures<Customer, String> param) {
 				Customer customer = param.getValue();
-				SimpleStringProperty convertedCstId = librarycontroller.getStringProperty(customer.getCustomerId());
+				SimpleStringProperty convertedCstId = librarycontroller.getStringProperty(customer.getCid());
 				return convertedCstId;
 			}
 		});
@@ -106,7 +106,7 @@ public class LendBookController implements Initializable{
 			confirmation.setContentText("Please return the book(s) in 2 weeks. " + "\n" 
 					+ "Due Date: " + library.getDate().plusDays(14));
 			for(Book book : basket) {
-				library.lendBook(chosenCustomer.getCustomerId(), book);
+				library.lendBook(chosenCustomer.getCid(), book);
 				System.out.println(book);
 				confirmation.showAndWait();
 			}

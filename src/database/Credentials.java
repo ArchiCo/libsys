@@ -1,18 +1,15 @@
 package database;
 
 public class Credentials {
-	private final String adminUser = "AdminUser";
-	private final String adminPass = "AdminPass";
-			
+	private final String adminUser = "AdminUser", adminPass = "AdminPass";
+
 	private String dbHostname  = "ec2-184-72-243-166.compute-1.amazonaws.com";
 	private int    dbPort      = 5432;
 	private String dbName      = "dbeqbssbap89ck";
 	private String dbUsername  = "epoxusywcguize";
 	private String dbPassword  = "9f5ce8aee62b66e69b388c89446c87518822090137cc57e861478f2ffea2376a";
 	
-	Credentials() {
-		
-	}
+	Credentials(){};
 	
 	Credentials(String hostname,
 			    int    port,

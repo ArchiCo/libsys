@@ -1,21 +1,9 @@
 package database;
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
+
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-
-import javax.sql.RowSet;
-
-import com.sun.rowset.JdbcRowSetImpl;
-
-import datatype.Book;
-import datatype.Customer;
-import datatype.Record;
-
-import java.sql.ResultSet;
 
 class Database {
 	private Credentials cred;

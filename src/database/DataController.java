@@ -2,8 +2,8 @@ package database;
 
 import java.io.IOException;
 
-import backend.Book;
-import backend.Customer;
+import datatype.Book;
+import datatype.Customer;
 
 public class DataController extends Database{
 	private RecordManager   rm;

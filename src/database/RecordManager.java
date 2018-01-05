@@ -10,8 +10,8 @@ import java.sql.SQLType;
 import java.sql.Types;
 import java.util.ArrayList;
 
-import backend.Customer;
-import backend.Record;
+import datatype.Customer;
+import datatype.Record;
 
 public class RecordManager {
 	private final int AID_COL      = 1;
@@ -27,7 +27,6 @@ public class RecordManager {
 	private final String SQL_DELETE_BY_AID    = "delete from " + destination + " where aid  = ?";
 	private final String SQL_DELETE_BY_LID   = "delete from " + destination + " where lid = ?";
 	private final String SQL_DELETE_BY_USER  = "delete from " + destination + " where cid = ?";
-	//private final String SQL_SELECT          = "select * from " + destination;
 	private final String SQL_SELECT_ALL      = "select * from " + destination;
 	private final String SQL_SELECT_BY_AID    = "select * from " + destination + " where aid = ?";
 	private final String SQL_SELECT_BY_LID   = "select * from " + destination + " where lid = ?";
@@ -62,7 +61,7 @@ public class RecordManager {
 			) {
 
 			for (Record record: records) {
-				stmt.setString(1, record.getCustomerId());
+				stmt.setString(1, record.getCid());
 				stmt.setInt   (2, record.getLid());
 				stmt.setDate  (3, Date.valueOf(record.getDateTaken()));
 				stmt.setDate  (4, Date.valueOf(record.getDateDue()));
@@ -99,7 +98,7 @@ public class RecordManager {
 		try (PreparedStatement stmt = db.getConnection().prepareStatement(SQL_DELETE_BY_AID);
 				) {
 				for (Record record: records) {
-					stmt.setInt   (1, record.getArchiveId());
+					stmt.setInt   (1, record.getAid());
 					stmt.addBatch();
 				}
 				stmt.executeBatch();
@@ -112,66 +111,6 @@ public class RecordManager {
 				
 			}
 	}
-	/*
-	boolean deleteByUser(Record record) throws Exception{
-		return deleteByUser(pack(record));
-	}
-	
-	boolean deleteByUser(ArrayList<Record> records) throws Exception {
-		if (records == null || records.isEmpty()) {
-			throw new Exception ("[RecordsManager, deleteByUser] The records collection is invalid.");
-		}
-		try (Connection con = db.getConnection();
-			 PreparedStatement stmt = con.prepareStatement(SQL_DELETE_BY_USER);
-				) {
-				
-				con.setAutoCommit(false);
-				for (Record record: records) {
-					stmt.setString(1, record.getCid());
-					stmt.addBatch();
-				}
-				stmt.executeBatch();
-				con.commit();
-				con.setAutoCommit(true);
-				return true;
-				
-			} catch (SQLException e) {
-				System.out.println("[RecordsManager, deleteByUser] SQL ERROR: " + e.getMessage());
-				return false;
-			} finally {
-				
-			}
-	}
-	
-	boolean deleteByLid(Record record) throws Exception{
-		return deleteByLid(pack(record));
-	}
-	
-	boolean deleteByLid(ArrayList<Record> records) throws Exception {
-		if (records == null || records.isEmpty()) {
-			throw new Exception ("[RecordsManager, deleteByLid] The records collection is invalid.");
-		}
-		try (Connection con = db.getConnection();
-			 PreparedStatement stmt = con.prepareStatement(SQL_DELETE_BY_LID);
-				) {
-				
-				con.setAutoCommit(false);
-				for (Record record: records) {
-					stmt.setInt(1, record.getLid());
-					stmt.addBatch();
-				}
-				stmt.executeBatch();
-				con.commit();
-				con.setAutoCommit(true);
-				return true;
-				
-			} catch (SQLException e) {
-				System.out.println("[RecordsManager, deleteByLid] SQL ERROR: " + e.getMessage());
-				return false;
-			} finally {
-				
-			}
-	}*/
 
 	public ArrayList<Record> fetchAll(){
 
@@ -200,7 +139,7 @@ public class RecordManager {
 
 		try (PreparedStatement stmt = db.getConnection().prepareStatement(SQL_UPDATE)) {
 			for (Record record : records) {
-				stmt.setString(1, record.getCustomerId());
+				stmt.setString(1, record.getCid());
 				stmt.setInt   (2, record.getLid());
 				stmt.setDate  (3, Date.valueOf(record.getDateTaken()));
 				stmt.setDate  (4, Date.valueOf(record.getDateDue()));
@@ -209,7 +148,7 @@ public class RecordManager {
 				} else {
 					stmt.setNull(5, Types.NULL);
 				}
-				stmt.setInt(6, record.getArchiveId());
+				stmt.setInt(6, record.getAid());
 				stmt.addBatch();
 			}
 			stmt.executeBatch();
@@ -260,8 +199,7 @@ public class RecordManager {
 		} finally {
 					
 		}
-	}
-	
+	}	
 	
 	private ArrayList<Record> fetch(PreparedStatement stmt) {
 		try {
