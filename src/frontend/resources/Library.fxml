@@ -411,15 +411,21 @@
                                                                               <Font size="20.0" />
                                                                            </font>
                                                                         </Label>
-                                                                        <Label text="Shift click to select multiple books" GridPane.columnIndex="4" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+                                                                        <Label text="Shift click to select multiple books" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
                                                                            <GridPane.margin>
                                                                               <Insets right="10.0" />
                                                                            </GridPane.margin>
+                                                                           <font>
+                                                                              <Font size="10.0" />
+                                                                           </font>
                                                                         </Label>
-                                                                        <Label text="in currently borrowing" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="TOP">
+                                                                        <Label text="in currently borrowing" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="3" GridPane.valignment="TOP">
                                                                            <GridPane.margin>
                                                                               <Insets right="10.0" />
                                                                            </GridPane.margin>
+                                                                           <font>
+                                                                              <Font size="10.0" />
+                                                                           </font>
                                                                         </Label>
                                                                      </children>
                                                                   </GridPane>

@@ -1004,6 +1004,15 @@ public class LibraryController implements Initializable {
 					cstHistoryRecordsTable.getItems().clear();
 					}
 				}
+			else {
+				LIDLabel.setText("");
+				titleLabel.setText("");
+				authorLabel.setText("");
+				genreLabel.setText("");
+				publisherLabel.setText("");
+				cstHistoryTable.getItems().clear();
+				cstHistoryRecordsTable.getItems().clear();
+					}
 			}	
 		});
 		
