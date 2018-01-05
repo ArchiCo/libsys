@@ -1164,20 +1164,20 @@ public class LibraryController implements Initializable {
 		Optional<String> result = dialog.showAndWait();
 		
 		if (result.isPresent() && cstFieldsAreEmpty(name, address, phone) == false) {
-			Alert confirmedGangMember = new Alert(AlertType.INFORMATION);
-			confirmedGangMember.setTitle("New customer registration");
-			confirmedGangMember.setHeaderText(null);
-			confirmedGangMember.setContentText("Welcome, " + name.getText() + " \n \n");
-			confirmedGangMember.showAndWait();
+			Alert statusAlert = new Alert(AlertType.INFORMATION);
+			statusAlert.setTitle("New customer registration");
+			statusAlert.setHeaderText(null);
+			statusAlert.setContentText("Welcome, " + name.getText() + " \n \n");
+			statusAlert.showAndWait();
 			library.registerCustomer(name.getText(), address.getText(), phone.getText());
 			refreshTable();
 		}
 		if(result.isPresent() && cstFieldsAreEmpty(name, address, phone) == true) {
-			Alert confirmedGangMember = new Alert(AlertType.ERROR);
-			confirmedGangMember.setTitle("Field Empty");
-			confirmedGangMember.setHeaderText(null);
-			confirmedGangMember.setContentText("A field was left empty. Retry.");
-			confirmedGangMember.showAndWait();
+			Alert statusAlert = new Alert(AlertType.ERROR);
+			statusAlert.setTitle("Field Empty");
+			statusAlert.setHeaderText(null);
+			statusAlert.setContentText("A field was left empty. Retry.");
+			statusAlert.showAndWait();
 			refreshTable();
 			}
 		}
