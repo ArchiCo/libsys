@@ -1061,8 +1061,8 @@ public class LibraryController implements Initializable {
 		if (event.getSource().equals(editCustomerBtn)) {
 			TextInputDialog dialog = new TextInputDialog("Edit Customer");
 			dialog.setTitle("Edit customer information");
-			dialog.setHeaderText("Edi");
-			dialog.setContentText("What String shall we use to summon Your Gracious?");
+			dialog.setHeaderText("Edit existing information");
+			dialog.setContentText("");
 			
 			GridPane grid = new GridPane();
 			grid.setHgap(10);
@@ -1110,9 +1110,9 @@ public class LibraryController implements Initializable {
 	private void addCustomerEvent(ActionEvent event) throws IOException {
 
 		TextInputDialog dialog = new TextInputDialog("");
-		dialog.setTitle("Join the Gang");
-		dialog.setHeaderText("Participate in the rough handling of Books");
-		dialog.setContentText("What String shall we use to summon Your Gracious?");
+		dialog.setTitle("Add Customer");
+		dialog.setHeaderText("Add Customer");
+		dialog.setContentText("Please fill in the customer's information");
 
 		GridPane grid = new GridPane();
 		grid.setHgap(10);
@@ -1182,15 +1182,15 @@ public class LibraryController implements Initializable {
 			
 			Alert alert = new Alert(AlertType.CONFIRMATION);
 			alert.setTitle("Remove Customer");
-			alert.setHeaderText("RIP Customer");
-			alert.setContentText("Remove?");
+			alert.setHeaderText("Remove Customer");
+			alert.setContentText("Remove Selected Customer?");
 			Optional <ButtonType> result = alert.showAndWait();
 			
 			if(result.get() == ButtonType.OK && tempCst != null) {
 				Alert confirmedCustomerKill = new Alert(AlertType.INFORMATION);
-				confirmedCustomerKill.setTitle("Customer Kill Confirmed");
+				confirmedCustomerKill.setTitle("Customer Removed.");
 				confirmedCustomerKill.setHeaderText(null);
-				confirmedCustomerKill.setContentText("Kill Confirmed.");
+				confirmedCustomerKill.setContentText("Customer Removed.");
 				confirmedCustomerKill.showAndWait();
 				libraryMenu.removeCustomer(tempCst.getCustomerId());
 				refreshTable();
@@ -1207,7 +1207,7 @@ public class LibraryController implements Initializable {
 		if (event.getSource().equals(addBookBtn)) {
 
 			TextInputDialog dialog = new TextInputDialog("Add Book");
-			dialog.setTitle("Text Input Dialog");
+			dialog.setTitle("Add Book");
 			dialog.setHeaderText("Add a new book.");
 
 			GridPane grid = new GridPane();
@@ -1280,7 +1280,7 @@ public class LibraryController implements Initializable {
 		 
 		if(event.getSource().equals(editBookBtn)) {		 
 				TextInputDialog dialog = new TextInputDialog("Edit Book");
-
+				dialog.setContentText("Edit Book Information");
 				GridPane grid = new GridPane();
 				grid.setHgap(10);
 				grid.setVgap(10);
@@ -1346,15 +1346,15 @@ public class LibraryController implements Initializable {
 		
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("Remove Book");
-		alert.setHeaderText("RIP Book");
-		alert.setContentText("Remove?");
+		alert.setHeaderText("Remove Selected Book");
+		alert.setContentText("Are you sure you want to remove this book?");
 		Optional <ButtonType> result = alert.showAndWait();
 		
 		if(result.get() == ButtonType.OK) {
 			Alert confirmedBookKill = new Alert(AlertType.INFORMATION);
-			confirmedBookKill.setTitle("Book Kill Confirmed");
+			confirmedBookKill.setTitle("Book Removed.");
 			confirmedBookKill.setHeaderText(null);
-			confirmedBookKill.setContentText("Kill Confirmed.");
+			confirmedBookKill.setContentText("Book Removed.");
 			confirmedBookKill.showAndWait();
 			libraryMenu.removeBook(tempBook.getLid());
 			refreshTable();
@@ -1391,8 +1391,8 @@ public class LibraryController implements Initializable {
 	public void returnBookEvent() {
 		Alert confirmedReturn = new Alert(AlertType.CONFIRMATION);
 		confirmedReturn.setTitle("Book return");
-		confirmedReturn.setHeaderText("The book is being returned");
-		confirmedReturn.setContentText("Return?");
+		confirmedReturn.setHeaderText("This book is being returned");
+		confirmedReturn.setContentText("Are you sure you want to return this book?");
 		Optional <ButtonType> result = confirmedReturn.showAndWait();
 		
 		if (result.get() == ButtonType.OK) {
@@ -1427,9 +1427,9 @@ public class LibraryController implements Initializable {
 				Optional<String> result1 = dialog.showAndWait();
 				if (result1.isPresent()) {
 					Alert confirmation = new Alert(AlertType.INFORMATION);
-					confirmation.setTitle("Book(s) returned");
+					confirmation.setTitle("Book returned");
 					confirmation.setHeaderText(null);
-					confirmation.setContentText("Book(s) Returned");
+					confirmation.setContentText("Book Returned");
 					library.returnBook(selectedBook, cstRec);
 					confirmation.showAndWait();
 					}
@@ -1466,9 +1466,9 @@ public class LibraryController implements Initializable {
 					if (result1.isPresent()) {
 						library.returnBook(book, cstRec);
 						Alert confirmation = new Alert(AlertType.INFORMATION);
-						confirmation.setTitle("Book(s) returned");
+						confirmation.setTitle("Book returned");
 						confirmation.setHeaderText(null);
-						confirmation.setContentText("Book(s) Returned");
+						confirmation.setContentText("Book Returned");
 						confirmation.showAndWait();
 						}	
 					}

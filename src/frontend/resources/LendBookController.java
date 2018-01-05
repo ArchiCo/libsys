@@ -96,9 +96,9 @@ public class LendBookController implements Initializable{
 	@FXML
 	public void lendBookEvent() {
 		Alert confirmedLend = new Alert(AlertType.CONFIRMATION);
-		confirmedLend.setTitle("Confirm Lend");
-		confirmedLend.setHeaderText("Gotta get em buhkz");
-		confirmedLend.setContentText("Lend?");
+		confirmedLend.setTitle("Confirm Lend Book");
+		confirmedLend.setHeaderText("Lend Selected Book");
+		confirmedLend.setContentText("Are you sure you want to lend this book to the selected customer?");
 		Optional <ButtonType> result = confirmedLend.showAndWait();
 		if (result.get() == ButtonType.OK ) {
 			Alert confirmation = new Alert(AlertType.INFORMATION);
