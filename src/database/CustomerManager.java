@@ -181,11 +181,11 @@ public class CustomerManager {
 					Date returned = history.getDate(10);
 					if (history.wasNull()) {
 						fetchedHistory.add(new History(new Customer(cid), 
-								           new Book(lid, isbn, title, genre, author, publisher, ""), 
+								           new Book(lid, isbn, title, genre, author, publisher, 0), 
 								           new Record(cid, lid, taken.toLocalDate(), due.toLocalDate())));
 					} else {
 						fetchedHistory.add(new History(new Customer(cid), 
-						           new Book(lid, isbn, title, genre, author, publisher, ""), 
+						           new Book(lid, isbn, title, genre, author, publisher, 0), 
 						           new Record(cid, lid, taken.toLocalDate(), due.toLocalDate(), returned.toLocalDate())));
 					}
 				}
