@@ -22,6 +22,7 @@
                   <Font size="30.0" />
                </font></Label>
           <Button fx:id="registerBtn" layoutX="139.0" layoutY="234.0" mnemonicParsing="false" onAction="#changeScreenBtn" prefHeight="30.0" prefWidth="70.0" text="Register" />
+            <Label layoutX="122.0" layoutY="95.0" text="Currently unimplemented. Click the login button" textFill="#720202" />
          </children>
       </AnchorPane>
    </center>
