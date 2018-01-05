@@ -274,6 +274,7 @@ public class LibraryController implements Initializable {
 		            toTheFutureField.setText(newValue.replaceAll("[^\\d]", ""));
 		        }}});
 */		
+		
 		//////////////////////////////Book Table//////////////////////////////////////////////
 		bookIDCol.setCellValueFactory (new Callback<TableColumn.CellDataFeatures<Book, Integer>, ObservableValue<Integer>>() {
 			@Override
@@ -1234,6 +1235,14 @@ public class LibraryController implements Initializable {
 			Publisher.setPromptText("");
 			TextField Shelf = new TextField();
 			Shelf.setPromptText("");
+			
+			Shelf.textProperty().addListener(new ChangeListener<String>() {
+			    @Override
+			    public void changed(ObservableValue<? extends String> observable, String oldValue, 
+			        String newValue) {
+			        if (!newValue.matches("\\d*")) {
+			            Shelf.setText(newValue.replaceAll("[^\\d]", ""));
+			    }}});
 
 			grid.add(new Label("ISBN:"), 0, 0);
 			grid.add(ISBN, 1, 0);
@@ -1306,6 +1315,14 @@ public class LibraryController implements Initializable {
 				Publisher.setPromptText(tempBook.getPublisher());
 				TextField Shelf = new TextField();
 				Shelf.setPromptText(String.valueOf(tempBook.getShelf()));
+				
+				Shelf.textProperty().addListener(new ChangeListener<String>() {
+				    @Override
+				    public void changed(ObservableValue<? extends String> observable, String oldValue, 
+				        String newValue) {
+				        if (!newValue.matches("\\d*")) {
+				            Shelf.setText(newValue.replaceAll("[^\\d]", ""));
+				    }}});
 
 				grid.add(new Label("ISBN:"), 0, 0);
 				grid.add(ISBN, 1, 0);
