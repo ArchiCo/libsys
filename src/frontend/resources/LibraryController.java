@@ -1254,7 +1254,9 @@ public class LibraryController implements Initializable {
 					alert.setContentText("Book correctly added.");
 
 					alert.showAndWait();
-					libraryMenu.addBook(ISBN.getText(), Title.getText(), Author.getText(), Genre.getText(),
+					//void backend.LibraryMenu.addBook(String isbn, String title, String genre, String author, String publisher, String shelf)
+
+					libraryMenu.addBook(ISBN.getText(), Title.getText(), Genre.getText(), Author.getText(),
 							Publisher.getText(), Shelf.getText());
 					refreshTable();
 				}
